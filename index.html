@@ -71,110 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Hexo+GithubPage+域名+七牛云图床+Typora搭建博客（1）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/02/14/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/" class="article-date">
-  <time class="dt-published" datetime="2022-02-14T12:25:00.000Z" itemprop="datePublished">2022-02-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/02/14/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/">Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>因为各个版本可能不一致，各个网站和软件也可能会发生未知变化，所以本文只针对特定版本和特定时间，遇到问题读者最好还是以官方文档为准。</p>
-<p>Base信息：</p>
-<p>MacOS：12.1</p>
-<p>Node.js: 16.13.2</p>
-<p>npm: 8.1.2</p>
-<p>git: 2.15.0</p>
-<p>Hexo: 6.0.0</p>
-<p>Typora: 1.0.5</p>
-<p>PicGo：2.3.0</p>
-<p>本文成稿于2022-02-12，本文假定你具有一定编程基础，买好了域名并备案，了解md语法。</p>
-<h1 id="安装相关软件"><a href="#安装相关软件" class="headerlink" title="安装相关软件"></a>安装相关软件</h1><p>安装git，参考官方文档，此处不赘述。</p>
-<p>安装<a target="_blank" rel="noopener" href="http://nodejs.cn/download/">node.js</a>，点击下载安装。</p>
-<p>打开终端，新建目录<code>blog</code>，接下来的操作都在这个目录下进行。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p>安装完后，输入以下命令进行检查，输入每个命令后，都会弹出相应版本号，确保都有安装:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line"></span><br><span class="line">npm -v</span><br><span class="line"></span><br><span class="line">Git --version</span><br></pre></td></tr></table></figure>
-
-<p>然后安装Hexo和 npm及hexo-deployer-git：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g hexo</span><br><span class="line">sudo npm install</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>初始化Hexo</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行下述命令生成本地网页文件并开启服务器，然后通过<a href="http://localhost:4000查看本地博客。">http://localhost:4000查看本地博客。</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://cdn.wangxiaoyi.world/image-20220213142609817.png" alt="image-20220213142609817"></p>
-<p>这样就代表本地成功了。</p>
-<p>登陆github，新建仓库，名称必须为<code>你的用户名.github.io</code>,比如你的用户名是just，那么就新建<code>just.github.io</code>，注意仓库要选择公开。</p>
-<p>通过访达进入blog文件夹，打开文件_config.yml，将下面代码复制进去。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:你的用户名/你的用户名.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
-<p>然后在终端中执行如下命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>出现这个标识则表示上传成功：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br></pre></td></tr></table></figure>
-
-<p>添加ssh key后不需要每次更新博客再输入用户名和密码。首先检查本地是否包含ssh keys。如果存在则直接将ssh key添加到GitHub之中，否则新生成ssh key。</p>
-<p>输入一下代码，之后按照要求输入账号和两次密码</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_email@exampl&quot;</span><br></pre></td></tr></table></figure>
-
-<p>完成之后，打开博客文件夹，将your_email.pub中的内容复制到github中的设置-deploy keys中即可。</p>
-<p>然后执行如下代码</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>切换到source目录下，新建文件<code>CNAME</code>，在其中添加一行记录，比如你的完整个人域名是<code>http://www.so.com</code>，那么此处填写：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">so.com</span><br></pre></td></tr></table></figure>
-
-<p>之后执行：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>然后在<code>云解析DNS/域名解析/解析设置</code>中添加两条记录：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">记录类型：CNAME</span><br><span class="line">主机记录：@</span><br><span class="line">解析线路：默认</span><br><span class="line">记录值：http://你的github的用户名.github.io</span><br><span class="line"></span><br><span class="line">记录类型：A</span><br><span class="line">主机记录：www</span><br><span class="line">解析线路：默认</span><br><span class="line">记录值：ping http://你的github的用户名.github.io 获得的ip地址，例如185.199.109.132</span><br></pre></td></tr></table></figure>
-
-<p>进入你的项目的github，进入对应的仓库，在仓库下的settings下找到Pages选项，将你的域名输入进Custom domain中：</p>
-<p><img src="http://cdn.wangxiaoyi.world/image-20220213203740363.png" alt="image-20220213203740363"></p>
-<p>之后就可以访问你自己的域名了，注意可能需要等待5min才能生效。</p>
-<p><img src="http://cdn.wangxiaoyi.world/image-20220213203835464.png" alt="image-20220213203835464"></p>
-<p>更换主题，可以参考<a target="_blank" rel="noopener" href="http://theme-next.iissnan.com/getting-started.html">NexT官方文档</a>，进行页面的美化修改等。</p>
-<p>下面是本人的例子：</p>
-<p>写作也可以参考Hexo官方文档，主要步骤就是终端中执行命令<code>hexo new 文章名</code>，然后在博客文件夹目录下的source下的_posts打开进行编写。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/02/14/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/" data-id="ckzmo7uqr0000ipy05x4dcx7a" data-title="Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/02/13/hello-world/" class="article-date">
@@ -226,6 +122,49 @@
 
 
   
+    <article id="post-Hexo+GithubPage+域名+七牛云图床+Typora搭建博客（1）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/02/12/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2022-02-12T12:25:00.000Z" itemprop="datePublished">2022-02-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/02/12/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/">Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>因为各个版本可能不一致，各个网站和软件也可能会发生未知变化，所以本文只针对特定版本和特定时间，遇到问题读者最好还是以官方文档为准。</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/02/12/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/02/12/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/" data-id="ckzmo7uqr0000ipy05x4dcx7a" data-title="Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
 
 
 </section>
@@ -257,11 +196,11 @@
       <ul>
         
           <li>
-            <a href="/2022/02/14/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/">Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）</a>
+            <a href="/2022/02/13/hello-world/">Hello World</a>
           </li>
         
           <li>
-            <a href="/2022/02/13/hello-world/">Hello World</a>
+            <a href="/2022/02/12/Hexo+GithubPage+%E5%9F%9F%E5%90%8D+%E4%B8%83%E7%89%9B%E4%BA%91%E5%9B%BE%E5%BA%8A+Typora%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%EF%BC%881%EF%BC%89/">Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）</a>
           </li>
         
       </ul>
