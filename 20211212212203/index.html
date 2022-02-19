@@ -77,18 +77,20 @@
 
 
 
-<meta name="description" content="Redis 核心就是如果我的数据全都在内存里，我单线程的去操作就是效率最高的。">
+<meta name="description" content="如无特殊说明，本站Redis系列文章均基于Redis 5.0.8，CentOS 7.9，远程连接工具RDM。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis单线程为什么还快">
-<meta property="og:url" content="http://wangxiaoyi.world/20211212092203/index.html">
+<meta property="og:title" content="Redis系列之CentOS下安装与启动和关闭">
+<meta property="og:url" content="http://wangxiaoyi.world/20211212212203/index.html">
 <meta property="og:site_name" content="Just">
-<meta property="og:description" content="Redis 核心就是如果我的数据全都在内存里，我单线程的去操作就是效率最高的。">
+<meta property="og:description" content="如无特殊说明，本站Redis系列文章均基于Redis 5.0.8，CentOS 7.9，远程连接工具RDM。">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-12-12T01:22:03.000Z">
-<meta property="article:modified_time" content="2022-02-15T09:00:16.410Z">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220215183116295.png">
+<meta property="article:published_time" content="2021-12-12T13:22:03.000Z">
+<meta property="article:modified_time" content="2022-02-19T08:17:04.088Z">
 <meta property="article:author" content="Just">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn.wangxiaoyi.world/image-20220215183116295.png">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://wangxiaoyi.world/20211212092203/"/>
+  <link rel="canonical" href="http://wangxiaoyi.world/20211212212203/"/>
 
 
 
 
 
-  <title>Redis单线程为什么还快 | Just</title>
+  <title>Redis系列之CentOS下安装与启动和关闭 | Just</title>
   
 
 
@@ -251,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20211212092203/">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20211212212203/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -268,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis单线程为什么还快</h1>
+          <h1 class="post-title" itemprop="name headline">Redis系列之CentOS下安装与启动和关闭</h1>
         
 
         <div class="post-meta">
@@ -280,7 +282,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-12T09:22:03+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-12T21:22:03+08:00">
                 2021-12-12
               </time>
             
@@ -312,7 +314,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  475
+                  1.2k
                 </span>
               
 
@@ -328,7 +330,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  4
                 </span>
               
             </div>
@@ -349,17 +351,85 @@
       
 
       
-        <p>Redis 核心就是如果我的数据全都在内存里，我单线程的去操作就是效率最高的。</p>
+        <p>如无特殊说明，本站Redis系列文章均基于Redis 5.0.8，CentOS 7.9，远程连接工具RDM。</p>
 <span id="more"></span>
 
-<p>因为多线程的本质就是 CPU 模拟出来多个进程的情况，这种模拟出来的情况就有一个代价，就是上下文的切换。对于一个内存的系统来说，它没有上下文的切换就是效率最高的。Redis 用单个CPU 绑定一块内存的数据，然后针对这块内存的数据进行多次读写的时候，都是在一个CPU上完成的，所以它是单线程处理这个事。在内存的情况下，这个方案就是最佳方案 —— 阿里 沈询 的解释。</p>
-<p>具体时间计算：</p>
-<p>一次CPU上下文的切换大概在 1500ns 左右。</p>
-<p>从内存中读取 1MB 的连续数据，耗时大约为 250us，假设1MB的数据由多个线程读取了1000次，那么就有1000次时间上下文的切换，</p>
-<p>那么就有1500ns * 1000 &#x3D; 1500us ，单线程读完1MB数据才250us ,而切换上下文就用了1500us了，还没算每次读一点数据的时间。</p>
-<p><strong>需要注意的的是</strong>，Redis 6 开始就不是单线程了。</p>
-<p>在 Redis 中，单线程的性能瓶颈主要在网络IO操作上。也就是在读写网络的read&#x2F;write系统调用执行期间会占用大部分CPU时间。如果要对一些大的键值对进行删除操作的话，在短时间内是删不完的，那么对于单线程来说就会阻塞后边的操作。</p>
-<p>Redis6.0的多线程是指，将网络数据读写和协议解析通过多线程的方式来处理，对于命令执行来说，<strong>仍然使用单线程操作</strong>。也就是说，Redis6.0的多线程是为了解决其网络IO的瓶颈。</p>
+<p>Redis 是一个开源的（BSD许可）、内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。</p>
+<p>redis借鉴了linux操作系统对于版本号的命名规则：版本号第二位如果是奇数，则为非稳定版本（比如4.1），如果是偶数，则为稳定版本（比如5.0）。当前奇数版本就是下一个稳定版本的开发版本。所以生产环境最好选择偶数版本的redis。</p>
+<p>安装方式有yum安装和源码编译安装。</p>
+<p>有人说编译安装性能好？扯犊子～</p>
+<p>编译安装的优势是：</p>
+<ul>
+<li>编译安装时可以指定扩展的module（模块），Php、Apache、Nginx都是一样有很多第三方扩展模块，如MySQL，编译安装时候，如果需要就定制存储引擎（Innodb，还是MyIASM）</li>
+<li>编译安装可以统一安装路径，linux软件约定安装目录在&#x2F;opt&#x2F;下面</li>
+<li>软件仓库版本一般比较低，编译源码安装可以根据需求，安装最新的版本</li>
+</ul>
+<h1 id="编译安装redis步骤"><a href="#编译安装redis步骤" class="headerlink" title="编译安装redis步骤"></a>编译安装redis步骤</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">下载redis源码</span> </span><br><span class="line">wget http://download.redis.io/releases/redis-5.0.8.tar.gz</span><br><span class="line"><span class="meta"># </span><span class="language-bash">解压缩</span> </span><br><span class="line">tar -zxf redis-5.0.8.tar.gz </span><br><span class="line"><span class="meta"># </span><span class="language-bash">建立一个redis目录的软连接</span></span><br><span class="line">ln -s redis-5.0.8 redis</span><br><span class="line"><span class="meta"># </span><span class="language-bash">切换redis源码目录</span> </span><br><span class="line">cd redis</span><br><span class="line"><span class="meta"># </span><span class="language-bash">编译源文件</span> </span><br><span class="line">make  </span><br><span class="line"><span class="meta"># </span><span class="language-bash">编译好后，src/目录下有编译好的redis指令</span></span><br><span class="line">make install  # 安装到指定目录，默认在/usr/local/bin,安装在默认目录可以在任意目录下执行redis命令</span><br></pre></td></tr></table></figure>
+<p>执行命令查看版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z /]# redis-cli -v</span><br><span class="line">redis-cli 5.0.8</span><br></pre></td></tr></table></figure>
+
+<p>redis可执行文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./redis-benchmark //用于进行redis性能测试的工具</span><br><span class="line">./redis-check-dump //用于修复出问题的rdb文件</span><br><span class="line">./redis-cli //redis的命令行客户端</span><br><span class="line">./redis-server //redis的服务端，启动redis</span><br><span class="line">./redis-check-aof //用于修复出问题的AOF文件</span><br><span class="line">./redis-sentinel //用于集群管理  </span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="启动redis服务端"><a href="#启动redis服务端" class="headerlink" title="启动redis服务端"></a>启动redis服务端</h1><p>启动方式共有三种：</p>
+<ul>
+<li>默认启动</li>
+<li>运行启动</li>
+<li>配置文件启动</li>
+</ul>
+<h2 id="默认启动"><a href="#默认启动" class="headerlink" title="默认启动"></a>默认启动</h2><p>默认启动redis非常简单，直接切换到&#x2F;usr&#x2F;local&#x2F;bin目录下执行redis-server就可以启动服务端了。</p>
+<p>默认情况下，redis-server会以非daemon的方式来运行，且默认服务端口为6379。  </p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220215183116295.png" alt="image-20220215183116295">     </p>
+<h2 id="运行启动"><a href="#运行启动" class="headerlink" title="运行启动"></a>运行启动</h2><p>redis-server加上要修改配置名和值（可以是多对），没有设置的配置将使用默认配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server --configkey1 value1 --configkey2 value2</span><br></pre></td></tr></table></figure>
+
+<p>例如，指定端口启动：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server --port 6379</span><br></pre></td></tr></table></figure>
+
+<p>虽然运行配置可以自定义配置，但是没有保存到文件中，所以一般只在快速调试的时候可能会使用。</p>
+<h2 id="配置文件启动"><a href="#配置文件启动" class="headerlink" title="配置文件启动"></a>配置文件启动</h2><p>将配置项写到配置文件中，那么只需要执行如下命令就可以启动 redis：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>redis配置项众多，比如：</p>
+<ul>
+<li>port 端口</li>
+<li>logfile 日志文件 </li>
+<li>dir redis工作目录（存放持久化文件和日志文件）</li>
+<li>daemonize 是否以守护进程的方式启动redis</li>
+</ul>
+<h1 id="redis命令行客户端"><a href="#redis命令行客户端" class="headerlink" title="redis命令行客户端"></a>redis命令行客户端</h1><p>redis-cli可以使用两种方式连接redis服务器</p>
+<ul>
+<li><p>交互式方式：</p>
+<p>通过<code>redis-cli -h &#123;host&#125; -p &#123;port&#125;</code>的方式连接到redis服务，之后所有的操作都是通过交互式实现的：</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">redis-cli  -h 127.0.0.1 -p 6379</span><br><span class="line"><span class="meta">#</span><span class="language-bash">测试是否连接上redis</span></span><br><span class="line">127.0.0.1:6379 &gt; ping</span><br><span class="line">返回pong代表连接上了</span><br><span class="line">//用set来设置key、value</span><br><span class="line">127.0.0.1:6379 &gt; set name &quot;Just&quot;</span><br><span class="line">OK</span><br><span class="line">//get获取name的值</span><br><span class="line">127.0.0.1:6379 &gt; get name</span><br><span class="line">&quot;Just&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>命令方式</p>
+<p>使用<code>redis-cli -h &#123;host&#125; -p &#123;port&#125; &#123;command&#125;</code>就可以直接得到命令的返回方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 -p 6379 get name</span><br><span class="line">&quot;Just&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>需要注意的是：如果没有-h参数，那么默认连接 127.0.0.1，如果没有-p参数，那么默认6379端口</p>
+</blockquote>
+<p>​                         </p>
+<h1 id="停止redis"><a href="#停止redis" class="headerlink" title="停止redis"></a>停止redis</h1><p>可以使用shutdown命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli shutdown</span><br></pre></td></tr></table></figure>
+
+<p>查看日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Ready to accept connections </span><br><span class="line">User requested shutdown...  # 客户端发出关闭指令</span><br><span class="line">Saving the final RDB snapshot before exiting.  # 保存rdb持久化文件</span><br><span class="line">DB saved on disk  # 将rdb文件保存到磁盘上</span><br><span class="line">Redis is now ready to exit, bye bye...</span><br></pre></td></tr></table></figure>
+
+<p>再次尝试连接：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z /]# redis-cli</span><br><span class="line">Could not connect to Redis at 127.0.0.1:6379: Connection refused</span><br></pre></td></tr></table></figure>
+
+<p>使用shutdown关闭redis比较优雅，断开与客户端的连接，持久化文件生成。</p>
+<p>除了shutdown命令，还可以使用kill命令，但是不要使用kill -9强制杀死redis，这样不但不会做持久化操作，还会造成缓冲区等资源不能被优雅关闭，甚至会造成aof和复制丢失数据的情况。</p>
+<p>shutdown还有一个参数，代表是否在关闭redis前，生成持久化文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli shutdown nosave|save</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -414,7 +484,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://wangxiaoyi.world/20211212092203/" title="Redis单线程为什么还快">http://wangxiaoyi.world/20211212092203/</a>
+    <a href="http://wangxiaoyi.world/20211212212203/" title="Redis系列之CentOS下安装与启动和关闭">http://wangxiaoyi.world/20211212212203/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -442,8 +512,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/20180202204249/" rel="next" title="nginx系列01--nginx简介和安装">
-                <i class="fa fa-chevron-left"></i> nginx系列01--nginx简介和安装
+              <a href="/20211212092203/" rel="next" title="Redis单线程为什么还快">
+                <i class="fa fa-chevron-left"></i> Redis单线程为什么还快
               </a>
             
           </div>
@@ -452,8 +522,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/20211212212203/" rel="prev" title="Redis系列之CentOS下安装与启动和关闭">
-                Redis系列之CentOS下安装与启动和关闭 <i class="fa fa-chevron-right"></i>
+              <a href="/20220212202500/" rel="prev" title="Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）">
+                Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -506,8 +576,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -602,6 +681,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85redis%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.</span> <span class="nav-text">编译安装redis步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8redis%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">2.</span> <span class="nav-text">启动redis服务端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%90%AF%E5%8A%A8"><span class="nav-number">2.1.</span> <span class="nav-text">默认启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%90%AF%E5%8A%A8"><span class="nav-number">2.2.</span> <span class="nav-text">运行启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%90%AF%E5%8A%A8"><span class="nav-number">2.3.</span> <span class="nav-text">配置文件启动</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">3.</span> <span class="nav-text">redis命令行客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2redis"><span class="nav-number">4.</span> <span class="nav-text">停止redis</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
