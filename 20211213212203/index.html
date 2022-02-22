@@ -85,7 +85,7 @@
 <meta property="og:description" content="如无特殊说明，本站Redis系列文章均基于Redis 5.0.8，CentOS 7.9，远程连接工具RDM。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-12-13T13:22:03.000Z">
-<meta property="article:modified_time" content="2022-02-21T13:13:13.236Z">
+<meta property="article:modified_time" content="2022-02-22T13:38:20.543Z">
 <meta property="article:author" content="Just">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -312,7 +312,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  643
+                  1.2k
                 </span>
               
 
@@ -328,7 +328,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  5
                 </span>
               
             </div>
@@ -352,14 +352,17 @@
         <p>如无特殊说明，本站Redis系列文章均基于Redis 5.0.8，CentOS 7.9，远程连接工具RDM。</p>
 <span id="more"></span>
 
-<p>Redis提供了发布（publish）订阅（subscribe）功能</p>
+<p>Redis提供了发布（publish）订阅（subscribe）功能。</p>
 <p>从pub&#x2F;sub的机制来看，更像是一个广播系统。多个sub可以订阅多个channel，多个pub可以往多个channel中发布消息，可以理解成：</p>
 <p>Subscribe：收音机，可以收到多个频道，并以队列的方式显示</p>
 <p>Publish: 电台，可以往不同的频道中发消息</p>
 <p>Channel：不同频率的频道。</p>
-<h1 id="发布订阅的命令"><a href="#发布订阅的命令" class="headerlink" title="发布订阅的命令"></a>发布订阅的命令</h1><p><code>PUBLISH channel msg</code> ： 将信息 message 发送到指定的频道 channel<br><code>SUBSCRIBE channel [channel ...]</code> ： 订阅频道，可以同时订阅多个频道<br><code>UNSUBSCRIBE [channel ...]</code> ： 取消订阅指定的频道, 如果不指定频道，则会取消订阅所有频道<br><code>PSUBSCRIBE pattern [pattern ...]</code>：  订阅一个或多个符合给定模式的频道，每个模式以 * 作为匹配符，比如 it* 匹配所    有以 it 开头的频道( it.news 、 it.blog 、 it.tweets 等等)， news.* 匹配所有    以 news. 开头的频道( news.it 、 news.global.today 等等)，诸如此类<br><code>PUNSUBSCRIBE [pattern [pattern ...]]</code> ： 退订指定的规则, 如果没有参数则会退订所有规则<br><code>PUBSUB subcommand [argument [argument ...]]</code> ： &#96;查看订阅与发布系统状态</p>
+<h1 id="发布订阅的命令"><a href="#发布订阅的命令" class="headerlink" title="发布订阅的命令"></a>发布订阅的命令</h1><p>主要有发布消息、订阅频道、取消订阅以及按照模式订阅和取消订阅等命令。</p>
+<p><code>PUBLISH channel msg</code> ： 将信息 message 发送到指定的频道 channel<br><code>SUBSCRIBE channel [channel ...]</code> ： 订阅频道，可以同时订阅多个频道<br><code>UNSUBSCRIBE [channel ...]</code> ： 取消订阅指定的频道, 如果不指定频道，则会取消订阅所有频道<br><code>PSUBSCRIBE pattern [pattern ...]</code>：  订阅一个或多个符合给定模式的频道，每个模式以 * 作为匹配符，比如 it* 匹配所    有以 it 开头的频道( it.news 、 it.blog 、 it.tweets 等等)， news.* 匹配所有    以 news. 开头的频道( news.it 、 news.global.today 等等)，诸如此类<br><code>PUNSUBSCRIBE [pattern [pattern ...]]</code> ： 退订指定的规则, 如果没有参数则会退订所有规则<br><code>PUBSUB subcommand [argument [argument ...]]</code> ： &#96;查看订阅与发布系统状态</p>
 <blockquote>
-<p>注意：使用发布订阅模式实现的消息队列，当有客户端订阅channel后只能收到后续发布到该频道的消息，之前发送的不会缓存，必须Provider和Consumer同时在线。</p>
+<p>注意：使用发布订阅模式实现的消息队列，当有客户端订阅channel后只能收到后续发布到该频道的消息，之前发送的不会缓存，必须Provider和Consumer同时在线。因为Redis不会对发布的消息进行持久化。</p>
+<p>同时，客户端在执行订阅命令之后进入订阅状态，只能接受：subscribe、psubscribe、unsubscribe、punsubscribe</p>
+<p>与专业的消息队列相比（比如kafka，rocketmq），redis的发布订阅很粗糙，例如无法实现消息堆积和回溯，但胜在足够简单。</p>
 </blockquote>
 <p>启动两个redis-cli窗口，均订阅JUST 频道（channel）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; SUBSCRIBE JUST</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;subscribe&quot;</span><br><span class="line">2) &quot;JUST&quot;</span><br><span class="line">3) (integer) 1</span><br><span class="line">1) &quot;message&quot;</span><br><span class="line">2) &quot;JUST&quot;</span><br><span class="line">3) &quot;123&quot;</span><br></pre></td></tr></table></figure>
@@ -367,7 +370,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; SUBSCRIBE JUST</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;subscribe&quot;</span><br><span class="line">2) &quot;JUST&quot;</span><br><span class="line">3) (integer) 1</span><br><span class="line">1) &quot;message&quot;</span><br><span class="line">2) &quot;JUST&quot;</span><br><span class="line">3) &quot;123&quot;</span><br></pre></td></tr></table></figure>
 
 <p>启动发布者向频道JUST发送消息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; PUBLISH JUST &quot;123&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><figcaption><span>l</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; PUBLISH JUST &quot;123&quot;</span><br><span class="line">(integer) 2  # 此时返回的是订阅者的个数，没有订阅则返回0</span><br><span class="line">127.0.0.1:6379&gt; </span><br></pre></td></tr></table></figure>
 
 
 
@@ -379,6 +382,41 @@
 <p>发布消息</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; PUBLISH JUST &quot;Testing~&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; </span><br></pre></td></tr></table></figure>
 
+
+
+<h1 id="取消订阅"><a href="#取消订阅" class="headerlink" title="取消订阅"></a>取消订阅</h1><p>客户端可以通过画unsubscribe命令取消对指定频道的订阅，取消成功后，不会再收到该频道发布的消息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; unsubscribe Just</span><br><span class="line">1) &quot;unsubscribe&quot;</span><br><span class="line">2) &quot;Just&quot;</span><br><span class="line">3) (integer) 0</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="按照模式订阅和取消订阅"><a href="#按照模式订阅和取消订阅" class="headerlink" title="按照模式订阅和取消订阅"></a>按照模式订阅和取消订阅</h1><p>除了subscribe和unsubscribe命令，redis还支持glob风格的订阅命令psubscribe和取消订阅命令punsubscribe，例如下面会订阅it开头的所有频道：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; psubscribe it*</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;psubscribe&quot;</span><br><span class="line">2) &quot;it*&quot;</span><br><span class="line">3) (integer) 1</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询订阅"><a href="#查询订阅" class="headerlink" title="查询订阅"></a>查询订阅</h1><p>可以查询：</p>
+<ul>
+<li>活跃的频道</li>
+<li>频道订阅数</li>
+<li>查看模式订阅数</li>
+</ul>
+<h2 id="查看活跃的频道"><a href="#查看活跃的频道" class="headerlink" title="查看活跃的频道"></a>查看活跃的频道</h2><p>所谓活跃的频道是指当前频道至少有一个订阅者：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; pubsub channels</span><br><span class="line">1) &quot;sport&quot;</span><br><span class="line">2) &quot;just&quot;</span><br><span class="line">3) &quot;travel&quot;</span><br><span class="line">127.0.0.1:6379&gt; pubsub channels *r*</span><br><span class="line">1) &quot;sport&quot;</span><br><span class="line">2) &quot;travel&quot;</span><br><span class="line">127.0.0.1:6379&gt; </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看频道订阅数"><a href="#查看频道订阅数" class="headerlink" title="查看频道订阅数"></a>查看频道订阅数</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; pubsub numsub just</span><br><span class="line">1) &quot;just&quot;</span><br><span class="line">2) (integer) 1</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看模式订阅数"><a href="#查看模式订阅数" class="headerlink" title="查看模式订阅数"></a>查看模式订阅数</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ8vbavndeiwj2ctanxb49Z ~]# redis-cli</span><br><span class="line">127.0.0.1:6379&gt; psubscribe channel *r*</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;psubscribe&quot;</span><br><span class="line">2) &quot;channel&quot;</span><br><span class="line">3) (integer) 1</span><br><span class="line">1) &quot;psubscribe&quot;</span><br><span class="line">2) &quot;*r*&quot;</span><br><span class="line">3) (integer) 2</span><br></pre></td></tr></table></figure>
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; pubsub numpat</span><br><span class="line">(integer) 2  # </span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>聊天室、公告牌、服务之间利用消息解耦都可以使用发布订阅模式。比如发布变化到指定频道，下游服务订阅这个变化并进行相应的操作，通过这种方式可以有效解决不同业务间的耦合性。</p>
 
       
     </div>
@@ -640,7 +678,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">发布订阅的命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A2%E9%98%85%E4%B8%80%E4%B8%AA%E6%88%96%E8%80%85%E5%A4%9A%E4%B8%AA%E7%AC%A6%E5%90%88%E6%A8%A1%E5%BC%8F%E7%9A%84%E9%A2%91%E9%81%93"><span class="nav-number">2.</span> <span class="nav-text">订阅一个或者多个符合模式的频道</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">发布订阅的命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A2%E9%98%85%E4%B8%80%E4%B8%AA%E6%88%96%E8%80%85%E5%A4%9A%E4%B8%AA%E7%AC%A6%E5%90%88%E6%A8%A1%E5%BC%8F%E7%9A%84%E9%A2%91%E9%81%93"><span class="nav-number">2.</span> <span class="nav-text">订阅一个或者多个符合模式的频道</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E8%AE%A2%E9%98%85"><span class="nav-number">3.</span> <span class="nav-text">取消订阅</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%89%E7%85%A7%E6%A8%A1%E5%BC%8F%E8%AE%A2%E9%98%85%E5%92%8C%E5%8F%96%E6%B6%88%E8%AE%A2%E9%98%85"><span class="nav-number">4.</span> <span class="nav-text">按照模式订阅和取消订阅</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%AE%A2%E9%98%85"><span class="nav-number">5.</span> <span class="nav-text">查询订阅</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%B4%BB%E8%B7%83%E7%9A%84%E9%A2%91%E9%81%93"><span class="nav-number">5.1.</span> <span class="nav-text">查看活跃的频道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%A2%91%E9%81%93%E8%AE%A2%E9%98%85%E6%95%B0"><span class="nav-number">5.2.</span> <span class="nav-text">查看频道订阅数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%A8%A1%E5%BC%8F%E8%AE%A2%E9%98%85%E6%95%B0"><span class="nav-number">5.3.</span> <span class="nav-text">查看模式订阅数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">应用</span></a></li></ol></div>
             
 
           </div>
@@ -674,7 +712,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">7k</span>
+    <span title="Site words total count">7.6k</span>
   
 </div>
 
