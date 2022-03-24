@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="redis," />
+  <meta name="keywords" content="go,go-zero," />
 
 
 
@@ -77,18 +77,25 @@
 
 
 
-<meta name="description" content="Redis 核心就是如果我的数据全都在内存里，我单线程的去操作就是效率最高的。">
+<meta name="description" content="寻便网络，未曾找到令我满意的全流程说明，愤而作此文^_^ 本文只介绍构建搭配，不解释为啥要安装配置如下工具。 本文最新更新于2022-03-24">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis单线程为什么还快">
-<meta property="og:url" content="http://wangxiaoyi.world/20211212092203/index.html">
+<meta property="og:title" content="win11 下构建go和go-zero环境">
+<meta property="og:url" content="http://wangxiaoyi.world/20220324190203/index.html">
 <meta property="og:site_name" content="Just">
-<meta property="og:description" content="Redis 核心就是如果我的数据全都在内存里，我单线程的去操作就是效率最高的。">
+<meta property="og:description" content="寻便网络，未曾找到令我满意的全流程说明，愤而作此文^_^ 本文只介绍构建搭配，不解释为啥要安装配置如下工具。 本文最新更新于2022-03-24">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-12-12T01:22:03.000Z">
-<meta property="article:modified_time" content="2022-02-15T09:00:16.410Z">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220324165606006.png">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220324174146466.png">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220324175539109.png">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220324175635486.png">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220324180001708.png">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220324181842307.png">
+<meta property="article:published_time" content="2022-03-24T11:02:03.000Z">
+<meta property="article:modified_time" content="2022-03-24T13:50:40.038Z">
 <meta property="article:author" content="Just">
-<meta property="article:tag" content="redis">
+<meta property="article:tag" content="go,go-zero">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn.wangxiaoyi.world/image-20220324165606006.png">
 
 
 
@@ -118,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://wangxiaoyi.world/20211212092203/"/>
+  <link rel="canonical" href="http://wangxiaoyi.world/20220324190203/"/>
 
 
 
 
 
-  <title>Redis单线程为什么还快 | Just</title>
+  <title>win11 下构建go和go-zero环境 | Just</title>
   
 
 
@@ -251,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20211212092203/">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20220324190203/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -268,7 +275,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis单线程为什么还快</h1>
+          <h1 class="post-title" itemprop="name headline">win11 下构建go和go-zero环境</h1>
         
 
         <div class="post-meta">
@@ -280,8 +287,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-12T09:22:03+08:00">
-                2021-12-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-24T19:02:03+08:00">
+                2022-03-24
               </time>
             
 
@@ -312,7 +319,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  475
+                  578
                 </span>
               
 
@@ -328,7 +335,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -349,17 +356,51 @@
       
 
       
-        <p>Redis 核心就是如果我的数据全都在内存里，我单线程的去操作就是效率最高的。</p>
+        <p>寻便网络，未曾找到令我满意的全流程说明，愤而作此文^_^</p>
+<p>本文只介绍构建搭配，不解释为啥要安装配置如下工具。</p>
+<p>本文最新更新于2022-03-24</p>
 <span id="more"></span>
 
-<p>因为多线程的本质就是 CPU 模拟出来多个进程的情况，这种模拟出来的情况就有一个代价，就是上下文的切换。对于一个内存的系统来说，它没有上下文的切换就是效率最高的。Redis 用单个CPU 绑定一块内存的数据，然后针对这块内存的数据进行多次读写的时候，都是在一个CPU上完成的，所以它是单线程处理这个事。在内存的情况下，这个方案就是最佳方案 —— 阿里 沈询 的解释。</p>
-<p>具体时间计算：</p>
-<p>一次CPU上下文的切换大概在 1500ns 左右。</p>
-<p>从内存中读取 1MB 的连续数据，耗时大约为 250us，假设1MB的数据由多个线程读取了1000次，那么就有1000次时间上下文的切换，</p>
-<p>那么就有1500ns * 1000 &#x3D; 1500us ，单线程读完1MB数据才250us ,而切换上下文就用了1500us了，还没算每次读一点数据的时间。</p>
-<p><strong>需要注意的的是</strong>，Redis 6 开始就不是单线程了。</p>
-<p>在 Redis 中，单线程的性能瓶颈主要在网络IO操作上。也就是在读写网络的read&#x2F;write系统调用执行期间会占用大部分CPU时间。如果要对一些大的键值对进行删除操作的话，在短时间内是删不完的，那么对于单线程来说就会阻塞后边的操作。</p>
-<p>Redis6.0的多线程是指，将网络数据读写和协议解析通过多线程的方式来处理，对于命令执行来说，<strong>仍然使用单线程操作</strong>。也就是说，Redis6.0的多线程是为了解决其网络IO的瓶颈。</p>
+
+
+<h1 id="下载安装Go"><a href="#下载安装Go" class="headerlink" title="下载安装Go"></a>下载安装Go</h1><p>点击此处选择合适版本<a target="_blank" rel="noopener" href="https://golang.google.cn/dl/">下载</a>， 梯子自备(建议选择新版，同时goland也选择最新版，如果后面出现无法识别go解释器，参考：<a target="_blank" rel="noopener" href="https://studygolang.com/topics/14506?fr=sidebar)%EF%BC%8C%E8%87%B3%E4%BA%8Eetcd%E7%AD%89%E9%97%AE%E9%A2%98%EF%BC%8C%E5%92%B1%E7%8E%A9%E7%9A%84%E5%B0%B1%E6%98%AF%E5%BF%83%E8%B7%B3%EF%BC%88%E6%89%8B%E5%8A%A8%E7%8B%97%E5%A4%B4%EF%BC%89">https://studygolang.com/topics/14506?fr=sidebar)，至于etcd等问题，咱玩的就是心跳（手动狗头）</a></p>
+<p>下载成功后傻瓜式安装，然后在cmd中执行<code>go version</code>，出现如下即安装成功，如果没成功，则考虑是否要添加环境变量：</p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220324165606006.png" alt="image-20220324165606006"></p>
+<h1 id="下载安装goland"><a href="#下载安装goland" class="headerlink" title="下载安装goland"></a>下载安装goland</h1><p>点击<a target="_blank" rel="noopener" href="https://www.jetbrains.com/go/download/#section=windows">下载</a>， 傻瓜式安装即可。至于激活方式，自己想办法咯~</p>
+<p>然后在settings中选择解释器，并且可以设置gopath和goroot：</p>
+<p>GOPATH: 你编写代码存放的目录</p>
+<p>GOROOT: go安装的路径</p>
+<h1 id="下载安装protobuf（废弃）"><a href="#下载安装protobuf（废弃）" class="headerlink" title="下载安装protobuf（废弃）"></a><del>下载安装protobuf</del>（废弃）</h1><p><del>点击<a target="_blank" rel="noopener" href="https://github.com/protocolbuffers/protobuf/releases">下载</a>， 选择<code>protoc-3.19.4-win64.zip</code>  样式的下载。放置到一个合适的位置，然后解压，将<code>bin</code>目录添加到环境变量中，比如我是<code>C:\Program Files\protoc-3.19.4-win64\bin</code>。之后在cmd中执行<code>protoc --version</code>, 显示如下即ok：</del></p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220324174146466.png" alt="image-20220324174146466"></p>
+<h1 id="Go-Module设置"><a href="#Go-Module设置" class="headerlink" title="Go Module设置"></a>Go Module设置</h1><p>参考：<a target="_blank" rel="noopener" href="https://go-zero.dev/cn/gomod-config.html">https://go-zero.dev/cn/gomod-config.html</a></p>
+<h1 id="Goctl安装"><a href="#Goctl安装" class="headerlink" title="Goctl安装"></a>Goctl安装</h1><p>先下载go-zero: <a target="_blank" rel="noopener" href="https://github.com/zeromicro/go-zero.git">https://github.com/zeromicro/go-zero.git</a></p>
+<p>cmd中，进入go-zero项目中 <code>tools/goctl/</code>目录下，执行<code>go build goctl.go</code>，等待执行结束后，进入对应目录下查看，将获得的exe文件移动到go解释器下的bin目录中：</p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220324175539109.png" alt="image-20220324175539109"></p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220324175635486.png" alt="image-20220324175635486"></p>
+<p>之后在cmd中执行<code>goctl -v</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\just&gt;goctl -v</span><br><span class="line">goctl version 1.3.3 windows/386</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="protoc-amp-protoc-gen-go安装"><a href="#protoc-amp-protoc-gen-go安装" class="headerlink" title="protoc &amp; protoc-gen-go安装"></a>protoc &amp; protoc-gen-go安装</h1><p>使用goctl一键安装： <code>goctl env check -i -f --verbose</code></p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220324180001708.png" alt="image-20220324180001708"></p>
+<p>验证是否安装成功：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\just&gt;protoc-gen-go --version</span><br><span class="line">protoc-gen-go v1.28.0</span><br><span class="line">C:\Users\just&gt;protoc --version</span><br><span class="line">libprotoc 3.19.4</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="etcd安装"><a href="#etcd安装" class="headerlink" title="etcd安装"></a>etcd安装</h1><p>点击<a target="_blank" rel="noopener" href="https://github.com/etcd-io/etcd/releases">下载</a>,， 选择<code>etcd-v3.5.2-windows-amd64.zip</code>, 下载好后解压缩到合适位置：</p>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220324181842307.png" alt="image-20220324181842307"></p>
+<p>其中etcd.exe是服务端，etcdctl.exe是客户端；</p>
+<p>点击etcd.exe运行etcd服务；客户端是有etcdctl来执行命令的。</p>
+<p>查看版本号 <code>etcdctl version</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files (x86)\etcd-v3.5.2-windows-amd64&gt;etcdctl version</span><br><span class="line">etcdctl version: 3.5.2</span><br><span class="line">API version: 3.5</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>至于redis、mysql等等，网上一搜一大把了，本文不再赘述。</p>
+<p>over。</p>
 
       
     </div>
@@ -414,7 +455,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://wangxiaoyi.world/20211212092203/" title="Redis单线程为什么还快">http://wangxiaoyi.world/20211212092203/</a>
+    <a href="http://wangxiaoyi.world/20220324190203/" title="win11 下构建go和go-zero环境">http://wangxiaoyi.world/20220324190203/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -429,7 +470,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag"># redis</a>
+            <a href="/tags/go-go-zero/" rel="tag"># go,go-zero</a>
           
         </div>
       
@@ -442,8 +483,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/20180202204249/" rel="next" title="nginx系列01--nginx简介和安装">
-                <i class="fa fa-chevron-left"></i> nginx系列01--nginx简介和安装
+              <a href="/20220215192133/" rel="next" title="个人推荐的软件">
+                <i class="fa fa-chevron-left"></i> 个人推荐的软件
               </a>
             
           </div>
@@ -451,10 +492,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/20211212212203/" rel="prev" title="Redis系列之CentOS下安装与启动和关闭">
-                Redis系列之CentOS下安装与启动和关闭 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -506,8 +543,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -626,6 +672,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85Go"><span class="nav-number">1.</span> <span class="nav-text">下载安装Go</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85goland"><span class="nav-number">2.</span> <span class="nav-text">下载安装goland</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85protobuf%EF%BC%88%E5%BA%9F%E5%BC%83%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">下载安装protobuf（废弃）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go-Module%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">Go Module设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Goctl%E5%AE%89%E8%A3%85"><span class="nav-number">5.</span> <span class="nav-text">Goctl安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#protoc-amp-protoc-gen-go%E5%AE%89%E8%A3%85"><span class="nav-number">6.</span> <span class="nav-text">protoc &amp; protoc-gen-go安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#etcd%E5%AE%89%E8%A3%85"><span class="nav-number">7.</span> <span class="nav-text">etcd安装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
