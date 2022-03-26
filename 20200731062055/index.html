@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next gemini" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,excel,xlrd," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="导入模块 1import xlrd  打开文件 1x1 &#x3D; xlrd.open_workbook(&quot;data.xlsx&quot;)  获取sheet  获取所有sheet名字：x1.sheet_names(） 获取sheet数量：x1.nsheets 获取所有sheet对象：x1.sheets() 通过sheet名查找：x1.sheet_by_name(“test”) 通过索引查找：x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于xlrd的Excel处理">
+<meta property="og:url" content="http://wangxiaoyi.world/20200731062055/index.html">
+<meta property="og:site_name" content="Just">
+<meta property="og:description" content="导入模块 1import xlrd  打开文件 1x1 &#x3D; xlrd.open_workbook(&quot;data.xlsx&quot;)  获取sheet  获取所有sheet名字：x1.sheet_names(） 获取sheet数量：x1.nsheets 获取所有sheet对象：x1.sheets() 通过sheet名查找：x1.sheet_by_name(“test”) 通过索引查找：x">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-07-30T22:20:55.000Z">
+<meta property="article:modified_time" content="2022-03-26T11:35:15.541Z">
+<meta property="article:author" content="Just">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="excel">
+<meta property="article:tag" content="xlrd">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxiaoyi.world/20200731062055/"/>
+
+
+
+
+
+  <title>基于xlrd的Excel处理 | Just</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Just</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">如果图片裂开请使用http协议而非https协议</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20200731062055/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Just">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于xlrd的Excel处理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-31T06:20:55+08:00">
+                2020-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导入模块</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br></pre></td></tr></table></figure>
+
+<p>打开文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x1 = xlrd.open_workbook(<span class="string">&quot;data.xlsx&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>获取sheet</p>
+<ul>
+<li>获取所有sheet名字：x1.sheet_names(）</li>
+<li>获取sheet数量：x1.nsheets</li>
+<li>获取所有sheet对象：x1.sheets()</li>
+<li>通过sheet名查找：x1.sheet_by_name(“test”)</li>
+<li>通过索引查找：x1.sheet_by_index(3)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">filename = <span class="string">&quot;demo.xlsx&quot;</span></span><br><span class="line">file_path = os.path.join(os.getcwd(), filename)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1、打开文件</span></span><br><span class="line">x1 = xlrd.open_workbook(file_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2、获取sheet对象</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;sheet_names:&#x27;</span>, x1.sheet_names())  <span class="comment"># 获取所有sheet名字</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;sheet_number:&#x27;</span>, x1.nsheets)  <span class="comment"># 获取sheet数量</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;sheet_object:&#x27;</span>, x1.sheets())  <span class="comment"># 获取所有sheet对象</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;By_name:&#x27;</span>, x1.sheet_by_name(<span class="string">&quot;test1&quot;</span>))  <span class="comment"># 通过sheet名查找,找不到会报错</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;By_index:&#x27;</span>, x1.sheet_by_index(<span class="number">2</span>))  <span class="comment"># 通过索引查找,找不到会报错</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sheet_names: [<span class="string">&#x27;test1&#x27;</span>, <span class="string">&#x27;test2&#x27;</span>, <span class="string">&#x27;test3&#x27;</span>]</span><br><span class="line">sheet_number: <span class="number">3</span></span><br><span class="line">sheet_object: [&lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A7690BA700</span>&gt;, &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A76909E400</span>&gt;, &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A76909E5B0</span>&gt;]</span><br><span class="line">By_name: &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A7690BA700</span>&gt;</span><br><span class="line">By_index: &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A76909E5B0</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>获取sheet的汇总数据：</p>
+<ul>
+<li>获取sheet名：sheet1.name</li>
+<li>获取总行数：sheet1.nrows</li>
+<li>获取总列数：sheet1.ncols</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sheet1 = x1.sheet_by_name(<span class="string">&quot;test1&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;sheet name:&quot;</span>, sheet1.name)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;row num:&quot;</span>, sheet1.nrows)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;col num:&quot;</span>, sheet1.ncols)</span><br></pre></td></tr></table></figure>
+
+<p>输出:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sheet name: test1</span><br><span class="line">row num: <span class="number">4</span></span><br><span class="line">col num: <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>单元格批量读取：</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">数据类型：</span><br><span class="line">空：0</span><br><span class="line">字符串：1</span><br><span class="line">数字：2</span><br><span class="line">日期：3</span><br><span class="line">布尔：4</span><br><span class="line">error：5</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p> a）行操作：</p>
+<ul>
+<li>sheet1.row_values(0)   # 获取第一行所有内容，合并单元格，首行显示值，其它为空。</li>
+<li>sheet1.row(0)     　　 # 获取单元格值类型和内容</li>
+<li>sheet1.row_types(0)   # 获取单元格数据类型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(sheet1.row_values(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row_types(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row_values(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row_types(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(sheet1.row_types(<span class="number">1</span>)))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(sheet1.row_types(<span class="number">1</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>输出:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;商品名称&#x27;</span>, <span class="string">&#x27;商品价格&#x27;</span>, <span class="string">&#x27;销量&#x27;</span>]</span><br><span class="line">[text:<span class="string">&#x27;商品名称&#x27;</span>, text:<span class="string">&#x27;商品价格&#x27;</span>, text:<span class="string">&#x27;销量&#x27;</span>]</span><br><span class="line">array(<span class="string">&#x27;B&#x27;</span>, [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">[<span class="string">&#x27;衬衫&#x27;</span>, <span class="number">66.0</span>, <span class="number">0.0</span>]</span><br><span class="line">[text:<span class="string">&#x27;衬衫&#x27;</span>, number:<span class="number">66.0</span>, number:<span class="number">0.0</span>]</span><br><span class="line">array(<span class="string">&#x27;B&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line">&lt;<span class="keyword">class</span> <span class="string">&#x27;array.array&#x27;</span>&gt;</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b) 表操作</p>
+<ul>
+<li><p>sheet1.row_values(0, 6, 10)  # 取第1行，第6~10列（不含第10列）</p>
+</li>
+<li><p>sheet1.col_values(0, 0, 5)  # 取第1列，第0~5行（不含第5行）</p>
+</li>
+<li><p>sheet1.row_slice(2, 0, 2)   # 获取单元格值类型和内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sheet1.row_slice(<span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">获取第三行,第<span class="number">0</span>和第<span class="number">1</span>列的值类型和内容</span><br><span class="line">[text:<span class="string">&#x27;衬衫&#x27;</span>, number:<span class="number">66.0</span>]</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>sheet1.row_types(1, 0, 2)  # 获取单元格数据类型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sheet1.row_types(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>) </span><br><span class="line">获取第二行,第<span class="number">0</span>和第<span class="number">1</span>列的值类型</span><br><span class="line">array(<span class="string">&#x27;B&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>])  <span class="comment"># [1,2] 分别代表上面的字符串和数字</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>特定单元格读取：</p>
+<p> a) 获取单元格值：</p>
+<ul>
+<li>sheet1.cell_value(1, 2)  # 获取第二行,第三列的数据</li>
+<li>sheet1.cell(1, 2).value  # 获取第二行,第三列的数据</li>
+<li>sheet1.row(1)[2].value   # 获取第二行,第三列的数据</li>
+</ul>
+<p>b) 获取单元格类型：</p>
+<ul>
+<li>sheet1.cell(1, 2).ctype   # 获取第二行,第三列的数据类型</li>
+<li>sheet1.cell_type(1, 2)  # 获取第二行,第三列的数据类型</li>
+<li>sheet1.row(1)[2].ctype  # 获取第二行,第三列的数据类型</li>
+</ul>
+<p>(0,0)转换A1:</p>
+<ul>
+<li><p>xlrd.cellname(0, 0)   # (0,0)转换成A1</p>
+</li>
+<li><p>xlrd.cellnameabs(0, 0)   # (0,0)转换成$A$1</p>
+</li>
+<li><p>xlrd.colname(30)    # 把列由数字转换为字母表示</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(xlrd.cellname(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(xlrd.cellnameabs(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(xlrd.colname(<span class="number">30</span>))</span><br><span class="line">输出:</span><br><span class="line">A1</span><br><span class="line">$A$<span class="number">1</span></span><br><span class="line">AE </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="读取demo"><a href="#读取demo" class="headerlink" title="读取demo"></a>读取demo</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># xls_file是文件对象</span></span><br><span class="line">wb = xlrd.open_workbook(file_contents=xls_file.read())</span><br><span class="line">table = wb.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, table.nrows):</span><br><span class="line">    values = table.row_values(row)</span><br><span class="line">    index = row + <span class="number">1</span> <span class="comment"># 第几行</span></span><br><span class="line">    info = values[<span class="number">0</span>] <span class="keyword">if</span> values[<span class="number">0</span>] <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="导出demo"><a href="#导出demo" class="headerlink" title="导出demo"></a>导出demo</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">headers = [</span><br><span class="line">    <span class="string">&#x27;【商品名称】&#x27;</span>, <span class="string">&quot;【价格】&quot;</span>, <span class="string">&quot;【销量】&quot;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个workbook 设置编码</span></span><br><span class="line">ws = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"><span class="comment"># 创建一个worksheet</span></span><br><span class="line">sheet = ws.add_sheet(<span class="string">&quot;销量统计表&quot;</span>)</span><br><span class="line"><span class="comment"># 初始化样式</span></span><br><span class="line">style = xlwt.XFStyle()</span><br><span class="line"><span class="comment"># 为样式创建字体</span></span><br><span class="line">font = xlwt.Font()</span><br><span class="line"><span class="comment"># 黑体</span></span><br><span class="line">font.bold = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 下划线</span></span><br><span class="line">font.underline = <span class="literal">True</span> </span><br><span class="line"><span class="comment"># 斜体字</span></span><br><span class="line">font.italic = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 设定样式</span></span><br><span class="line">style.font = font</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(headers)):</span><br><span class="line">    sheet.write(<span class="number">0</span>, i, headers[i], style)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> obj <span class="keyword">in</span> qs:</span><br><span class="line">        sheet.write(row, <span class="number">0</span>, obj.name)</span><br><span class="line">        sheet.write(row, <span class="number">1</span>, obj.price)</span><br><span class="line">        sheet.write(row, <span class="number">2</span>, obj.count)</span><br><span class="line"></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line">        sio = StringIO.StringIO()</span><br><span class="line">        ws.save(sio)</span><br><span class="line">        sio.seek(<span class="number">0</span>)</span><br><span class="line">        response = StreamingHttpResponse([line <span class="keyword">for</span> line <span class="keyword">in</span> sio.readlines()],</span><br><span class="line">                                         content_type=<span class="string">&#x27;application/vnd.ms-excel&#x27;</span>)</span><br><span class="line">        response[<span class="string">&#x27;Content-Disposition&#x27;</span>] = <span class="string">&#x27;attachment; filename=商品详情.xls&#x27;</span></span><br><span class="line">        <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得写的还行，赞助瓶脉动～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赞助饮料</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt=" 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Just
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://wangxiaoyi.world/20200731062055/" title="基于xlrd的Excel处理">http://wangxiaoyi.world/20200731062055/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/excel/" rel="tag"># excel</a>
+          
+            <a href="/tags/xlrd/" rel="tag"># xlrd</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/20200730223203/" rel="next" title="基于docx的word导出">
+                <i class="fa fa-chevron-left"></i> 基于docx的word导出
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/20211212092203/" rel="prev" title="Redis单线程为什么还快">
+                Redis单线程为什么还快 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:wangyi3355@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcool.com/" title="Linux命令查询" target="_blank">Linux命令查询</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.canva.cn/" title="Canva" target="_blank">Canva</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lingxi360.com/" title="灵析" target="_blank">灵析</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mp.weixin.qq.com/" title="微信公众平台" target="_blank">微信公众平台</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://macwk.com/" title="Mac软件" target="_blank">Mac软件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/" title="微博" target="_blank">微博</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://wenshu.court.gov.cn/" title="裁判文书网" target="_blank">裁判文书网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://redis.cn/" title="Redis中文网" target="_blank">Redis中文网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://go-zero.dev/cn/" title="go_zero" target="_blank">go_zero</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcc.cc/" title="linux" target="_blank">linux</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96demo"><span class="nav-number">1.</span> <span class="nav-text">读取demo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%87%BAdemo"><span class="nav-number">2.</span> <span class="nav-text">导出demo</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Just</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">23.4k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 提供支持</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

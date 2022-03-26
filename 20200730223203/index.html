@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="python,word,docx," />
 
 
 
@@ -77,22 +77,20 @@
 
 
 
-<meta name="description" content="因为各个版本可能不一致，各个网站和软件也可能会发生未知变化，所以本文只针对特定版本和特定时间，遇到问题读者最好还是以官方文档为准。">
+<meta name="description" content="基于docx的word导出">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）">
-<meta property="og:url" content="http://wangxiaoyi.world/20220212202500/index.html">
+<meta property="og:title" content="基于docx的word导出">
+<meta property="og:url" content="http://wangxiaoyi.world/20200730223203/index.html">
 <meta property="og:site_name" content="Just">
-<meta property="og:description" content="因为各个版本可能不一致，各个网站和软件也可能会发生未知变化，所以本文只针对特定版本和特定时间，遇到问题读者最好还是以官方文档为准。">
+<meta property="og:description" content="基于docx的word导出">
 <meta property="og:locale">
-<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220213142609817.png">
-<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220213203740363.png">
-<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220213203835464.png">
-<meta property="article:published_time" content="2022-02-12T12:25:00.000Z">
-<meta property="article:modified_time" content="2022-02-19T06:57:23.626Z">
+<meta property="article:published_time" content="2020-07-30T14:32:03.000Z">
+<meta property="article:modified_time" content="2022-03-26T11:33:57.757Z">
 <meta property="article:author" content="Just">
-<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="word">
+<meta property="article:tag" content="docx">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://cdn.wangxiaoyi.world/image-20220213142609817.png">
 
 
 
@@ -122,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://wangxiaoyi.world/20220212202500/"/>
+  <link rel="canonical" href="http://wangxiaoyi.world/20200730223203/"/>
 
 
 
 
 
-  <title>Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1） | Just</title>
+  <title>基于docx的word导出 | Just</title>
   
 
 
@@ -255,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20220212202500/">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20200730223203/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -272,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）</h1>
+          <h1 class="post-title" itemprop="name headline">基于docx的word导出</h1>
         
 
         <div class="post-meta">
@@ -284,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-12T20:25:00+08:00">
-                2022-02-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-30T22:32:03+08:00">
+                2020-07-30
               </time>
             
 
@@ -316,7 +314,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.2k
+                  638
                 </span>
               
 
@@ -332,7 +330,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  4
+                  3
                 </span>
               
             </div>
@@ -353,114 +351,14 @@
       
 
       
-        <p>因为各个版本可能不一致，各个网站和软件也可能会发生未知变化，所以本文只针对特定版本和特定时间，遇到问题读者最好还是以官方文档为准。</p>
+        <p>基于docx的word导出</p>
 <span id="more"></span>
 
-<p>Base信息：</p>
-<p>MacOS：12.1</p>
-<p>Node.js: 16.13.2</p>
-<p>npm: 8.1.2</p>
-<p>git: 2.15.0</p>
-<p>Hexo: 6.0.0</p>
-<p>Typora: 1.0.5</p>
-<p>PicGo：2.3.0</p>
-<p>本文成稿于2022-02-12，本文假定你具有一定编程基础，买好了域名并备案，了解md语法。</p>
-<hr>
-<p>安装相关软件</p>
-<p>安装git，参考官方文档，此处不赘述。</p>
-<p>安装<a target="_blank" rel="noopener" href="http://nodejs.cn/download/">node.js</a>，点击下载安装。</p>
-<p>打开终端，新建目录<code>blog</code>，接下来的操作都在这个目录下进行。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> Pt</span><br><span class="line"><span class="keyword">from</span> docx.enum.text <span class="keyword">import</span> WD_ALIGN_PARAGRAPH</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> Inches</span><br><span class="line"><span class="keyword">import</span> StringIO</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">document = Document()</span><br><span class="line"><span class="comment"># 以下两行使文档确定为宋体</span></span><br><span class="line">document.styles[<span class="string">&#x27;Normal&#x27;</span>].font.name = <span class="string">&#x27;宋体&#x27;</span></span><br><span class="line">document.styles[<span class="string">&#x27;Normal&#x27;</span>]._element.rPr.rFonts.<span class="built_in">set</span>(qn(<span class="string">&#x27;w:eastAsia&#x27;</span>), <span class="string">&#x27;宋体&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> objs:</span><br><span class="line">    title = obj.title</span><br><span class="line">    <span class="comment"># 添加等级为0级的标题(最大标题)</span></span><br><span class="line">    document.add_heading(title, <span class="number">0</span>)</span><br><span class="line">    <span class="comment"># head = document.add_heading(level=0)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 添加空行</span></span><br><span class="line">    head = document.add_paragraph()</span><br><span class="line">    run = head.add_run(title)</span><br><span class="line">    <span class="comment"># 字体大小设置，和word里面的字号相对应</span></span><br><span class="line">    run.font.size = Pt(<span class="number">12</span>)</span><br><span class="line">    </span><br><span class="line">    p = document.add_paragraph()</span><br><span class="line">    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER    <span class="comment">#段落文字居中设置</span></span><br><span class="line">    run = p.add_run(<span class="string">u&#x27;我添加的段落文字&#x27;</span>)</span><br><span class="line">    run.font.color.rgb = RGBColor(<span class="number">54</span>,<span class="number">95</span>,<span class="number">145</span>)   <span class="comment">#颜色设置，这里是用RGB颜色</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加图片</span></span><br><span class="line">    pic = document.add_picture(<span class="string">&#x27;pic.png&#x27;</span>,width = Inches(<span class="number">1.5</span>))  <span class="comment">#图片和python文件不在同一个文件夹下面的时候，要补全文件地址</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 以下两行 图片居中设置</span></span><br><span class="line">    last_paragraph = document.paragraphs[-<span class="number">1</span>]</span><br><span class="line">    last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 添加2行3列的表格</span></span><br><span class="line">    table = document.add_table(rows=<span class="number">2</span>, cols=<span class="number">3</span>，style=<span class="string">&quot;Table Grid&quot;</span>) </span><br><span class="line">    </span><br><span class="line">    col = table.columns[<span class="number">1</span>]</span><br><span class="line">    <span class="comment"># 设置表格第2列宽度为Inches(5) 默认情况下表格是自动适应文档宽度</span></span><br><span class="line">    col.width = Inches(<span class="number">5</span>)     </span><br><span class="line"></span><br><span class="line">    sub_title = obj.sub_title</span><br><span class="line">    document.add_paragraph(sub_title)</span><br><span class="line">    <span class="comment"># document.add_heading(sub_title, 4)</span></span><br><span class="line">    document.add_paragraph()</span><br><span class="line"></span><br><span class="line">f = StringIO.StringIO()</span><br><span class="line">document.save(f)</span><br><span class="line">length = f.tell()</span><br><span class="line">f.seek(<span class="number">0</span>)</span><br><span class="line">response = HttpResponse(</span><br><span class="line">    f.getvalue(),</span><br><span class="line">    content_type=<span class="string">&#x27;application/vnd.openxmlformats-officedocument.wordprocessingml.document&#x27;</span></span><br><span class="line">)</span><br><span class="line">response[<span class="string">&#x27;Content-Disposition&#x27;</span>] = <span class="string">&#x27;attachment; filename=文档名称.docx&#x27;</span></span><br><span class="line">response[<span class="string">&#x27;Content-Length&#x27;</span>] = length</span><br><span class="line"><span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
 
-<p>安装完后，输入以下命令进行检查，输入每个命令后，都会弹出相应版本号，确保都有安装:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line"></span><br><span class="line">npm -v</span><br><span class="line"></span><br><span class="line">Git --version</span><br></pre></td></tr></table></figure>
+<p>完整demo</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.oxml.ns <span class="keyword">import</span> qn</span><br><span class="line"><span class="keyword">from</span> docx.oxml <span class="keyword">import</span> OxmlElement</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> Pt</span><br><span class="line"><span class="keyword">from</span> docx.enum.text <span class="keyword">import</span> WD_ALIGN_PARAGRAPH</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> Inches</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">document = Document()</span><br><span class="line">document.add_heading(<span class="string">&#x27;This is my title&#x27;</span>, <span class="number">0</span>)</span><br><span class="line">document.add_paragraph(<span class="string">&#x27;my paragraph&#x27;</span>)</span><br><span class="line"> </span><br><span class="line">document.styles[<span class="string">&#x27;Normal&#x27;</span>].font.name = <span class="string">u&#x27;黑体&#x27;</span></span><br><span class="line">p = document.add_paragraph()</span><br><span class="line">p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER</span><br><span class="line">run = p.add_run(<span class="string">u&#x27;我添加的段落文字 &#x27;</span>)</span><br><span class="line">run.font.color.rgb = RGBColor(<span class="number">54</span>, <span class="number">95</span>, <span class="number">145</span>)</span><br><span class="line">run.font.size = Pt(<span class="number">36</span>)</span><br><span class="line"> </span><br><span class="line">pic = document.add_picture(<span class="string">&#x27;logo1.PNG&#x27;</span>)</span><br><span class="line">last_paragraph = document.paragraphs[-<span class="number">1</span>]</span><br><span class="line">last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  <span class="comment"># 图片居中设置</span></span><br><span class="line"> </span><br><span class="line">rows = <span class="number">2</span></span><br><span class="line">cols = <span class="number">3</span></span><br><span class="line">table = document.add_table(rows=rows, cols=cols,style = <span class="string">&quot;Table Grid&quot;</span>)  <span class="comment"># 添加2行3列的表格</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(rows):</span><br><span class="line">    tr = table.rows[i]._tr</span><br><span class="line">    trPr = tr.get_or_add_trPr()</span><br><span class="line">    trHeight = OxmlElement(<span class="string">&#x27;w:trHeight&#x27;</span>)</span><br><span class="line">    trHeight.<span class="built_in">set</span>(qn(<span class="string">&#x27;w:val&#x27;</span>), <span class="string">&quot;450&quot;</span>)</span><br><span class="line">    trPr.append(trHeight)  <span class="comment"># 表格高度设置</span></span><br><span class="line"><span class="comment"># table.autofit = False</span></span><br><span class="line">col = table.columns[<span class="number">1</span>]</span><br><span class="line">col.width = Inches(<span class="number">5</span>)</span><br><span class="line">arr = [<span class="string">&#x27;序号&#x27;</span>,<span class="string">&quot;类型&quot;</span>,<span class="string">&quot;详细描述&quot;</span>]</span><br><span class="line">heading_cells = table.rows[<span class="number">0</span>].cells</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(cols):</span><br><span class="line">    p = heading_cells[i].paragraphs[<span class="number">0</span>]</span><br><span class="line">    run = p.add_run(arr[i])</span><br><span class="line">    run.font.color.rgb = RGBColor(<span class="number">54</span>, <span class="number">95</span>, <span class="number">145</span>)  <span class="comment"># 颜色设置，这里是用RGB颜色</span></span><br><span class="line">    run.font.size = Pt(<span class="number">12</span>)  <span class="comment"># 字体大小设置，和word里面的字号相对应</span></span><br><span class="line">    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER</span><br><span class="line">table.cell(<span class="number">1</span>, <span class="number">1</span>).text = <span class="string">u&#x27;表格文字&#x27;</span></span><br><span class="line">table.add_row()</span><br><span class="line">document.save(<span class="string">&#x27;test1.docx&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
-<p>然后安装Hexo和 npm及hexo-deployer-git：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g hexo</span><br><span class="line">sudo npm install</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>初始化Hexo</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行下述命令生成本地网页文件并开启服务器，然后通过<a href="http://localhost:4000查看本地博客。">http://localhost:4000查看本地博客。</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://cdn.wangxiaoyi.world/image-20220213142609817.png" alt="image-20220213142609817"></p>
-<p>这样就代表本地成功了。</p>
-<hr>
-<p>登陆github，新建仓库，名称必须为<code>你的用户名.github.io</code>,比如你的用户名是just，那么就新建<code>just.github.io</code>，注意仓库要选择公开。</p>
-<p>通过访达进入blog文件夹，打开文件_config.yml，将下面代码复制进去。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:你的用户名/你的用户名.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
-<p>然后在终端中执行如下命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>出现这个标识则表示上传成功：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br></pre></td></tr></table></figure>
-
-<p>添加ssh key后不需要每次更新博客再输入用户名和密码。首先检查本地是否包含ssh keys。如果存在则直接将ssh key添加到GitHub之中，否则新生成ssh key。</p>
-<p>输入一下代码，之后按照要求输入账号和两次密码</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_email@exampl&quot;</span><br></pre></td></tr></table></figure>
-
-<p>完成之后，打开博客文件夹，将your_email.pub中的内容复制到github中的设置-deploy keys中即可。</p>
-<p>然后执行如下代码</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>切换到source目录下，新建文件<code>CNAME</code>，在其中添加一行记录，比如你的完整个人域名是<code>http://www.so.com</code>，那么此处填写：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">so.com</span><br></pre></td></tr></table></figure>
-
-<p>之后执行：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>然后在<code>云解析DNS/域名解析/解析设置</code>中添加两条记录：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">记录类型：CNAME</span><br><span class="line">主机记录：@</span><br><span class="line">解析线路：默认</span><br><span class="line">记录值：http://你的github的用户名.github.io</span><br><span class="line"></span><br><span class="line">记录类型：A</span><br><span class="line">主机记录：www</span><br><span class="line">解析线路：默认</span><br><span class="line">记录值：ping http://你的github的用户名.github.io 获得的ip地址，例如185.199.109.132</span><br></pre></td></tr></table></figure>
-
-<p>进入你的项目的github，进入对应的仓库，在仓库下的settings下找到Pages选项，将你的域名输入进Custom domain中：</p>
-<p><img src="http://cdn.wangxiaoyi.world/image-20220213203740363.png" alt="image-20220213203740363"></p>
-<p>之后就可以访问你自己的域名了，注意可能需要等待5min才能生效。</p>
-<p><img src="http://cdn.wangxiaoyi.world/image-20220213203835464.png" alt="image-20220213203835464"></p>
-<hr>
-<p>更换主题，可以参考<a target="_blank" rel="noopener" href="http://theme-next.iissnan.com/getting-started.html">NexT官方文档</a>，进行页面的美化修改等。</p>
-<p>下面是本人的例子：</p>
-<p>先切换到你的博客目录，然后执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
-
-<p>官方文档上有的内容，本文不会涉及。</p>
-<p>hexo 5.0以后删除了swig，所以要安装上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i hexo-renderer-swig</span><br></pre></td></tr></table></figure>
-
-<p>修改菜单的时候注意去掉斜杠后面的空格：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: / || home</span><br><span class="line">  about: /about/|| user</span><br><span class="line">  tags: /tags/|| tags</span><br><span class="line"><span class="meta">  #</span><span class="language-bash">categories: /categories/ || th</span></span><br><span class="line">  archives: /archives/|| archive</span><br></pre></td></tr></table></figure>
-
-<p>修改文章链接：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">permalink: :year/:month/:day/:hour-:minute-:second/</span><br></pre></td></tr></table></figure>
-
-<p>添加版权信息：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">creative_commons:</span><br><span class="line">  license: by-nc-sa</span><br><span class="line">  sidebar: true #侧边栏中的版权标识</span><br><span class="line">  post: true #每篇文章底部都显示版权信息</span><br><span class="line">  language:</span><br></pre></td></tr></table></figure>
-
-<p>返回顶部：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">back2top:</span><br><span class="line">  enable: true</span><br><span class="line"><span class="meta">  # </span><span class="language-bash">Back to top <span class="keyword">in</span> sidebar.</span></span><br><span class="line">  sidebar: false</span><br><span class="line"><span class="meta">  # </span><span class="language-bash">Scroll percent label <span class="keyword">in</span> b2t button.</span></span><br><span class="line">  scrollpercent: true</span><br></pre></td></tr></table></figure>
-
-<p>增加阅读进度：</p>
-<p>打开 <code>themes/next/_config.yml</code> ,搜索关键字 <code>scrollpercent</code> ,把 <code>false</code> 改为 <code>true</code>。</p>
-<p>添加统计功能</p>
-<p>在站点的根目录下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i --save hexo-wordcount</span><br></pre></td></tr></table></figure>
-
-<p>打开 <code>themes/next/_config.yml</code> ，搜索关键字 <code>post_wordcount</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">post_wordcount:</span><br><span class="line">  item_text: true</span><br><span class="line"><span class="meta">  #</span><span class="language-bash">字数统计</span></span><br><span class="line">  wordcount: true</span><br><span class="line"><span class="meta">  #</span><span class="language-bash">预览时间</span></span><br><span class="line">  min2read: true</span><br><span class="line"><span class="meta">  #</span><span class="language-bash">总字数,显示在页面底部</span></span><br><span class="line">  totalcount: true</span><br><span class="line">  separated_meta: true</span><br></pre></td></tr></table></figure>
-
-<p>关闭动画效果(此处是修改，不是新增)：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: false</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>写作可以参考Hexo官方文档，主要步骤就是终端中执行命令<code>hexo new 文章名</code>，然后在博客文件夹目录下的source下的_posts打开进行编写。</p>
-<p>本文参考了如下文章，在此衷心表示感谢。几位翔实严谨的文章帮助我解决了不少问题。</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/351031589">https://zhuanlan.zhihu.com/p/351031589</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/75438236">https://zhuanlan.zhihu.com/p/75438236</a></p>
-<p><a target="_blank" rel="noopener" href="http://www.dragonstyle.win/3358042383.html">http://www.dragonstyle.win/3358042383.html</a></p>
 
       
     </div>
@@ -515,7 +413,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://wangxiaoyi.world/20220212202500/" title="Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（1）">http://wangxiaoyi.world/20220212202500/</a>
+    <a href="http://wangxiaoyi.world/20200730223203/" title="基于docx的word导出">http://wangxiaoyi.world/20200730223203/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -530,7 +428,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/word/" rel="tag"># word</a>
+          
+            <a href="/tags/docx/" rel="tag"># docx</a>
           
         </div>
       
@@ -543,8 +445,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/20211213212203/" rel="next" title="Redis系列之Redis的发布与订阅">
-                <i class="fa fa-chevron-left"></i> Redis系列之Redis的发布与订阅
+              <a href="/20200721070238/" rel="next" title="设计模式（1）">
+                <i class="fa fa-chevron-left"></i> 设计模式（1）
               </a>
             
           </div>
@@ -553,8 +455,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/20220212222233/" rel="prev" title="Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（2）">
-                Mac下Hexo+GithubPage+域名+七牛云图床+Typora+PicGo搭建博客（2） <i class="fa fa-chevron-right"></i>
+              <a href="/20200731062055/" rel="prev" title="基于xlrd的Excel处理">
+                基于xlrd的Excel处理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
