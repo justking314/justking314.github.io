@@ -1436,98 +1436,14 @@
 
       
         
-          
-            <p>导入模块</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br></pre></td></tr></table></figure>
-
-<p>打开文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x1 = xlrd.open_workbook(<span class="string">&quot;data.xlsx&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>获取sheet</p>
-<ul>
-<li>获取所有sheet名字：x1.sheet_names(）</li>
-<li>获取sheet数量：x1.nsheets</li>
-<li>获取所有sheet对象：x1.sheets()</li>
-<li>通过sheet名查找：x1.sheet_by_name(“test”)</li>
-<li>通过索引查找：x1.sheet_by_index(3)</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">filename = <span class="string">&quot;demo.xlsx&quot;</span></span><br><span class="line">file_path = os.path.join(os.getcwd(), filename)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1、打开文件</span></span><br><span class="line">x1 = xlrd.open_workbook(file_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2、获取sheet对象</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;sheet_names:&#x27;</span>, x1.sheet_names())  <span class="comment"># 获取所有sheet名字</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;sheet_number:&#x27;</span>, x1.nsheets)  <span class="comment"># 获取sheet数量</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;sheet_object:&#x27;</span>, x1.sheets())  <span class="comment"># 获取所有sheet对象</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;By_name:&#x27;</span>, x1.sheet_by_name(<span class="string">&quot;test1&quot;</span>))  <span class="comment"># 通过sheet名查找,找不到会报错</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;By_index:&#x27;</span>, x1.sheet_by_index(<span class="number">2</span>))  <span class="comment"># 通过索引查找,找不到会报错</span></span><br></pre></td></tr></table></figure>
-
-<p>输出结果:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sheet_names: [<span class="string">&#x27;test1&#x27;</span>, <span class="string">&#x27;test2&#x27;</span>, <span class="string">&#x27;test3&#x27;</span>]</span><br><span class="line">sheet_number: <span class="number">3</span></span><br><span class="line">sheet_object: [&lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A7690BA700</span>&gt;, &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A76909E400</span>&gt;, &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A76909E5B0</span>&gt;]</span><br><span class="line">By_name: &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A7690BA700</span>&gt;</span><br><span class="line">By_index: &lt;xlrd.sheet.Sheet <span class="built_in">object</span> at <span class="number">0x000002A76909E5B0</span>&gt;</span><br></pre></td></tr></table></figure>
-
-<p>获取sheet的汇总数据：</p>
-<ul>
-<li>获取sheet名：sheet1.name</li>
-<li>获取总行数：sheet1.nrows</li>
-<li>获取总列数：sheet1.ncols</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sheet1 = x1.sheet_by_name(<span class="string">&quot;test1&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;sheet name:&quot;</span>, sheet1.name)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;row num:&quot;</span>, sheet1.nrows)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;col num:&quot;</span>, sheet1.ncols)</span><br></pre></td></tr></table></figure>
-
-<p>输出:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sheet name: test1</span><br><span class="line">row num: <span class="number">4</span></span><br><span class="line">col num: <span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p>单元格批量读取：</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">数据类型：</span><br><span class="line">空：0</span><br><span class="line">字符串：1</span><br><span class="line">数字：2</span><br><span class="line">日期：3</span><br><span class="line">布尔：4</span><br><span class="line">error：5</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p> a）行操作：</p>
-<ul>
-<li>sheet1.row_values(0)   # 获取第一行所有内容，合并单元格，首行显示值，其它为空。</li>
-<li>sheet1.row(0)     　　 # 获取单元格值类型和内容</li>
-<li>sheet1.row_types(0)   # 获取单元格数据类型</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(sheet1.row_values(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row_types(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row_values(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(sheet1.row_types(<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(sheet1.row_types(<span class="number">1</span>)))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(sheet1.row_types(<span class="number">1</span>)))</span><br></pre></td></tr></table></figure>
-
-<p>输出:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;商品名称&#x27;</span>, <span class="string">&#x27;商品价格&#x27;</span>, <span class="string">&#x27;销量&#x27;</span>]</span><br><span class="line">[text:<span class="string">&#x27;商品名称&#x27;</span>, text:<span class="string">&#x27;商品价格&#x27;</span>, text:<span class="string">&#x27;销量&#x27;</span>]</span><br><span class="line">array(<span class="string">&#x27;B&#x27;</span>, [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">[<span class="string">&#x27;衬衫&#x27;</span>, <span class="number">66.0</span>, <span class="number">0.0</span>]</span><br><span class="line">[text:<span class="string">&#x27;衬衫&#x27;</span>, number:<span class="number">66.0</span>, number:<span class="number">0.0</span>]</span><br><span class="line">array(<span class="string">&#x27;B&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line">&lt;<span class="keyword">class</span> <span class="string">&#x27;array.array&#x27;</span>&gt;</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>]</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b) 表操作</p>
-<ul>
-<li><p>sheet1.row_values(0, 6, 10)  # 取第1行，第6~10列（不含第10列）</p>
-</li>
-<li><p>sheet1.col_values(0, 0, 5)  # 取第1列，第0~5行（不含第5行）</p>
-</li>
-<li><p>sheet1.row_slice(2, 0, 2)   # 获取单元格值类型和内容</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sheet1.row_slice(<span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">获取第三行,第<span class="number">0</span>和第<span class="number">1</span>列的值类型和内容</span><br><span class="line">[text:<span class="string">&#x27;衬衫&#x27;</span>, number:<span class="number">66.0</span>]</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>sheet1.row_types(1, 0, 2)  # 获取单元格数据类型</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sheet1.row_types(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>) </span><br><span class="line">获取第二行,第<span class="number">0</span>和第<span class="number">1</span>列的值类型</span><br><span class="line">array(<span class="string">&#x27;B&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>])  <span class="comment"># [1,2] 分别代表上面的字符串和数字</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>特定单元格读取：</p>
-<p> a) 获取单元格值：</p>
-<ul>
-<li>sheet1.cell_value(1, 2)  # 获取第二行,第三列的数据</li>
-<li>sheet1.cell(1, 2).value  # 获取第二行,第三列的数据</li>
-<li>sheet1.row(1)[2].value   # 获取第二行,第三列的数据</li>
-</ul>
-<p>b) 获取单元格类型：</p>
-<ul>
-<li>sheet1.cell(1, 2).ctype   # 获取第二行,第三列的数据类型</li>
-<li>sheet1.cell_type(1, 2)  # 获取第二行,第三列的数据类型</li>
-<li>sheet1.row(1)[2].ctype  # 获取第二行,第三列的数据类型</li>
-</ul>
-<p>(0,0)转换A1:</p>
-<ul>
-<li><p>xlrd.cellname(0, 0)   # (0,0)转换成A1</p>
-</li>
-<li><p>xlrd.cellnameabs(0, 0)   # (0,0)转换成$A$1</p>
-</li>
-<li><p>xlrd.colname(30)    # 把列由数字转换为字母表示</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(xlrd.cellname(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(xlrd.cellnameabs(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(xlrd.colname(<span class="number">30</span>))</span><br><span class="line">输出:</span><br><span class="line">A1</span><br><span class="line">$A$<span class="number">1</span></span><br><span class="line">AE </span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="读取demo"><a href="#读取demo" class="headerlink" title="读取demo"></a>读取demo</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># xls_file是文件对象</span></span><br><span class="line">wb = xlrd.open_workbook(file_contents=xls_file.read())</span><br><span class="line">table = wb.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, table.nrows):</span><br><span class="line">    values = table.row_values(row)</span><br><span class="line">    index = row + <span class="number">1</span> <span class="comment"># 第几行</span></span><br><span class="line">    info = values[<span class="number">0</span>] <span class="keyword">if</span> values[<span class="number">0</span>] <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="导出demo"><a href="#导出demo" class="headerlink" title="导出demo"></a>导出demo</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">headers = [</span><br><span class="line">    <span class="string">&#x27;【商品名称】&#x27;</span>, <span class="string">&quot;【价格】&quot;</span>, <span class="string">&quot;【销量】&quot;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个workbook 设置编码</span></span><br><span class="line">ws = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"><span class="comment"># 创建一个worksheet</span></span><br><span class="line">sheet = ws.add_sheet(<span class="string">&quot;销量统计表&quot;</span>)</span><br><span class="line"><span class="comment"># 初始化样式</span></span><br><span class="line">style = xlwt.XFStyle()</span><br><span class="line"><span class="comment"># 为样式创建字体</span></span><br><span class="line">font = xlwt.Font()</span><br><span class="line"><span class="comment"># 黑体</span></span><br><span class="line">font.bold = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 下划线</span></span><br><span class="line">font.underline = <span class="literal">True</span> </span><br><span class="line"><span class="comment"># 斜体字</span></span><br><span class="line">font.italic = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 设定样式</span></span><br><span class="line">style.font = font</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(headers)):</span><br><span class="line">    sheet.write(<span class="number">0</span>, i, headers[i], style)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> obj <span class="keyword">in</span> qs:</span><br><span class="line">        sheet.write(row, <span class="number">0</span>, obj.name)</span><br><span class="line">        sheet.write(row, <span class="number">1</span>, obj.price)</span><br><span class="line">        sheet.write(row, <span class="number">2</span>, obj.count)</span><br><span class="line"></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line">        sio = StringIO.StringIO()</span><br><span class="line">        ws.save(sio)</span><br><span class="line">        sio.seek(<span class="number">0</span>)</span><br><span class="line">        response = StreamingHttpResponse([line <span class="keyword">for</span> line <span class="keyword">in</span> sio.readlines()],</span><br><span class="line">                                         content_type=<span class="string">&#x27;application/vnd.ms-excel&#x27;</span>)</span><br><span class="line">        response[<span class="string">&#x27;Content-Disposition&#x27;</span>] = <span class="string">&#x27;attachment; filename=商品详情.xls&#x27;</span></span><br><span class="line">        <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
-
-
-          
+          <p>导入模块</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/20200731062055/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
