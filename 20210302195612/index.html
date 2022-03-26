@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next gemini" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,flask," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="请求对象request封装了从客户端发来的请求报文，我们能从他获取请求报文中的所有数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flask中的request对象">
+<meta property="og:url" content="http://wangxiaoyi.world/20210302195612/index.html">
+<meta property="og:site_name" content="Just">
+<meta property="og:description" content="请求对象request封装了从客户端发来的请求报文，我们能从他获取请求报文中的所有数据。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-03-02T11:56:12.000Z">
+<meta property="article:modified_time" content="2022-03-26T12:13:13.477Z">
+<meta property="article:author" content="Just">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="flask">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxiaoyi.world/20210302195612/"/>
+
+
+
+
+
+  <title>flask中的request对象 | Just</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Just</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">如果图片裂开请使用http协议而非https协议</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20210302195612/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Just">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">flask中的request对象</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-02T19:56:12+08:00">
+                2021-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  898
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>请求对象request封装了从客户端发来的请求报文，我们能从他获取请求报文中的所有数据。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>请求解析和响应封装实际上大部分是有werkzeug完成的，flask子类化werkzeug的请求和响应对象并添加了和程序相关的特定功能。</p>
+</blockquote>
+<p>假设请求的url是<strong><a target="_blank" rel="noopener" href="http://just.com/hi?name=kevin">http://just.com/hi?name=kevin</a></strong>, 当flask接收到请求后，请求对象会提供多个属性来获取url的各个部分，常用的属性如下：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>path</td>
+<td>&#x2F;hi</td>
+</tr>
+<tr>
+<td>full_path</td>
+<td>&#x2F;hi?name&#x3D;kevin</td>
+</tr>
+<tr>
+<td>host</td>
+<td>just.com</td>
+</tr>
+<tr>
+<td>host_url</td>
+<td><a target="_blank" rel="noopener" href="http://just.com/">http://just.com/</a></td>
+</tr>
+<tr>
+<td>base_url</td>
+<td><a target="_blank" rel="noopener" href="http://just.com/hi">http://just.com/hi</a></td>
+</tr>
+<tr>
+<td>url</td>
+<td><a target="_blank" rel="noopener" href="http://just.com/hi?name=kevin">http://just.com/hi?name=kevin</a></td>
+</tr>
+<tr>
+<td>url_root</td>
+<td><a target="_blank" rel="noopener" href="http://just.com/">http://just.com/</a></td>
+</tr>
+</tbody></table>
+<p>除了url，请求报文中的其他信息都可以通过request对象提供的属性和方法获取，常见的如下：</p>
+<table>
+<thead>
+<tr>
+<th>属性&#x2F;方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>args</td>
+<td>werkzeug的immutablemultidict对象。存储解析后的查询字符串，可通过字典方式获取键值。如果需要获取未解析的原生查询字符串，可以使用query_string属性</td>
+</tr>
+<tr>
+<td>blueprint</td>
+<td>当前蓝本的名称</td>
+</tr>
+<tr>
+<td>cookies</td>
+<td>一个包含所有随请求提交的cookies的字典</td>
+</tr>
+<tr>
+<td>data</td>
+<td>包含字符串形式的请求数据</td>
+</tr>
+<tr>
+<td>endpoint</td>
+<td>与当前请求相匹配的端点值</td>
+</tr>
+<tr>
+<td>file</td>
+<td>werkzeug的multidict对象，包含所有上传文件，可以使用字典的形式获取文件。使用的键为文件input标签中的name属性值，对应的值为werkzeug的filestorage对象，可以调用save()方法并差UN如保存路径来保存文件。</td>
+</tr>
+<tr>
+<td>form</td>
+<td>werkzeug的immutablemultidict对象。与file类似，包含解析后的表单数据。表单字段值通过input标签的name属性值作为键获取。</td>
+</tr>
+<tr>
+<td>values</td>
+<td>werkzeug的combinedmultidict对象，结合了args和form属性的值。</td>
+</tr>
+<tr>
+<td>get_data(cache&#x3D;True,as_text&#x3D;False,parse_form_data&#x3D;False)</td>
+<td>获取请求中的数据，默认读取为字节字符串（bytestring），将as_text设为True则返回值将是解码后的unicode字符串。</td>
+</tr>
+<tr>
+<td>get_json(self,force&#x3D;False,silent&#x3D;False,cache&#x3D;True)</td>
+<td>作为json解析并返回数据，如果mime类型不是json，返回None（除非force设为True）；解析出错则抛出werkzeug提供的badrequest异常（如果未开启调试模式，则返回400错误响应），如果silent设为True则返回None；cache设置是否缓存解析后的json数据。</td>
+</tr>
+<tr>
+<td>headers</td>
+<td>一个werkzeug的environheaders对象，包含首部字段，可以以字典的形式操作</td>
+</tr>
+<tr>
+<td>is_json</td>
+<td>通过mime类型判断是否为json数据，返回布尔值</td>
+</tr>
+<tr>
+<td>json</td>
+<td>包含解析后的json数据，内部调用了get_json()，可通过字典的形式获取键值</td>
+</tr>
+<tr>
+<td>method</td>
+<td>请求的http方法</td>
+</tr>
+<tr>
+<td>referrer</td>
+<td>请求发起的源url</td>
+</tr>
+<tr>
+<td>scheme</td>
+<td>请求的url模式（http还是https）</td>
+</tr>
+<tr>
+<td>user_agent</td>
+<td>用户代理（user Agent,UA）,包含了用户的客户端类型，操作系统类型等信息</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>werkzeug的multidict类是字典的子类，它主要实现了同一个键对应多个值的情况。比如一个文件上传字段可能会接受多个文件，这时就可以通过getlist()方法来获取文件对象列表。</p>
+<p>immutablemultidict类继承了multidict类，但是其值是不可改变的。</p>
+</blockquote>
+<p>需要注意的是，和普通的字典类型不同，当我们从request对象的类型为multidict或者immutablemultidict的属性（比如files，form，args）中直接使用键作为索引获取数据的时候（比如request.args[‘name’]），如果没有对应的键，那么会返回http400错误响应，表示请求无效，而不是抛出keyerror异常。为了避免这个错误，我们应该使用get()方法获取数据，并且get()方法可以设置默认值（同python中的字典）。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得写的还行，赞助瓶脉动～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赞助饮料</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt=" 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Just
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://wangxiaoyi.world/20210302195612/" title="flask中的request对象">http://wangxiaoyi.world/20210302195612/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/flask/" rel="tag"># flask</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/20210301214901/" rel="next" title="flask扩展command命令">
+                <i class="fa fa-chevron-left"></i> flask扩展command命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/20211212092203/" rel="prev" title="Redis单线程为什么还快">
+                Redis单线程为什么还快 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:wangyi3355@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcool.com/" title="Linux命令查询" target="_blank">Linux命令查询</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.canva.cn/" title="Canva" target="_blank">Canva</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lingxi360.com/" title="灵析" target="_blank">灵析</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mp.weixin.qq.com/" title="微信公众平台" target="_blank">微信公众平台</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://macwk.com/" title="Mac软件" target="_blank">Mac软件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/" title="微博" target="_blank">微博</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://wenshu.court.gov.cn/" title="裁判文书网" target="_blank">裁判文书网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://redis.cn/" title="Redis中文网" target="_blank">Redis中文网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://go-zero.dev/cn/" title="go_zero" target="_blank">go_zero</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcc.cc/" title="linux" target="_blank">linux</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Just</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">64.9k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 提供支持</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

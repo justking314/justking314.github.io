@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next gemini" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,安全," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Python语言安全编程规范[^1] 除非有特别说明，所有的代码示例都是基于Python 2.7版本。 该规范旨在减少SQL注入、敏感信息泄露、命令注入攻击等安全问题的发生。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python语言安全编程规范">
+<meta property="og:url" content="http://wangxiaoyi.world/20200107193800/index.html">
+<meta property="og:site_name" content="Just">
+<meta property="og:description" content="Python语言安全编程规范[^1] 除非有特别说明，所有的代码示例都是基于Python 2.7版本。 该规范旨在减少SQL注入、敏感信息泄露、命令注入攻击等安全问题的发生。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-01-07T11:38:00.000Z">
+<meta property="article:modified_time" content="2022-03-26T12:18:02.546Z">
+<meta property="article:author" content="Just">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxiaoyi.world/20200107193800/"/>
+
+
+
+
+
+  <title>Python语言安全编程规范 | Just</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Just</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">如果图片裂开请使用http协议而非https协议</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20200107193800/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Just">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python语言安全编程规范</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-07T19:38:00+08:00">
+                2020-01-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  15.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  61
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Python语言安全编程规范-1"><a href="#Python语言安全编程规范-1" class="headerlink" title="Python语言安全编程规范[^1]"></a>Python语言安全编程规范[^1]</h2><blockquote>
+<p>除非有特别说明，所有的代码示例都是基于Python 2.7版本。</p>
+<p>该规范旨在减少SQL注入、敏感信息泄露、命令注入攻击等安全问题的发生。</p>
+</blockquote>
+<span id="more"></span>
+
+<p>术语定义：</p>
+<p><strong>信任边界：</strong>位于信任边界之内的所有组件都是被系统本身直接控制的。所有来自不受控的外部系统的连接与数据，包括客户端与第三方系统，都应该被认为是不可信的，要先在边界处对其校验，才能允许它们进一步与本系统交互。</p>
+<h3 id="数据校验"><a href="#数据校验" class="headerlink" title="数据校验"></a>数据校验</h3><ol>
+<li><p>校验跨信任边界传递的不可信数据</p>
+<p>程序可能会接收来自用户、网络连接或其他来源的不可信数据，并将这些数据跨信任边界传递到目标系统（如浏览器、数据库等）。由于目标系统可能无法区分处理畸形的不可信数据，未经校验的不可信数据可能会引起某种注入攻击，对系统造成严重影响，因此，必须对不可信数据进行校验，且数据校验必须在信任边界以内进行（如对于Web应用，需要在服务端做校验）。数据校验有输入校验和输出校验，对从信任边界外传入的数据进行校验的叫输入校验，对传出到信任边界外的数据进行校验的叫输出校验。</p>
+<p>如下描述了四种数据校验策略（任何时候，尽可能使用接收已知合法数据的“白名单”策略）。</p>
+<ul>
+<li><p>接受已知好的数据</p>
+<p>这种策略被称为“白名单”或者“正向”校验。该策略检查数据是否属于一个严格约束的、已知的、可接受的合法数据集合。例如，下面的示例代码确保name参数只包含字母、数字以及下划线</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> re.match(<span class="string">&quot;^[0-9A-Za-z_]+$&quot;</span>, name):</span><br><span class="line">    <span class="keyword">raise</span> IllegalArgumentException</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拒绝已知坏的数据</p>
+<p>这种策略被称为“黑名单”或者“负向”校验，相对于正向校验，这是一种较弱的校验方式。由于潜在的不合法数据可能是一个不受约束的无限集合，这就意味着你必须一直维护一个已知不合法字符或者模式的列表。如果不定期研究新的攻击方式并对校验的表达式进行日常更新，该校验方式就会很快过时。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">removeJavascript</span>(<span class="params"><span class="built_in">input</span></span>):</span><br><span class="line">    p = re.<span class="built_in">compile</span>(<span class="string">&quot;javascript&quot;</span>, re.IGNORECASE)</span><br><span class="line">    m = p.match(<span class="built_in">input</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">not</span> m <span class="keyword">and</span> <span class="built_in">input</span> <span class="keyword">or</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>“白名单”方式净化</p>
+<p>对任何不属于已验证合法字符数据中的字符进行净化，然后再使用净化后的数据，净化的方式包括删除、编码、替换。比如，如果你期望接收一个电话号码，那么你可以删除掉输入中所有的非数字字符，“(555)123-1234”，“555.123.1234”，与“555&quot;;DROP TABLE USER;–123.1234”全部会被转换为“5551231234”，然后再对转换的结果进行校验。又比如，对于用户评论栏的文本输入，由于几乎所有的字符都可能被用到，确定一个合法的数据集合是非常困难的，一种解决方案是：将所有非字母数字替换成其编码后的版本，那么“I like your web page!”被净化后将输出为“I%20like%20your%20web%20page%21”，这里使用了URL编码，利用如下代码，可以方便的进行转换。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="built_in">print</span> urllib.quote(<span class="string">&quot;I like your web page!&quot;</span>) </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>“黑名单”方式净化</p>
+<p>为了确保输入数据是“安全”的，可以剔除或者转换某些字符（例如，删除引号、转换成HTML实体）。跟“黑名单”校验类似，随着时间推移不合法字符的范围很可能不一样，需要对不合法字符进行日常维护。因此，执行一个单纯针对正确输入的“正向”校验更加简单、高效、安全。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">quoteApostrophe</span>(<span class="params"><span class="built_in">input</span></span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">isinstance</span>(<span class="built_in">input</span>, basestring) <span class="keyword">and</span> <span class="built_in">input</span>.replace(<span class="string">&quot;&#x27;&quot;</span>, <span class="string">&quot;&amp;rsquo;&quot;</span>) <span class="keyword">or</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>禁止直接使用不可信数据来拼接SQL语句</p>
+<p><strong>说明：</strong>SQL注入是指原始SQL查询被动态更改成一个与程序预期完全不同的查询。执行这样一个更改后的查询可能导致信息泄露或者数据被篡改。防止SQL注入的方式主要可以分为两类：</p>
+<ul>
+<li><p>使用参数化查询</p>
+</li>
+<li><p>对不可信数据进行校验</p>
+</li>
+</ul>
+<p>参数化查询是一种简单有效的防止SQL注入的方式，应该被优先考虑使用。另外，参数化查询还能改进数据库访问的性能，例如，SQL Server与Oracle数据库会为其缓存一个查询计划，以便在多次重复执行相同的查询语句时重复使用。</p>
+<p>使用支持参数化查询功能的数据库操作接口就能便捷有效地防止SQL注入攻击。Python的DB-API是一个规范，它定义了一系列必须的对象和数据库存取方式，以便为各种各样的底层数据库系统和多种多样的数据库接口程序提供一致的访问接口。DB-API规范目的在于鼓励促进所有用于访问数据库的Python模块相互之间的一致性。目前Python支持几乎所有的平台，它支持大量主要的数据库访问，当中有很多都是基于DB-API规范定义的，其中的execute()函数可以支持参数传入，从库函数的层面上解决了SQL注入的问题。比如操作PostgreSQL的psycopg2，操作SQLite的sqlite3，操作Sybase的Sybase module for Python，处理ODBC连接的pyodbc，处理JDBC连接的zxJDBC库等，都是支持DB-API2.0的Python库。详情可以查询Python DB-API的官方介绍：<a target="_blank" rel="noopener" href="https://www.python.org/dev/peps/pep-0249/#id41%EF%BC%8C%E5%AF%B9%E5%BA%94%E7%9A%84%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91%E7%9A%84%E4%BB%8B%E7%BB%8D%E5%8F%AF%E4%BB%A5%E5%8F%82%E7%85%A7%EF%BC%9Ahttp://blog.csdn.net/dajianshi/article/details/7482201">https://www.python.org/dev/peps/pep-0249/#id41，对应的中文翻译的介绍可以参照：http://blog.csdn.net/dajianshi/article/details/7482201</a></p>
+<p><strong>错误示例：</strong>直接拼接成Sql语句</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sql = <span class="string">&quot;select id,type,name from xl_bugs where id = %s and type = %s&quot;</span> % (<span class="built_in">id</span>, <span class="built_in">type</span>)</span><br><span class="line">cur.execute(sql)</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">args = (<span class="built_in">id</span>, <span class="built_in">type</span>)</span><br><span class="line">cur.execute(<span class="string">&#x27;select id, type ,name from xl_bugs where id = %s and type = %s&#x27;</span>, args )</span><br></pre></td></tr></table></figure>
+
+<p>对不可信数据进行校验的有如下两个例子：</p>
+<ul>
+<li><p>对于字符型的字段进行处理时，要对输入做转义，将单引号替换为两个单引号。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_sql_str</span>(<span class="params">name_str</span>):</span><br><span class="line">    sql_str = <span class="string">&quot;select * from stu where name =&#x27;%s&#x27;&quot;</span> % name_str</span><br><span class="line">    <span class="built_in">print</span> sql_str</span><br></pre></td></tr></table></figure>
+
+<p>如果name_str获取到字符串为<code>&quot;&#39; or 1=1 --&quot;</code>，最终拼接的SQL语句为：</p>
+<p><code>select * from stu where name =&#39;&#39; or 1=1 --&#39;</code></p>
+<p>该SQL语句被注入后，会导致所有的stu表的数据被放到结果集中</p>
+<p><strong>正确示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_sql_str</span>(<span class="params">name_str</span>):</span><br><span class="line">    <span class="comment">#将单引号替换为两个单引号</span></span><br><span class="line">    name_str=name_str.replace(<span class="string">&quot;&#x27;&quot;</span>,<span class="string">&quot;&#x27;&#x27;&quot;</span>) </span><br><span class="line">    sql_str = <span class="string">&quot;select * from stu where name =&#x27;%s&#x27;&quot;</span> % name_str</span><br><span class="line">    <span class="built_in">print</span> sql_str</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于整型字段进行处理时，需要对输入进行类型检测，拒绝传入的不是合法数字。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_sql_str</span>(<span class="params">id_str</span>):</span><br><span class="line">    sql_str = <span class="string">&quot;select * from stu where id =%s&quot;</span> % id_str</span><br><span class="line">    <span class="built_in">print</span> sql_str</span><br></pre></td></tr></table></figure>
+
+<p>如果id_str获取到字符串为“1 or 1&#x3D;1”，最终拼接的SQL语句为：</p>
+<p><code>“select * from stu where id=1 or 1=1”</code></p>
+<p>该SQL语句被注入后，会导致所有的stu表的数据被放到结果集中。</p>
+<p><strong>正确示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gen_sql_str</span>(<span class="params">id_str</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        id_int = <span class="built_in">int</span>(id_str)</span><br><span class="line">        sql_str = <span class="string">&quot;select * from stu where id =%d&quot;</span> % id_int</span><br><span class="line">        <span class="built_in">print</span> sql_str</span><br><span class="line">    <span class="keyword">except</span> ValueError, ex:</span><br><span class="line">        <span class="built_in">print</span> ex</span><br></pre></td></tr></table></figure>
+
+<p>对于字符型的字段，如果作为like的一部分。需要参考<a href="#%E9%99%84%E5%BD%95A">附录A</a>做转义。</p>
+</li>
+</ul>
+</li>
+<li><p>验证路径之前应该先将其标准化</p>
+<p><strong>说明：</strong>绝对路径或者相对路径中可能会包含如符号（软）链接（symbolic [soft] links）、硬链接（hard links）、快捷方式（shortcuts）、影子文件（shadows）、别名（aliases）和连接文件（junctions）等形式，在进行文件验证操作之前必须完整解析这些文件链接。路径中也可能会包含如下所示的文件名，使得验证变得困难：</p>
+<ul>
+<li><p>“.”指目录本身。</p>
+</li>
+<li><p>在一个目录内，“..”指该目录的上一级目录。</p>
+</li>
+</ul>
+<p>除此之外，还有与特定操作系统和特定文件系统相关的命名约定，也会使验证变得困难。</p>
+<p>同一个目录或者文件，可以通过多种路径名来引用它，对其进行标准化，可以使文件路径验证较为容易。</p>
+<p>当试图限制用户只能访问某个特定目录中的文件时，或者当基于文件名或者路径名来做安全决策时，验证是必须的。攻击者可能会利用目录遍历（directory traversal）或者等价路径（path equivalence）漏洞的方式来绕过这些限制。目录遍历漏洞使得攻击者能够转移到一个特定目录进行I&#x2F;O操作，等价路径漏洞使得攻击者可以使用与某个资源名不同但是等价的名称来绕过安全检查。</p>
+<p>在程序获取一个文件标准路径与打开这个文件之间，会有一个固有的时间竞争窗口。在对标准化的文件路径进行验证时，文件系统可能被修改，标准化的路径名可能不再指向原始的有效文件。值得庆幸的是，可以使用标准化的路径名来判断引用的文件名是否在安全目录中，来消除条件竞争。如果引用的文件是在一个安全目录之中，很明显攻击者无法篡改文件，也无法利用条件竞争。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span> os.path.abspath(<span class="string">&quot;pwck&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> Exception, ex:</span><br><span class="line">    <span class="built_in">print</span> ex</span><br></pre></td></tr></table></figure>
+
+<p>os.path.abspath返回文件的绝对路径，但是它不会解析文件链接。</p>
+<p><strong>正确示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span> os.path.realpath(<span class="string">&quot;pwck&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> Exception, ex:</span><br><span class="line">    <span class="built_in">print</span> ex</span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例使用了os.path.realpath方法，它能在所有的平台上对所有别名、快捷方式以及符号链接进行一致地解析。特殊的文件名，比如“..”会被移除，这样输入在验证之前会被简化成其标准形式。当使用标准形式的文件路径来做验证时，攻击者将无法使用..&#x2F;序列来跳出特定目录。</p>
+</li>
+<li><p>禁止使用eval和exec执行不可信代码</p>
+<p><strong>说明</strong>： </p>
+<p>eval函数的声明为：eval(expression[, globals[, locals]])。它将字符串expression当成有效Python表达式来求值，并返回计算结果。</p>
+<p>exec语句将字符串当成有效Python代码来执行。提供给exec的代码名称空间和exec语句的名称空间相同。</p>
+<p>两个函数都可以把一个字符串当做有效Python代码来执行。如果引入外部输入的字符串，要严格校验输入的str表达式的合法性。如果校验缺失，可以导致用户访问代码名称空间的变量，引起信息泄露。另外，eval函数还可以使用__import__导入任意模块。</p>
+<p>因此，在使用eval或者exec时，如果不允许使用名称空间中的变量，建议对代码名称空间中的变量做黑名单校验。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># example1.py</span></span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line">num = randint(<span class="number">1</span>,<span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Guess the number! 1 to 100.&quot;</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    guess = <span class="built_in">eval</span>(raw_input(<span class="string">&#x27;Your guess&gt; &#x27;</span>))</span><br><span class="line">    <span class="keyword">if</span> guess != num:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Nope,&quot;</span>, guess, <span class="string">&quot;is wrong.&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;You win!&quot;</span></span><br><span class="line">        exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>下面是一些有效的Python表达式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python example1.py</span><br><span class="line">Guess the number! <span class="number">1</span> to <span class="number">100.</span></span><br><span class="line">Your guess&gt; <span class="number">3</span>*<span class="number">4</span></span><br><span class="line">Nope, <span class="number">12</span> <span class="keyword">is</span> wrong.</span><br><span class="line">Your guess&gt; <span class="string">&quot;hello&quot;</span></span><br><span class="line">Nope, hello <span class="keyword">is</span> wrong.</span><br></pre></td></tr></table></figure>
+
+<p>下面表达式可以<strong>绕过</strong>程序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ python example1.py</span><br><span class="line">Guess the number! <span class="number">1</span> to <span class="number">100.</span></span><br><span class="line">Your guess&gt; num</span><br><span class="line">You win!</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例：</strong></p>
+<p>没有使用eval函数对外部输入进行表达式求值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line">num = randint(<span class="number">1</span>,<span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Guess the number! 1 to 100.&quot;</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    guess = raw_input(<span class="string">&#x27;Your guess&gt; &#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> guess != <span class="built_in">str</span>(num):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Nope,&quot;</span>, guess, <span class="string">&quot;is wrong.&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;You win!&quot;</span></span><br><span class="line">        exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁止使用<strong>input</strong>函数</p>
+<p><strong>说明：</strong>input能接收字符串，它希望能够读取一个合法的python表达式，并去执行它。它可以导致用户非法访问程序名称空间变量。但raw_input()直接读取控制台的输入，并将其当做字符串保存起来。在python的官方手册上说明input(x)等同于eval(raw_input(x))，需要用户输入时，可以使用raw_input函数。因此不允许使用input函数。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Secret = <span class="string">&quot;42&quot;</span></span><br><span class="line">value = <span class="built_in">input</span>(<span class="string">&quot;Answer to everything is ? &quot;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;The answer to everything is %s&quot;</span> % (value,)</span><br></pre></td></tr></table></figure>
+
+<p>在以上的代码中input()会接受原始输入，如何这里用户传入一个dir()再结合print，就会执行dir()的功能返回一个对象的<strong>大部分</strong>属性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Answer to everything <span class="keyword">is</span> ? <span class="built_in">dir</span>() </span><br><span class="line">The answer to everything <span class="keyword">is</span></span><br><span class="line">[‘Secret’, <span class="string">&#x27;__builtins__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__file__&#x27;</span>, <span class="string">&#x27;__name__&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;__package__&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>我在这里看到了有一个<strong>Secret</strong>对象，然后借助原来程序的功能就可以得到该值： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Answer to everything <span class="keyword">is</span> ? Secret    </span><br><span class="line">The answer to everything <span class="keyword">is</span> <span class="number">42</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Secret = <span class="string">&quot;42&quot;</span></span><br><span class="line">value = raw_input(<span class="string">&quot;Answer to everything is ? &quot;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;The answer to everything is %s&quot;</span> % (value,)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁止调用OS命令解析器执行命令或运行程序， 防止命令注入</p>
+<p><strong>说明：</strong>使用未经校验的不可信输入作为系统命令的参数或命令的一部分，可能导致命令注入漏洞。对于命令注入漏洞，命令将会以与Python应用程序相同的特权级别执行，它向攻击者提供了类似系统shell的功能。在Python中，os.system或os.popen经常被用来调用一个新的进程，如果被执行的命令来自于外部输入，则可能会产生命令和参数注入。命令注入相关的特殊符号的详细信息，请参考<a href="#%E9%99%84%E5%BD%95B">附录B</a>。</p>
+<p>执行命令的时候，请注意以下几点：</p>
+<p>1、命令执行的字符串不要去拼接输入的参数，如果必须拼接时，要对输入参数进行白名单过滤</p>
+<p>2、对传入的参数要做类型校验，例如：整数数据，可以对数据进行整数强制转换</p>
+<p>3、保证格式化字符串的正确性，例如：int类型参数的拼接，对于参数要用%d，不能用%s</p>
+<p><strong>错误示例1</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">home = os.getenv(<span class="string">&#x27;APPHOME&#x27;</span>)</span><br><span class="line">cmd = home.join(INITCMD)</span><br><span class="line">os.system(cmd);</span><br></pre></td></tr></table></figure>
+
+<p>攻击者可以通过修改环境变量APPHOME，并且在相应目录下放置INITCMD</p>
+<p><strong>错误示例2</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btype = req.field(<span class="string">&#x27;backuptype&#x27;</span>)</span><br><span class="line">cmd = <span class="string">&quot;cmd.exe /K \&quot;c:\\util\\rmanDB.bat &quot;</span> + btype + <span class="string">&quot;&amp;&amp;c:\\util\\cleanup.bat\&quot;&quot;</span></span><br><span class="line">os.system(cmd);</span><br></pre></td></tr></table></figure>
+
+<p>没有校验backuptype，这个是用户输入的，攻击者可能进行攻击，例如：用户输入的是：”&amp;&amp; del c:\dbms\<em>.</em>“。</p>
+<p><strong>错误示例3</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">import</span> os</span><br><span class="line">    <span class="built_in">print</span> os.system(<span class="string">&quot;ls &quot;</span> + sys.argv[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">except</span> Exception, ex:</span><br><span class="line"><span class="built_in">print</span> ex</span><br></pre></td></tr></table></figure>
+
+<p>攻击者可以通过以下命令来利用这个漏洞程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python test.py <span class="string">&quot;. &amp;&amp; echo bad&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>实际将会执行两个命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls . </span><br><span class="line">echo bad</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例</strong>1（避免使用os.system ()）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">import</span> os</span><br><span class="line">    <span class="built_in">print</span> os.listdir(sys.argv[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">except</span> Exception, ex:</span><br><span class="line">    <span class="built_in">print</span> ex</span><br></pre></td></tr></table></figure>
+
+<p>可以使用标准的API替代运行系统命令来完成任务。这个正确示例使用方法os.listdir来列举目录下的内容，而不是调用os.system来运行一个外部进程，从而消除了发生命令注入与参数注入的可能。</p>
+<p><strong>正确示例</strong>2<strong>（数据校验）</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &gt; <span class="number">20</span>:</span><br><span class="line">     <span class="built_in">print</span> <span class="string">&#x27;Parameter length error.&#x27;</span></span><br><span class="line">        sys.exit()</span><br><span class="line">    <span class="keyword">if</span> re.match(<span class="string">&quot;[\.0-9A-Za-z@]+/Z&quot;</span>, sys.argv[<span class="number">1</span>]):</span><br><span class="line">        <span class="built_in">print</span> os.system(<span class="string">&quot;ls &quot;</span> + sys.argv[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">except</span> Exception, ex:</span><br><span class="line">    ……</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果无法避免使用os.system，则必须要对输入数据进行检查和净化，要过滤的字符参考<a href="#%E9%99%84%E5%BD%95B">附录B</a>。</p>
+</li>
+<li><p>禁止使用SimpleXMLRPCServer模块中的allow_dotted_names选项</p>
+<blockquote>
+<p>注意此条适用范围</p>
+</blockquote>
+<p><strong>说明：</strong>在版本2.4.1以前，使能allow_dotted_names选项是不安全的。如果使能allow_dotted_names选项，会允许调用者访问实例所在模块的所有变量，甚至执行任意代码。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> SimpleXMLRPCServer</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StringFunctions</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># Make all of the Python string functions available through</span></span><br><span class="line">        <span class="comment"># python_string.func_name</span></span><br><span class="line">        <span class="keyword">import</span> string</span><br><span class="line">        self.python_string = string</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_privateFunction</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># This function cannot be called through XML-RPC because it</span></span><br><span class="line">        <span class="comment"># starts with an &#x27;_&#x27;</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">chop_in_half</span>(<span class="params">self, astr</span>):</span><br><span class="line">        <span class="keyword">return</span> astr[:<span class="built_in">len</span>(astr)/<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">repeat</span>(<span class="params">self, astr, times</span>):</span><br><span class="line">        <span class="keyword">return</span> astr * times</span><br><span class="line"></span><br><span class="line">server = SimpleXMLRPCServer.SimpleXMLRPCServer((<span class="string">&quot;localhost&quot;</span>, <span class="number">8000</span>))</span><br><span class="line">server.register_instance(StringFunctions(), allow_dotted_names = <span class="literal">True</span>)</span><br><span class="line">server.register_function(<span class="keyword">lambda</span> astr: <span class="string">&#x27;_&#x27;</span> + astr, <span class="string">&#x27;_string&#x27;</span>)</span><br><span class="line">server.serve_forever()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>以上面的代码为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>StringFunctions.chop_in_half.im_func.func_globals</span><br></pre></td></tr></table></figure>
+
+<p>运行上面的代码将会输出StringFunctions所在模块的所有全局变量，导致敏感信息泄露。</p>
+<p>如果你在模块导入了 os 、 command 、 subprocess 等模块，那么攻击者就可以调用任意命令。</p>
+<p>如果非要使能allow_dotted_names选项，需要在实例中定义或重载<code>_dispatch</code>方法，实现自己的 RPC方法进行分发。</p>
+<p>如果使用一个实例来注册 RPC 方法，需求区分两种情况：</p>
+<p><strong>正确示例</strong>1：</p>
+<p>该实例不从SimpleXMLRPCServer继承，需要自己实现_dispatch方法；</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Math</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_listMethods</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> [<span class="string">&#x27;add&#x27;</span>, <span class="string">&#x27;pow&#x27;</span>]</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_methodHelp</span>(<span class="params">self, method</span>):</span><br><span class="line">        <span class="keyword">if</span> method == <span class="string">&#x27;add&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;add(2,3) =&gt; 5&quot;</span></span><br><span class="line">        <span class="keyword">elif</span> method == <span class="string">&#x27;pow&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;pow(x, y[, z]) =&gt; number&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_dispatch</span>(<span class="params">self, method, params</span>):</span><br><span class="line">        <span class="keyword">if</span> method == <span class="string">&#x27;pow&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">pow</span>(*params)</span><br><span class="line">        <span class="keyword">elif</span> method == <span class="string">&#x27;add&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> params[<span class="number">0</span>] + params[<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> <span class="string">&#x27;bad method&#x27;</span></span><br><span class="line"></span><br><span class="line">server = SimpleXMLRPCServer((<span class="string">&quot;localhost&quot;</span>, <span class="number">8000</span>))</span><br><span class="line">server.register_introspection_functions()</span><br><span class="line">server.register_instance(Math(), allow_dotted_names = <span class="literal">True</span>)</span><br><span class="line">server.serve_forever()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例</strong>2：</p>
+<p>该实例继承SimpleXMLRPCServer来实现自己的XML-RPC Server，需要重载_dispatch方法来实现自己 RPC 方法分发机制。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MathServer</span>(<span class="title class_ inherited__">SimpleXMLRPCServer</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_dispatch</span>(<span class="params">self, method, params</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># We are forcing the &#x27;export_&#x27; prefix on methods that are</span></span><br><span class="line">            <span class="comment"># callable through XML-RPC to prevent potential security</span></span><br><span class="line">            <span class="comment"># problems</span></span><br><span class="line">            func = <span class="built_in">getattr</span>(self, <span class="string">&#x27;export_&#x27;</span> + method)</span><br><span class="line">        <span class="keyword">except</span> AttributeError:</span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">&#x27;method &quot;%s&quot; is not supported&#x27;</span> % method)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> func(*params)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">export_add</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        <span class="keyword">return</span> x + y</span><br><span class="line"></span><br><span class="line">server = MathServer((<span class="string">&quot;localhost&quot;</span>, <span class="number">8000</span>))</span><br><span class="line">server.serve_forever()</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="异常行为"><a href="#异常行为" class="headerlink" title="异常行为"></a>异常行为</h3><ol>
+<li><p>不要抑制或者忽略已检查异常</p>
+<p><strong>说明</strong>：编码人员常常会通过一个空的或者无意义的catch块来抑制捕获的已检查异常。每一个catch块都应该确保程序只会在继续有效的情况下才会继续运行下去。因此，catch块必须要么从异常情况中恢复，要么重新抛出适合当前catch块上下文的另一个异常以允许最邻近的外层try-catch语句块来进行恢复工作。异常会打断应用原本预期的控制流程。例如，try块中位于异常发生点之后的任何表达式和语句都不会被执行。因此，异常必须被妥当处理。许多抑制异常的理由都是不合理的。例如，当对客户端从潜在问题恢复过来不抱期望时，一种好的做法是让异常被广播出来，而不是去捕获和抑制这个异常。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment"># to_do</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    <span class="keyword">import</span> traceback</span><br><span class="line">    traceback.print_exc()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>错误示例中，except块只是简单地将异常堆栈轨迹打印出来。虽然打印异常的堆栈轨迹对于定位问题是有帮助的，但是最终的程序运行逻辑等同于抑制异常。注意，即使这个错误示例在发生异常时会打印一个堆栈轨迹，但是程序会继续运行，如同异常从未被抛出过。换句话说，除了try块中位于异常发生点之后的表达式和语句不会被执行之外，发生的异常不会影响程序的其他行为。</p>
+<p><strong>正确示例</strong>1:</p>
+<p>这个正确示例通过要求用户指定另外一个文件名来处理FileNotFoundException异常。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">validFlag = <span class="literal">False</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> validFlag:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># If requested file does not exist, throws FileNotFoundException</span></span><br><span class="line">        <span class="comment"># If requested file exists, sets validFlag to true</span></span><br><span class="line">        validFlag = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">except</span> FileNotFoundException:</span><br><span class="line">        <span class="keyword">import</span> traceback</span><br><span class="line">        traceback.print_exc()</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例</strong>2:</p>
+<p>继承Exception Reporter并过滤敏感异常。有时候异常必须对用户隐藏。在这种情况下，一种可行的方式是继承Exception类，并且在重写默认的__str__方法的基础上，增加一个filter()方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyExceptionReporter</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, msg</span>):</span><br><span class="line">        self.msg = msg</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">filter</span>(self.msg)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">filter</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># Sanitize sensitive data or replace sensitive exceptions with non-sensitive exceptions (whitelist)</span></span><br><span class="line">        <span class="comment"># Return non-sensitive exception</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>例外情况：</p>
+<ol>
+<li><p>在资源释放失败不会影响程序后续行为的情况下，释放资源时发生的异常可以被抑制。释放资源的例子包括关闭文件、网络套接字、线程等等。这些资源通常是在except或者fiannly块中被释放，并且在后续的程序运行中都不会再被使用。因此，除非资源被耗尽，否则不会有其他途径使得这些异常会影响程序后续的行为。在充分处理了资源耗尽问题的情况下，只需对异常进行净化和记录日志（以备日后改进）就足够了；在这种情况下没必要做其他额外的错误处理。</p>
+</li>
+<li><p>如果在特定的抽象层次上不可能从异常情况中恢复过来，则在那个层级的代码就不用处理这个异常，而是应该抛出一个合适的异常，让更高层次的代码去捕获处理，并尝试恢复。对于这种情况，最通常的实现方法是省略掉catch语句块，允许异常被广播出去。</p>
+</li>
+</ol>
+</li>
+<li><p>禁止在异常中泄露敏感信息</p>
+<p><strong>说明：</strong>敏感数据的范围应该基于应用场景以及产品威胁分析的结果来确定。典型的敏感数据包括口令、银行账号、个人信息、通讯记录、密钥等。如果在传递异常的时候未对其中的敏感信息进行过滤常常会导致信息泄露，而这可能帮助攻击者尝试发起进一步的攻击。攻击者可以通过构造恶意的输入参数来发掘应用的内部结构和机制。不管是异常中的文本消息，还是异常本身的类型都可能泄露敏感信息。例如，对于IOError异常，其中的异常消息会透露文件系统的结构信息，而通过异常本身的类型，可以得知所请求的文件不存在。因此，当异常会被传递到信任边界以外时，必须同时对敏感的异常消息和敏感的异常类型进行过滤。</p>
+<p><strong>错误示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="number">2</span> != <span class="built_in">len</span>(sys.argv):</span><br><span class="line">    <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">            <span class="built_in">open</span>(sys.argv[<span class="number">1</span>], <span class="string">&quot;r&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> MyError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="comment"># Log the exception</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果传入一个文件名后，程序返回一个异常，则暗示该文件不存在，而如果不抛出异常则说明该文件是存在的。使得系统面临暴力攻击的风险，攻击者可以多次传入所有可能的文件名进行查询来发现有效文件。</p>
+<p><strong>正确示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="number">2</span> != <span class="built_in">len</span>(sys.argv):</span><br><span class="line">    <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment">#先到路径进行标准化</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        turepath = os.path.realpath(sys.argv[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">except</span> Exception, ex:</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line">       <span class="comment">#校验路径是否以/home/python/开头</span></span><br><span class="line">        <span class="keyword">if</span> <span class="number">0</span> == turepath.startswith(‘/home/python/’):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="built_in">open</span>(turepath)</span><br><span class="line">            <span class="keyword">except</span> IOError:</span><br><span class="line">                <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这个正确示例中，规定用户只能打开&#x2F;home&#x2F;python&#x2F;目录下的文件，用户不可能发现这个目录以外的任何信息。在这个方案中，如果无法打开文件，或者文件不在合法的目录下，则会产生一条简洁的错误消息。</p>
+</li>
+<li><p>方法发生异常时要恢复到之前的对象状态</p>
+<p><strong>说明：</strong>当发生异常的时候，对象一般需要（关键的安全对象则必须）维持其状态的一致性。常用的可用来维持对象状态一致性的手段包括：</p>
+<ul>
+<li><p>输入校验（如校验方法的调用参数）</p>
+</li>
+<li><p>调整逻辑顺序，使可能发生异常的代码在对象被修改之前执行</p>
+</li>
+<li><p>当业务操作失败时，进行回滚</p>
+</li>
+<li><p>对一个临时的副本对象进行所需的操作，直到成功完成这些操作后，才把更新提交到原始的对象</p>
+</li>
+<li><p>避免去修改对象状态</p>
+</li>
+</ul>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">PADDING = <span class="number">2</span></span><br><span class="line">MAX_DIMENSION = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dimensions</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, length, width, height</span>):</span><br><span class="line">        self.length = length</span><br><span class="line">        self.width = width</span><br><span class="line">        self.height = height</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">        self.length += PADDING</span><br><span class="line">        self.width += PADDING</span><br><span class="line">        self.height += PADDING</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.validate(weight)</span><br><span class="line">            volume = self.length * self.width * self.height</span><br><span class="line">            self.length -= PADDING</span><br><span class="line">            self.width -= PADDING</span><br><span class="line">            self.height -= PADDING</span><br><span class="line">            <span class="keyword">return</span> volume</span><br><span class="line">        <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">validate</span>(<span class="params">self, weight</span>) :</span><br><span class="line">        <span class="comment"># do some validation and may throw a exception</span></span><br><span class="line">        <span class="keyword">if</span> weight&gt;<span class="number">20</span>:</span><br><span class="line">            <span class="keyword">raise</span> Exception</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span></span><br><span class="line">    d = Dimensions(<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="built_in">print</span> d.getVolumePackage(<span class="number">21</span>)  <span class="comment"># Prints -1 (error)</span></span><br><span class="line">    <span class="built_in">print</span> d.getVolumePackage(<span class="number">19</span>)  <span class="comment"># Prints 2744 instead of 1728</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这个错误示例中，未有异常发生时，代码逻辑会恢复对象的原始状态。但是如果出现异常事件，则回滚代码不会被执行，从而导致后续的getVolumePackage()调用不会返回正确的结果。</p>
+<p><strong>正确示例</strong>1:<strong>回滚</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">    self.length -= PADDING</span><br><span class="line">    self.width -= PADDING</span><br><span class="line">    self.height -= PADDING</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例在getVolumePackage()方法的except块中加入了发生异常时恢复对象状态的代码。</p>
+<p><strong>正确示例</strong>2:<strong>finally</strong>子句</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">    self.length += PADDING</span><br><span class="line">    self.width += PADDING</span><br><span class="line">    self.height += PADDING</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        self.validate(weight)</span><br><span class="line">        volume = self.length * self.width * self.height</span><br><span class="line">        <span class="keyword">return</span> volume</span><br><span class="line">    <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        self.length -= PADDING</span><br><span class="line">        self.width -= PADDING</span><br><span class="line">        self.height -= PADDING</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例使用一个finally子句来执行回滚操作，以保证不管是否发生异常，都会进行回滚。</p>
+<p><strong>正确示例</strong>3:<strong>输入校验</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        self.validate(weight)</span><br><span class="line">    <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    self.length += PADDING</span><br><span class="line">    self.width += PADDING</span><br><span class="line">    self.height += PADDING</span><br><span class="line">    volume = self.length * self.width * self.height</span><br><span class="line">    self.length -= PADDING</span><br><span class="line">    self.width -= PADDING</span><br><span class="line">    self.height -= PADDING</span><br><span class="line">    <span class="keyword">return</span> volume</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例在修改对象状态之前执行输入校验。注意，try代码块中只包含可能会抛出异常的代码，而其他代码都被移到try块之外。</p>
+<p><strong>正确示例</strong>4:<strong>未修改的对象</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        self.validate(weight)</span><br><span class="line">    <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    volume = (self.length + PADDING) * (self.width + PADDING) * (self.height + PADDING)</span><br><span class="line">    <span class="keyword">return</span> volume</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例避免了需要修改对象，使得对象状态不可能不一致，也因此没有必要进行回滚操作。相比之前的解决方案，更推荐使用这种方式。但是对于一些复杂的代码，这种方式可能无法实行。</p>
+</li>
+</ol>
+<h3 id="异常行为-1"><a href="#异常行为-1" class="headerlink" title="异常行为"></a>异常行为</h3><ol>
+<li><p>不要抑制或者忽略已检查异常</p>
+<p><strong>说明</strong>：编码人员常常会通过一个空的或者无意义的catch块来抑制捕获的已检查异常。每一个catch块都应该确保程序只会在继续有效的情况下才会继续运行下去。因此，catch块必须要么从异常情况中恢复，要么重新抛出适合当前catch块上下文的另一个异常以允许最邻近的外层try-catch语句块来进行恢复工作。异常会打断应用原本预期的控制流程。例如，try块中位于异常发生点之后的任何表达式和语句都不会被执行。因此，异常必须被妥当处理。许多抑制异常的理由都是不合理的。例如，当对客户端从潜在问题恢复过来不抱期望时，一种好的做法是让异常被广播出来，而不是去捕获和抑制这个异常。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment"># to_do</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    <span class="keyword">import</span> traceback</span><br><span class="line">    traceback.print_exc()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>错误示例中，except块只是简单地将异常堆栈轨迹打印出来。虽然打印异常的堆栈轨迹对于定位问题是有帮助的，但是最终的程序运行逻辑等同于抑制异常。注意，即使这个错误示例在发生异常时会打印一个堆栈轨迹，但是程序会继续运行，如同异常从未被抛出过。换句话说，除了try块中位于异常发生点之后的表达式和语句不会被执行之外，发生的异常不会影响程序的其他行为。</p>
+<p><strong>正确示例</strong>1:</p>
+<p>这个正确示例通过要求用户指定另外一个文件名来处理FileNotFoundException异常。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">validFlag = <span class="literal">False</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> validFlag:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># If requested file does not exist, throws FileNotFoundException</span></span><br><span class="line">        <span class="comment"># If requested file exists, sets validFlag to true</span></span><br><span class="line">        validFlag = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">except</span> FileNotFoundException:</span><br><span class="line">        <span class="keyword">import</span> traceback</span><br><span class="line">        traceback.print_exc()</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例</strong>2:</p>
+<p>继承Exception Reporter并过滤敏感异常。有时候异常必须对用户隐藏。在这种情况下，一种可行的方式是继承Exception类，并且在重写默认的__str__方法的基础上，增加一个filter()方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyExceptionReporter</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, msg</span>):</span><br><span class="line">        self.msg = msg</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">filter</span>(self.msg)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">filter</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># Sanitize sensitive data or replace sensitive exceptions with non-sensitive exceptions (whitelist)</span></span><br><span class="line">        <span class="comment"># Return non-sensitive exception</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>例外情况：</p>
+<ol>
+<li><p>在资源释放失败不会影响程序后续行为的情况下，释放资源时发生的异常可以被抑制。释放资源的例子包括关闭文件、网络套接字、线程等等。这些资源通常是在except或者fiannly块中被释放，并且在后续的程序运行中都不会再被使用。因此，除非资源被耗尽，否则不会有其他途径使得这些异常会影响程序后续的行为。在充分处理了资源耗尽问题的情况下，只需对异常进行净化和记录日志（以备日后改进）就足够了；在这种情况下没必要做其他额外的错误处理。</p>
+</li>
+<li><p>如果在特定的抽象层次上不可能从异常情况中恢复过来，则在那个层级的代码就不用处理这个异常，而是应该抛出一个合适的异常，让更高层次的代码去捕获处理，并尝试恢复。对于这种情况，最通常的实现方法是省略掉catch语句块，允许异常被广播出去。</p>
+</li>
+</ol>
+</li>
+<li><p>禁止在异常中泄露敏感信息</p>
+<p><strong>说明：</strong>敏感数据的范围应该基于应用场景以及产品威胁分析的结果来确定。典型的敏感数据包括口令、银行账号、个人信息、通讯记录、密钥等。如果在传递异常的时候未对其中的敏感信息进行过滤常常会导致信息泄露，而这可能帮助攻击者尝试发起进一步的攻击。攻击者可以通过构造恶意的输入参数来发掘应用的内部结构和机制。不管是异常中的文本消息，还是异常本身的类型都可能泄露敏感信息。例如，对于IOError异常，其中的异常消息会透露文件系统的结构信息，而通过异常本身的类型，可以得知所请求的文件不存在。因此，当异常会被传递到信任边界以外时，必须同时对敏感的异常消息和敏感的异常类型进行过滤。</p>
+<p><strong>错误示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="number">2</span> != <span class="built_in">len</span>(sys.argv):</span><br><span class="line">    <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">            <span class="built_in">open</span>(sys.argv[<span class="number">1</span>], <span class="string">&quot;r&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> MyError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="comment"># Log the exception</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果传入一个文件名后，程序返回一个异常，则暗示该文件不存在，而如果不抛出异常则说明该文件是存在的。使得系统面临暴力攻击的风险，攻击者可以多次传入所有可能的文件名进行查询来发现有效文件。</p>
+<p><strong>正确示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="number">2</span> != <span class="built_in">len</span>(sys.argv):</span><br><span class="line">    <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment">#先到路径进行标准化</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        turepath = os.path.realpath(sys.argv[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">except</span> Exception, ex:</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line">       <span class="comment">#校验路径是否以/home/python/开头</span></span><br><span class="line">        <span class="keyword">if</span> <span class="number">0</span> == turepath.startswith(‘/home/python/’):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="built_in">open</span>(turepath)</span><br><span class="line">            <span class="keyword">except</span> IOError:</span><br><span class="line">                <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span> (<span class="string">&quot;Invalid file&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这个正确示例中，规定用户只能打开&#x2F;home&#x2F;python&#x2F;目录下的文件，用户不可能发现这个目录以外的任何信息。在这个方案中，如果无法打开文件，或者文件不在合法的目录下，则会产生一条简洁的错误消息。</p>
+</li>
+<li><p>方法发生异常时要恢复到之前的对象状态</p>
+<p><strong>说明：</strong>当发生异常的时候，对象一般需要（关键的安全对象则必须）维持其状态的一致性。常用的可用来维持对象状态一致性的手段包括：</p>
+<ul>
+<li><p>输入校验（如校验方法的调用参数）</p>
+</li>
+<li><p>调整逻辑顺序，使可能发生异常的代码在对象被修改之前执行</p>
+</li>
+<li><p>当业务操作失败时，进行回滚</p>
+</li>
+<li><p>对一个临时的副本对象进行所需的操作，直到成功完成这些操作后，才把更新提交到原始的对象</p>
+</li>
+<li><p>避免去修改对象状态</p>
+</li>
+</ul>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">PADDING = <span class="number">2</span></span><br><span class="line">MAX_DIMENSION = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dimensions</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, length, width, height</span>):</span><br><span class="line">        self.length = length</span><br><span class="line">        self.width = width</span><br><span class="line">        self.height = height</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">        self.length += PADDING</span><br><span class="line">        self.width += PADDING</span><br><span class="line">        self.height += PADDING</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.validate(weight)</span><br><span class="line">            volume = self.length * self.width * self.height</span><br><span class="line">            self.length -= PADDING</span><br><span class="line">            self.width -= PADDING</span><br><span class="line">            self.height -= PADDING</span><br><span class="line">            <span class="keyword">return</span> volume</span><br><span class="line">        <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">validate</span>(<span class="params">self, weight</span>) :</span><br><span class="line">        <span class="comment"># do some validation and may throw a exception</span></span><br><span class="line">        <span class="keyword">if</span> weight&gt;<span class="number">20</span>:</span><br><span class="line">            <span class="keyword">raise</span> Exception</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span></span><br><span class="line">    d = Dimensions(<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="built_in">print</span> d.getVolumePackage(<span class="number">21</span>)  <span class="comment"># Prints -1 (error)</span></span><br><span class="line">    <span class="built_in">print</span> d.getVolumePackage(<span class="number">19</span>)  <span class="comment"># Prints 2744 instead of 1728</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这个错误示例中，未有异常发生时，代码逻辑会恢复对象的原始状态。但是如果出现异常事件，则回滚代码不会被执行，从而导致后续的getVolumePackage()调用不会返回正确的结果。</p>
+<p><strong>正确示例</strong>1:<strong>回滚</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">    self.length -= PADDING</span><br><span class="line">    self.width -= PADDING</span><br><span class="line">    self.height -= PADDING</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例在getVolumePackage()方法的except块中加入了发生异常时恢复对象状态的代码。</p>
+<p><strong>正确示例</strong>2:<strong>finally</strong>子句</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">    self.length += PADDING</span><br><span class="line">    self.width += PADDING</span><br><span class="line">    self.height += PADDING</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        self.validate(weight)</span><br><span class="line">        volume = self.length * self.width * self.height</span><br><span class="line">        <span class="keyword">return</span> volume</span><br><span class="line">    <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        self.length -= PADDING</span><br><span class="line">        self.width -= PADDING</span><br><span class="line">        self.height -= PADDING</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例使用一个finally子句来执行回滚操作，以保证不管是否发生异常，都会进行回滚。</p>
+<p><strong>正确示例</strong>3:<strong>输入校验</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        self.validate(weight)</span><br><span class="line">    <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    self.length += PADDING</span><br><span class="line">    self.width += PADDING</span><br><span class="line">    self.height += PADDING</span><br><span class="line">    volume = self.length * self.width * self.height</span><br><span class="line">    self.length -= PADDING</span><br><span class="line">    self.width -= PADDING</span><br><span class="line">    self.height -= PADDING</span><br><span class="line">    <span class="keyword">return</span> volume</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例在修改对象状态之前执行输入校验。注意，try代码块中只包含可能会抛出异常的代码，而其他代码都被移到try块之外。</p>
+<p><strong>正确示例</strong>4:<strong>未修改的对象</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getVolumePackage</span>(<span class="params">self, weight</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        self.validate(weight)</span><br><span class="line">    <span class="keyword">except</span> (Exception , ex) <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    volume = (self.length + PADDING) * (self.width + PADDING) * (self.height + PADDING)</span><br><span class="line">    <span class="keyword">return</span> volume</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例避免了需要修改对象，使得对象状态不可能不一致，也因此没有必要进行回滚操作。相比之前的解决方案，更推荐使用这种方式。但是对于一些复杂的代码，这种方式可能无法实行。</p>
+</li>
+</ol>
+<h3 id="IO操作"><a href="#IO操作" class="headerlink" title="IO操作"></a>IO操作</h3><ol>
+<li><p>禁止使用mktemp创建临时文件</p>
+<p>mktemp函数返回的临时文件名中含有进程ID号，这导致临时文件名很容易被猜测。攻击者可利用此漏洞执行符号链接攻击，使本地攻击者可以覆盖任意文件，导致拒绝服务。<strong>Python2.3版本之后该函数被废除</strong>。可以使用替代函数namedTemporaryFile()、mkstemp()和 mkdtemp()。使用新函数创建的临时文件名不再包含进程ID，而是替代为由六个随机字符组成的一个字符串。</p>
+<p><strong>错误示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tempfile</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">tempfile = tempfile.mktemp()</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tempfile</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">tempfile = tempfile.mkstemp()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>临时文件使用完毕应及时删除</p>
+<p><strong>说明：</strong>在全局可写的目录中创建临时文件，例如，POSIX系统下的&#x2F;tmp与&#x2F;var&#x2F;tmp目录，Windows系统下的C:\TEMP目录。这类目录中的文件可能会被定期清理，例如，每天晚上或者重启时。然而，如果文件未被安全地创建或者用完后还是可访问的，具备本地文件系统访问权限的攻击者便可以利用共享目录中的文件进行恶意操作。删除已经不再需要的临时文件有助于对文件名和其他资源（如二级存储）进行回收利用。每一个程序在正常运行过程中都有责任确保删除已使用完毕的临时文件。</p>
+<p>注意：下面的示例代码已假设文件在创建时指定了合适的访问权限，以遵循规则 <code>3.在多用户系统中创建文件时指定合适的访问权限</code></p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;tempnam.tmp&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> os.path.isfile(f):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;This file already exists&quot;</span></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    strs = <span class="string">&quot;Data&quot;</span></span><br><span class="line">    f.write(strs)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    <span class="keyword">if</span> f:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            f.close()</span><br><span class="line">        <span class="keyword">except</span> :</span><br><span class="line">            <span class="comment"># handle error</span></span><br><span class="line">            <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>这个错误示例代码在运行结束时未将临时文件删除。</p>
+<p><strong>正确示例</strong>1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tempfile</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    a = tempfile.NamedTemporaryFile(delete=<span class="literal">True</span>)</span><br><span class="line">    <span class="built_in">print</span> a.name</span><br><span class="line">    a.write(<span class="string">&quot;abc&quot;</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    a.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个正确示例创建临时文件时用到了NamedTemporaryFile ()方法，这个方法会新建一个随机的文件名。文件使用try-finally构造块来打开，这种方式将会自动关闭文件，而不管是否有异常发生，并且在打开文件时用到了delete选项，使得文件在关闭时会被自动删除。</p>
+<p><strong>正确示例2:手动删除临时文件</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">f = os.<span class="built_in">open</span>(<span class="string">&quot;tempnam.tmp&quot;</span>, os.O_WRONLY, <span class="built_in">int</span>(<span class="string">&quot;0600&quot;</span>, <span class="number">8</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    strs = <span class="string">&quot;Data&quot;</span></span><br><span class="line">    f.write(strs)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    <span class="keyword">if</span> f:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            f.close()</span><br><span class="line">        <span class="keyword">except</span> :</span><br><span class="line">            <span class="comment"># handle error</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">if</span> os.path.isfile(<span class="string">&quot;tempnam.tmp&quot;</span>):</span><br><span class="line">        os.remove(<span class="string">&quot;tempnam.tmp&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>临时文件应该在使用完毕之后、系统终止之前被手动删除</p>
+</li>
+<li><p>在多用户系统中创建文件时指定合适的访问许可</p>
+<p><strong>说明：</strong>多用户系统中的文件通常归属于一个特定的用户。文件的主人能够指定系统中哪些其他用户能够访问该文件的内容。这些文件系统使用权限和许可模型来保护文件访问。当一个文件被创建时，文件访问许可规定了哪些用户可以访问或者操作这个文件。当一个程序在创建文件时没有对文件的访问许可做足够的限制，攻击者可能在程序修改此文件的访问权限之前对其进行读取或者修改。因此，一定要在创建文件时就为其指定访问许可，以防止未授权的文件访问。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;tempnam.tmp&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>python内置的open方法无法让程序员显式的指定文件的访问权限。在这个错误示例中，所创建文件的访问许可取决于具体的实现机制，可能无法防止未授权的访问。</p>
+<p><strong>正确示例</strong>1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment">#使用os的open函数指定访问许可</span></span><br><span class="line">fd = os.<span class="built_in">open</span>(<span class="string">&quot;tempnam.tmp&quot;</span>, os.O_WRONLY, <span class="built_in">int</span>(<span class="string">&quot;0600&quot;</span>, <span class="number">8</span>))</span><br><span class="line">myFileObject = os.fdopen(fd)</span><br><span class="line">myFileObject.write(<span class="string">&quot;...&quot;</span>)</span><br><span class="line">myFileObject.close()</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例2：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">name = <span class="string">&quot;tempnam.tmp&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(name, <span class="string">&quot;wt&quot;</span>) <span class="keyword">as</span> myfile:</span><br><span class="line"><span class="comment">#使用os的chmod函数设定访问许可</span></span><br><span class="line">    os.chmod(name, 0600)</span><br><span class="line">    myfile.write(<span class="string">&quot;eeek&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>例外情况：</strong></p>
+<p>如果文件是创建在一个安全目录中，而且对于非受信用户是不可读的，那么可以允许以默认许可创建文件。例如，如果整个文件系统是可信的或者只有可信用户可以访问，就属于这种情况。</p>
+</li>
+</ol>
+<h3 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h3><ol>
+<li><p>禁止对不可信来源的数据进行unpickle和load shelf</p>
+<p><strong>说明：</strong>pickle模块实现了序列化和反序列化一个Python结构体对象。”Pickling”过程是把Python 分层的对象结构转换成字节流， “unpickling”过程是把字节流转换回分层的对象结构。pickle存在安全性问题。Python的文档清晰地表明它不提供安全性保证，因此从一个不可信的数据源接收到的数据禁止进行反序列化。</p>
+<p>因为shelf依赖于pickle，所以从不可信来源的数据load shelf也是不安全的。</p>
+</li>
+<li><p>将敏感对象发送出信任区域前进行签名并加密</p>
+<p><strong>说明：</strong>敏感数据传输过程中要防止窃取和恶意篡改。使用安全的加密算法加密传输对象可以保护数据，防止对象被非法篡改，保持其完整性。在以下场景中，需要对对象密封和数字签名来保证数据安全：</p>
+<ul>
+<li><p>序列化或传输敏感数据</p>
+</li>
+<li><p>没有使用类似于SSL传输通道</p>
+</li>
+<li><p>敏感数据需要长久保存（比如在硬盘驱动器上）</p>
+</li>
+</ul>
+<p><strong>例外情况：</strong></p>
+<ul>
+<li><p>为已加密对象签名在特定场景下是合理的，比如验证从其他地方接收的加密对象的真实性。这是对于被机密对象本身而非其内容的保证。</p>
+</li>
+<li><p>签名和加密仅仅对于必须跨过信任边界的对象是必需的。始终位于信任边界内的对象不需要签名或加密。例如，如果某网络全部位于信任边界内，始终处于该网络上的对象无需签名或加密。</p>
+</li>
+</ul>
+</li>
+<li><p>禁止序列化未加密的敏感数据</p>
+<p><strong>说明：</strong>虽然序列化可以将对象的状态保存为一个字节序列，之后通过反序列化该字节序列又能重新构造出原来的对象，但是它并没有提供一种机制来保证序列化数据的安全性。可访问序列化数据的攻击者可以借此获取敏感信息并确定对象的实现细节。攻击者也可恶意修改其中的数据，试图在其被反序列化之后对系统造成危害。敏感数据序列化之后是潜在对外暴露着的，因此序列化信息中不应该包括：密钥、数字证书、以及那些在序列化时引用敏感数据的类。此条规则的意义在于防止敏感数据被无意识的序列化导致敏感信息泄露。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GPSLocation</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y, <span class="built_in">id</span></span>):</span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line">        self.<span class="built_in">id</span> = <span class="built_in">id</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getstate__</span>(<span class="params">self</span>):</span><br><span class="line">        state = <span class="built_in">dict</span>(self.__dict__)</span><br><span class="line">        <span class="keyword">return</span> state</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line">a = pickle.dumps(GPSLocation(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line">b = pickle.loads(a)</span><br><span class="line"><span class="built_in">print</span> b.y</span><br></pre></td></tr></table></figure>
+
+<p>在这段示例代码中，假定坐标信息是敏感的，那么将其序列化到数据流中使之面临敏感信息泄露与被恶意篡改的风险。</p>
+<p><strong>正确示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GPSLocation</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y, <span class="built_in">id</span></span>):</span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line">        self.<span class="built_in">id</span> = <span class="built_in">id</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getstate__</span>(<span class="params">self</span>):</span><br><span class="line">        state = <span class="built_in">dict</span>(self.__dict__)</span><br><span class="line">        <span class="keyword">del</span> state[<span class="string">&#x27;x&#x27;</span>]</span><br><span class="line">        <span class="keyword">del</span> state[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">        <span class="keyword">return</span> state</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pickle </span><br><span class="line">a = pickle.dumps(GPSLocation(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line">b = pickle.loads(a)</span><br><span class="line"><span class="built_in">print</span> b.y</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在将某个包含敏感数据的类序列化时，程序必须确保敏感数据不被序列化。这包括阻止包含敏感信息的数据成员被序列化，以及不可序列化或者敏感对象的引用被序列化。该示例使用__getstate__方法，从而使它们不包括在依照默认的序列化机制应该被序列化的字段列表中。这样既避免了错误的序列化，又防止了敏感数据被意外序列化。</p>
+<p><strong>例外情况：</strong></p>
+<p>可以序列化已正确加密的敏感数据。</p>
+</li>
+</ol>
+<h3 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h3><ol>
+<li><p>生产代码不能包含任何调试入口点</p>
+<p><strong>说明</strong>：由于调试或者测试目的，开发者经常在代码中添加特定的调测代码，这些代码并没有打算与应用一起交付或者部署。当这类的调测代码不小心被留在了应用中，这个应用对某些特殊交互就是开放的。这些后门入口点可以导致安全风险。</p>
+</li>
+</ol>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
+<li><p>禁止在日志中保存口令、密钥等敏感信息</p>
+<p><strong>说明：</strong>在日志中不能输出口令、密钥和其他敏感信息，口令包括明文口令和密文口令。对于敏感信息建议采取以下方法：</p>
+<ul>
+<li><p>不在日志中打印敏感信息。</p>
+</li>
+<li><p>若因为特殊原因必须要打印日志，则用固定长度的星号（*）代替输出的敏感信息。</p>
+</li>
+</ul>
+</li>
+<li><p>禁止使用私有或者弱加密算法</p>
+<p><strong>说明：</strong>禁止使用私有算法或者弱加密算法（比如DES，MD5等）。应该使用经过验证的、安全的、公开的加密算法。</p>
+</li>
+<li><p>基于哈希算法的口令安全存储必须加入盐值（salt）</p>
+<p><strong>说明：</strong>单向哈希是在一个方向上工作的哈希函数，从预映射的值很容易计算其哈希值，但要根据特定哈希值产生一个预映射的值却是非常困难的。单向哈希主要应用于加密、消息完整性校验、冗余校验等。假如没有加入盐值，则加密原理是：</p>
+<p>密文&#x3D; 哈希算法（明文）</p>
+<p>此时，若攻击者获取到密文，同时知道哈希算法，则就可以通过字典攻击来探测和获取口令。加入盐值之后：</p>
+<p>密文&#x3D; 哈希算法（明文+盐值）</p>
+<p>其中盐值可以随机设置，这样即使相同的口令，但盐值不同，密文也不同，从而增加了口令的破解难度、增强安全性。</p>
+<p><strong>正确示例（PBKDF2）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib, binascii</span><br><span class="line"><span class="comment">#  b&#x27;salt&#x27;为安全随机数</span></span><br><span class="line">dk = hashlib.pbkdf2_hmac(<span class="string">&#x27;sha256&#x27;</span>, <span class="string">b&#x27;password&#x27;</span>, <span class="string">b&#x27;salt&#x27;</span>, <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> binascii.hexlify(dk)</span><br></pre></td></tr></table></figure>
+
+<p>口令单向Hash场景下可以使用PBKDF2算法，PBKDF2是一个密钥导出算法，既可用于导出密钥，也可用于口令保存，并且已在RFC 2898标准中定义。它使用最为广泛，能被大多数算法库所支持。</p>
+</li>
+<li><p>禁止将敏感信息硬编码在程序中</p>
+<p><strong>说明：</strong>如果将敏感信息（包括口令和加密密钥）硬编码在程序中，可能会将敏感信息暴露给攻击者。无需反编译pyc文件，任何能够访问到pyc文件的人都可以获取这些敏感信息。因此，不能将敏感信息硬编码在程序中。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Defpassword</span>:</span><br><span class="line">   defPassword = <span class="string">&quot;123456&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>恶意用户可以直接打开pyc文件发现其中硬编码的默认密码是：123456。</p>
+</li>
+<li><p>使用安全随机数</p>
+<p><strong>说明:</strong> Python产生随机数的功能在random模块中实现，实现了各种分布的伪随机数生成器。产生的随机数可以是均匀分布，高斯分布，对数正态分布，负指数分布以及alpha，beta分布，但是这些随机数都是伪随机数，不能应用于安全加密目的的应用中。如果你需要一个真正的密码安全随机数，在Linux和类Unix下用，请使用&#x2F;dev&#x2F;random生成安全随机数，在windows下，使用random模块中的SystemRandom类来实现。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">sr = random.randint(<span class="number">0</span>, <span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">file = <span class="built_in">open</span>(<span class="string">&quot;/dev/random&quot;</span>, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">sr = file.read(<span class="number">10</span>)</span><br><span class="line">file.close()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用SSLSocket代替Socket来进行安全数据交互</p>
+<p><strong>说明：</strong>当在不安全的传输通道中传输敏感数据时，程序必须使用SSLSocket类，而不能是socket类。SSLSocket类提供了诸如SSL&#x2F;TLS等安全协议来保证通道不受监听和恶意篡改的影响。</p>
+<p>SSLSocket类提供的主要保护包括：</p>
+<ul>
+<li><p>完整性保护：SSL防止消息被主动窃取者篡改。</p>
+</li>
+<li><p>认证：在大多数模式下，SSL都对对端进行认证。服务器通常都被认证，如果服务器要求，客户端也可以被认证。</p>
+</li>
+<li><p>保密性（隐私保护）：在大多数模式下，SSL对客户端和服务器之间传输的数据进行加密。 这样保护了数据的保密性，被动窃听器不能监听诸如财务或者个人信息之类的敏感信息。</p>
+</li>
+</ul>
+<p>错误示例：未使用SSLSocket保护的示例(摘自python手册)：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Echo server program</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&#x27;&#x27;</span>                  <span class="comment"># Symbolic name meaning all available interfaces</span></span><br><span class="line">PORT = <span class="number">50007</span>              <span class="comment"># Arbitrary non-privileged port</span></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">s.bind((HOST, PORT))</span><br><span class="line">s.listen(<span class="number">1</span>)</span><br><span class="line">conn, addr = s.accept()</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;Connected by&#x27;</span>, addr</span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    data = conn.recv(<span class="number">1024</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> data: <span class="keyword">break</span></span><br><span class="line">    conn.sendall(data)</span><br><span class="line">conn.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Echo client program</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&#x27;&#x27;</span>    <span class="comment"># The remote host</span></span><br><span class="line">PORT = <span class="number">50007</span>              <span class="comment"># The same port as used by the server</span></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">s.connect((HOST, PORT))</span><br><span class="line">s.sendall(<span class="string">&#x27;Hello, world&#x27;</span>)</span><br><span class="line">data = s.recv(<span class="number">1024</span>)</span><br><span class="line">s.close()</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;Received&#x27;</span>, <span class="built_in">repr</span>(data)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>正确示例：</p>
+<p>使用SSLSocket保护的示例(代码原型来自python2.7.3手册)：</p>
+<p><strong>服务端</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket, ssl</span><br><span class="line"></span><br><span class="line">bindsocket = socket.socket()</span><br><span class="line">bindsocket.bind((<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">10023</span>))</span><br><span class="line">bindsocket.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ssl_version建议使用TLSv1.2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    newsocket, fromaddr = bindsocket.accept()</span><br><span class="line">    connstream = ssl.wrap_socket(newsocket,</span><br><span class="line">                                 server_side=<span class="literal">True</span>,</span><br><span class="line">                                 certfile=<span class="string">&quot;mycertfile&quot;</span>,</span><br><span class="line">                                 keyfile=<span class="string">&quot;mykeyfile&quot;</span>,</span><br><span class="line">                                 ssl_version=ssl.PROTOCOL_TLSv1_2)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        deal_with_client(connstream)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        connstream.shutdown(socket.SHUT_RDWR)</span><br><span class="line">        connstream.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">deal_with_client</span>(<span class="params">connstream</span>):</span><br><span class="line">    data = connstream.read()</span><br><span class="line">    <span class="comment"># null data means the client is finished with us</span></span><br><span class="line">    <span class="keyword">while</span> data:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> do_something(connstream, data):</span><br><span class="line">            <span class="comment"># we&#x27;ll assume do_something returns False</span></span><br><span class="line">            <span class="comment"># when we&#x27;re finished with client</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        data = connstream.read()</span><br><span class="line">    <span class="comment"># finished with client</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket, ssl, pprint</span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line"></span><br><span class="line"><span class="comment"># require a certificate from the server</span></span><br><span class="line">ssl_sock = ssl.wrap_socket(s,</span><br><span class="line">                           ca_certs=<span class="string">&quot;/etc/ca_certs_file&quot;</span>,</span><br><span class="line">                           cert_reqs=ssl.CERT_REQUIRED)</span><br><span class="line"></span><br><span class="line">ssl_sock.connect((<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">10023</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">repr</span>(ssl_sock.getpeername())</span><br><span class="line"><span class="built_in">print</span> ssl_sock.cipher()</span><br><span class="line"><span class="built_in">print</span> pprint.pformat(ssl_sock.getpeercert())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set a simple HTTP request -- use httplib in actual code.</span></span><br><span class="line">ssl_sock.write(<span class="string">&quot;&quot;&quot;hello, world&quot;&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Read a chunk of data.  Will not necessarily</span></span><br><span class="line"><span class="comment"># read all the data returned by the server.</span></span><br><span class="line">data = ssl_sock.read()</span><br><span class="line"></span><br><span class="line"><span class="comment"># note that closing the SSLSocket will also close the underlying socket</span></span><br><span class="line">ssl_sock.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在python2.7.10及以上版本ssl库有变化,可以参照所使用的python版本的手册</p>
+<p>该正确代码示例应用ssl库使用SSL&#x2F;TLS安全协议保护传输的报文。使用ssl的程序如果尝试连接不使用SSL的端口，那么这个程序将无限期被阻塞。同理，一个不使用ssl的程序如果要同一个使用SSL的端口建立连接也将会被阻塞。</p>
+<p><strong>例外情况：</strong></p>
+<p>因为SSLSocket提供的报文安全传输机制性，将造成巨大的性能开销。在以下情况下，普通的套接字就可以满足需求：</p>
+<ul>
+<li><p>套接字上传输的数据不敏感。</p>
+</li>
+<li><p>数据虽然敏感，但是已经过恰当加密（参考规则 将敏感对象发送出信任区域前进行签名并加密)）。</p>
+</li>
+<li><p>套接字的网络路径没有越出信任边界。这种情况只有在特定的情况下才能发生。例如，套接字的两端都在同一个本例网络，而且整个网络都是可信的情况时。</p>
+</li>
+</ul>
+</li>
+<li><p>对子类继承的变量要做显式定义和赋初值</p>
+<p><strong>说明：</strong>在Python中，类变量都是作为字典进行内部处理的，并且遵循方法解析顺序（MRO）。子类没有定义的属性会引用基类的属性值，如果基类的属性值发生变化，对应的子类引用的基类的属性的值也相应发生了变化。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">   x = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>(<span class="title class_ inherited__">A</span>):</span><br><span class="line">   <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span>(<span class="title class_ inherited__">A</span>):</span><br><span class="line">   <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>B.x = <span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span> A.x, B.x, C.x</span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>A.x = <span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span> A.x, B.x, C.x</span><br><span class="line"><span class="number">3</span> <span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里虽然没有给C.x赋值，但是由于基类的值A.x发生改变，在获取C.x的值得时候发现它引用的数据发生了变化。在上面这段代码中，因为属性x没有在类C中发现，它会查找它的基类（在上面例子中只有A，尽管Python支持多继承）。换句话说，就是C自己没有x属性，独立于A，因此，引用 C.x其实就是引用A.x。</p>
+<p><strong>正确示例：</strong>如果希望类C中的x不引用自A类，可以在C类中重新定义属性X，这样C类的就不会引用A类的属性x了，值的变化就不会相互影响。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>(<span class="title class_ inherited__">A</span>):</span><br><span class="line">   x = <span class="number">2</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span>(<span class="title class_ inherited__">A</span>):</span><br><span class="line">   x = -<span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span> A.x, B.x, C.x</span><br><span class="line"><span class="number">1</span> <span class="number">2</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>A.x = <span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span> A.x, B.x, C.x</span><br><span class="line"><span class="number">3</span> <span class="number">2</span> -<span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+<li><p>禁止通过注释的方式删除无用的功能代码</p>
+<p><strong>说明：</strong>python的注释包含：单行注释、多行注释、代码间注释、doc string等。除了doc string是使用””””””括起来的多行注释，常用来描述类或者函数的用法、功能、参数、返回等信息外，其余形式注释都是使用#符号开头用来注释掉#后面的内容。基于python语言运行时编译的特殊性，如果在提供代码的时候提供的是py文件，即便是某些函数和方法在代码中进行了注释，别有用心的人依然可以通过修改注释来使某些功能启用；尤其是某些接口函数，如果不在代码中进行彻底删除，可能在不知情的情况下就被启用了某些本应被屏蔽的功能。因此根据红线要求，在python中不使用的功能、模块、函数、变量等一定要在代码中彻底删除，不给安全留下隐患。即便是不提供源码py文件，提供编译过的pyc、pyo文件，别有用心的人可以通过反编译来获取源代码，同样注释掉的代码依然有被意外执行的风险，可能会造成不可预测的结果。</p>
+<p><strong>错误示例：</strong>在main.py中有两个接口被注释掉了，但是没有被删除。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">if</span> sys.argv[<span class="number">1</span>].startswith(<span class="string">&#x27;--&#x27;</span>):</span><br><span class="line">        option = sys.argv[<span class="number">1</span>][<span class="number">2</span>:]</span><br><span class="line">        <span class="keyword">if</span> option == <span class="string">&quot;load&quot;</span>:</span><br><span class="line">            <span class="comment">#安装应用</span></span><br><span class="line">            LoadCmd(option, sys.argv[<span class="number">2</span>:<span class="number">3</span>][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">elif</span> option == <span class="string">&#x27;unload&#x27;</span>:</span><br><span class="line">            <span class="comment">#卸载应用</span></span><br><span class="line">            UnloadCmd(sys.argv[<span class="number">2</span>:<span class="number">3</span>][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">elif</span> option == <span class="string">&#x27;unloadproc&#x27;</span>:</span><br><span class="line">            <span class="comment">#卸载流程</span></span><br><span class="line">            UnloadProcessCmd(sys.argv[<span class="number">2</span>:<span class="number">3</span>][<span class="number">0</span>])</span><br><span class="line"><span class="comment">#       elif option == &#x27;active&#x27;:</span></span><br><span class="line"><span class="comment">#           ActiveCmd(sys.argv[2:3][0])</span></span><br><span class="line"><span class="comment">#       elif option == &#x27;inactive&#x27;:</span></span><br><span class="line"><span class="comment">#           InActiveCmd(sys.argv[2:3][0])</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            Loginfo(<span class="string">&quot;Command %s is unknown&quot;</span>%(sys.argv[<span class="number">1</span>]))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在上例中很容易让其他人看到我们程序中的两个屏蔽的接口，容易造成不安全的因素，注释的代码应该删除。</p>
+<p><strong>正确实例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">if</span> sys.argv[<span class="number">1</span>].startswith(<span class="string">&#x27;--&#x27;</span>):</span><br><span class="line">        option = sys.argv[<span class="number">1</span>][<span class="number">2</span>:]</span><br><span class="line">        <span class="keyword">if</span> option == <span class="string">&quot;load&quot;</span>:</span><br><span class="line">            <span class="comment">#安装应用</span></span><br><span class="line">            LoadCmd(option, sys.argv[<span class="number">2</span>:<span class="number">3</span>][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">elif</span> option == <span class="string">&#x27;unload&#x27;</span>:</span><br><span class="line">            <span class="comment">#卸载应用</span></span><br><span class="line">            UnloadCmd(sys.argv[<span class="number">2</span>:<span class="number">3</span>][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">elif</span> option == <span class="string">&#x27;unloadproc&#x27;</span>:</span><br><span class="line">            <span class="comment">#卸载流程</span></span><br><span class="line">            UnloadProcessCmd(sys.argv[<span class="number">2</span>:<span class="number">3</span>][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            Loginfo(<span class="string">&quot;Command %s is unknown&quot;</span>%(sys.argv[<span class="number">1</span>]))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>慎用__del__方法</p>
+<p><strong>说明：</strong>当一个程序正常运行到最后一条语句，或者出现一个未捕获的SystemExit异常(由sys.exit()产生)，或者解释器收到一个SIGTERM或者SIGHUP(在UNIX下)信号时，程序就会终止。解释器会将所有已知名称空间下的所有对象、对象的引用记数清为0(并同时删除所有的名称空间)。当一个对象的引用记数变为零，就会自动调用它的__del__()来销毁该对象。当两个对象存在互相引用时，在程序结束时，这两个对象就无法被销毁(这会造成内存泄漏)。尽管Python的垃圾回收机制能在运行时删除这些对象，在程序结束时该机制不会被自动调用。</p>
+<p>Python的垃圾回收过程与常用语言的不一样，Python按照locals中的字典顺序进行垃圾回收，而不是按照创建顺序进行。如果有些对象的__del__方法会访问全局数据或者其他模块中的方法定义，那么由于这些对象有可能已经被删除，__del__方法就有可能引发NameError异常。这说明某个对象的 __del__方法执行失败，通常意味着有一项重要操作没有完成(例如关闭一个服务器连接)。因此，最好在代码中显式的执行清理操作，而不是依赖解释器来自动做这件事。</p>
+<p><strong>错误示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NewClass</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    num_count = <span class="number">0</span> <span class="comment"># 所有的实例都共享此变量，即不单独为每个实例分配</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        NewClass.num_count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> name,NewClass.num_count</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__del__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Deleting&quot;</span>,self.name, <span class="string">&quot;...&quot;</span></span><br><span class="line">        NewClass.num_count -= <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> self.name,<span class="string">&quot;is deleted, num_count=&quot;</span>,NewClass.num_count</span><br><span class="line"></span><br><span class="line">aa = NewClass(<span class="string">&quot;aa&quot;</span>)</span><br><span class="line">bb = NewClass(<span class="string">&quot;bb&quot;</span>)</span><br><span class="line">cc = NewClass(<span class="string">&quot;cc&quot;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">locals</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#此处没有手动指定回收流程，故Python会自动调用_del_方法回收</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Over&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>代码运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">aa <span class="number">1</span></span><br><span class="line">bb <span class="number">2</span></span><br><span class="line">cc <span class="number">3</span></span><br><span class="line">&#123;<span class="string">&#x27;aa&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fc0ad8216d0</span>&gt;, <span class="string">&#x27;NewClass&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;__main__.NewClass&#x27;</span>&gt;, <span class="string">&#x27;bb&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fc0ad821710</span>&gt;, <span class="string">&#x27;__builtins__&#x27;</span>: &lt;module <span class="string">&#x27;__builtin__&#x27;</span> (built-<span class="keyword">in</span>)&gt;, <span class="string">&#x27;__file__&#x27;</span>: <span class="string">&#x27;jstex.py&#x27;</span>, <span class="string">&#x27;__package__&#x27;</span>: <span class="literal">None</span>, <span class="string">&#x27;cc&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fc0ad821750</span>&gt;, <span class="string">&#x27;__name__&#x27;</span>: <span class="string">&#x27;__main__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>: <span class="literal">None</span>&#125;</span><br><span class="line">Over</span><br><span class="line">Deleting aa ...</span><br><span class="line">aa <span class="keyword">is</span> deleted, num_count= <span class="number">2</span></span><br><span class="line">Deleting bb ...</span><br><span class="line">Exception AttributeError: <span class="string">&quot;&#x27;NoneType&#x27; object has no attribute &#x27;num_count&#x27;&quot;</span> <span class="keyword">in</span> &lt;bound method NewClass.__del__ of &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fc0ad821710</span>&gt;&gt; ignored</span><br><span class="line">Deleting cc ...</span><br><span class="line">Exception AttributeError: <span class="string">&quot;&#x27;NoneType&#x27; object has no attribute &#x27;num_count&#x27;&quot;</span> <span class="keyword">in</span> &lt;bound method NewClass.__del__ of &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fc0ad821750</span>&gt;&gt; ignored</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例</strong>1：手动指定回收顺序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NewClass</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    num_count = <span class="number">0</span> <span class="comment"># 所有的实例都共享此变量，即不单独为每个实例分配</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        NewClass.num_count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> name,NewClass.num_count</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__del__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Deleting&quot;</span>,self.name, <span class="string">&quot;...&quot;</span></span><br><span class="line">        NewClass.num_count -= <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> self.name,<span class="string">&quot;is deleted, num_count=&quot;</span>,NewClass.num_count</span><br><span class="line"></span><br><span class="line">aa = NewClass(<span class="string">&quot;aa&quot;</span>)</span><br><span class="line">bb = NewClass(<span class="string">&quot;bb&quot;</span>)</span><br><span class="line">cc = NewClass(<span class="string">&quot;cc&quot;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">locals</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">del</span> aa</span><br><span class="line"><span class="keyword">del</span> bb</span><br><span class="line"><span class="keyword">del</span> cc</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">locals</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#此处没有手动指定回收流程，故Python会自动调用_del_方法回收</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Over&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">aa <span class="number">1</span></span><br><span class="line">bb <span class="number">2</span></span><br><span class="line">cc <span class="number">3</span></span><br><span class="line">&#123;<span class="string">&#x27;aa&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fe0b16306d0</span>&gt;, <span class="string">&#x27;NewClass&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;__main__.NewClass&#x27;</span>&gt;, <span class="string">&#x27;bb&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fe0b1630710</span>&gt;, <span class="string">&#x27;__builtins__&#x27;</span>: &lt;module <span class="string">&#x27;__builtin__&#x27;</span> (built-<span class="keyword">in</span>)&gt;, <span class="string">&#x27;__file__&#x27;</span>: <span class="string">&#x27;jstex1.py&#x27;</span>, <span class="string">&#x27;__package__&#x27;</span>: <span class="literal">None</span>, <span class="string">&#x27;cc&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7fe0b1630750</span>&gt;, <span class="string">&#x27;__name__&#x27;</span>: <span class="string">&#x27;__main__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>: <span class="literal">None</span>&#125;</span><br><span class="line">Deleting aa ...</span><br><span class="line">aa <span class="keyword">is</span> deleted, num_count= <span class="number">2</span></span><br><span class="line">Deleting bb ...</span><br><span class="line">bb <span class="keyword">is</span> deleted, num_count= <span class="number">1</span></span><br><span class="line">Deleting cc ...</span><br><span class="line">cc <span class="keyword">is</span> deleted, num_count= <span class="number">0</span></span><br><span class="line">&#123;<span class="string">&#x27;NewClass&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;__main__.NewClass&#x27;</span>&gt;, <span class="string">&#x27;__builtins__&#x27;</span>: &lt;module <span class="string">&#x27;__builtin__&#x27;</span> (built-<span class="keyword">in</span>)&gt;, <span class="string">&#x27;__file__&#x27;</span>: <span class="string">&#x27;jstex1.py&#x27;</span>, <span class="string">&#x27;__package__&#x27;</span>: <span class="literal">None</span>, <span class="string">&#x27;__name__&#x27;</span>: <span class="string">&#x27;__main__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>: <span class="literal">None</span>&#125;</span><br><span class="line">Over</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>正确示例2</strong>：在_del_方法中指定调用自身的变量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NewClass</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    num_count = <span class="number">0</span> <span class="comment"># 所有的实例都共享此变量，即不单独为每个实例分配</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        NewClass.num_count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> name,NewClass.num_count</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__del__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Deleting&quot;</span>,self.name, <span class="string">&quot;...&quot;</span></span><br><span class="line">        self.__class__.num_count -= <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> self.name,<span class="string">&quot;is deleted, num_count=&quot;</span>,self.__class__.num_count</span><br><span class="line"></span><br><span class="line">aa = NewClass(<span class="string">&quot;aa&quot;</span>)</span><br><span class="line">bb = NewClass(<span class="string">&quot;bb&quot;</span>)</span><br><span class="line">cc = NewClass(<span class="string">&quot;cc&quot;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">locals</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#此处没有手动指定回收流程，故Python会自动调用_del_方法回收</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Over&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">aa <span class="number">1</span></span><br><span class="line">bb <span class="number">2</span></span><br><span class="line">cc <span class="number">3</span></span><br><span class="line">&#123;<span class="string">&#x27;aa&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7f5c496786d0</span>&gt;, <span class="string">&#x27;NewClass&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;__main__.NewClass&#x27;</span>&gt;, <span class="string">&#x27;bb&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7f5c49678710</span>&gt;, <span class="string">&#x27;__builtins__&#x27;</span>: &lt;module <span class="string">&#x27;__builtin__&#x27;</span> (built-<span class="keyword">in</span>)&gt;, <span class="string">&#x27;__file__&#x27;</span>: <span class="string">&#x27;jstex2.py&#x27;</span>, <span class="string">&#x27;__package__&#x27;</span>: <span class="literal">None</span>, <span class="string">&#x27;cc&#x27;</span>: &lt;__main__.NewClass <span class="built_in">object</span> at <span class="number">0x7f5c49678750</span>&gt;, <span class="string">&#x27;__name__&#x27;</span>: <span class="string">&#x27;__main__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>: <span class="literal">None</span>&#125;</span><br><span class="line">Over</span><br><span class="line">Deleting aa ...</span><br><span class="line">aa <span class="keyword">is</span> deleted, num_count= <span class="number">2</span></span><br><span class="line">Deleting bb ...</span><br><span class="line">bb <span class="keyword">is</span> deleted, num_count= <span class="number">1</span></span><br><span class="line">Deleting cc ...</span><br><span class="line">cc <span class="keyword">is</span> deleted, num_count= <span class="number">0</span> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>由于不能保证对象的__del__()方法在程序结束时一定会执行，一个比较好的办法就是在程序结束时显式的清除某些对象。例如打开的文件以及网络连接等。你可以给一个自定义对象写一个专门的销毁方法(例如close())，也可以写一个终止函数，并通过 atexit 模块将其注册到系统中:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> atexit</span><br><span class="line">connection = open_connection(<span class="string">&quot;deaddot.com&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cleanup</span>():</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Going away...&quot;</span></span><br><span class="line">    close_connection(connection)</span><br><span class="line"></span><br><span class="line">atexit.register(cleanup)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也可以以这种方式来调用垃圾回收器:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> atexit gc</span><br><span class="line">atexit.register(gc.collect)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><a name="附录A">附录A</a></p>
+<p>下表中总结了常用数据库中与SQL注入攻击相关的特殊字符：</p>
+<table>
+ <tr>
+     <th>数据库</th>
+     <th>特殊字符</th>
+     <th>描述</th>  
+        <th>转义序列</th>
+ </tr >
+ <tr >
+     <td rowspan="4">Oracle</td>
+     <td>%</td>
+     <td>百分比：任何包括0或更多字符的字符串</td>
+        <td>/% escape '/'</td>
+ </tr>
+ <tr>
+     <td>_</td>
+     <td>下划线：任意单个字符</td>
+     <td>/_ escape '/'</td>
+ </tr>
+ <tr>
+     <td>/</td>
+     <td>斜线：转义字符</td>
+        <td>// escape '/'</td>
+ </tr>
+ <tr>
+     <td>'</td>
+     <td>单引号</td>
+     <td>''</td>
+ </tr>
+ <tr>
+  <td rowspan="5">MySQL</td>
+     <td>'</td>
+        <td>单引号</td>
+        <td>\'</td>
+ </tr>
+ <tr>
+     <td>"</td>
+     <td>双引号</td>
+        <td>\"</td>
+ </tr>
+ <tr>
+     <td>\</td>
+     <td>反斜杠</td>
+     <td>\\ </td>
+ </tr>
+ <tr>
+     <td>%</td>
+     <td>百分比：任何包括0或更多字符的字符串</td>
+        <td>\%</td>
+ </tr>
+ <tr>
+     <td >_</td>
+     <td>下划线：任意单个字符</td>
+        <td>\_</td>
+ </tr>
+    <tr>
+  <td rowspan="2">DB2</td>
+     <td>'</td>
+        <td>单引号</td>
+        <td>''</td>
+ </tr>
+    <tr>
+     <td >;</td>
+     <td>冒号</td>
+        <td>.</td>
+ </tr>
+       <tr>
+  <td rowspan="5">SQL Server</td>
+     <td>'</td>
+        <td>单引号</td>
+        <td>''</td>
+ </tr>
+    <tr>
+     <td >[</td>
+     <td>左中括号：转义字符</td>
+        <td>[[]</td>
+ </tr>
+    <tr>
+     <td >_</td>
+     <td>下划线：任意单个字符</td>
+        <td>[_]</td>
+ </tr>
+    <tr>
+     <td >%</td>
+     <td>百分比：任何包括0或更多字符的字符串</td>
+        <td>[%]</td>
+ </tr>
+    <tr>
+     <td >^</td>
+     <td>插入符号：不包括以下字符</td>
+        <td>[^]</td>
+ </tr>
+</table>
+
+<p><a name="附录B">附录B</a></p>
+<p>下表中总结了常用的与命令注入相关的特殊字符：</p>
+<table>
+ <tr>
+     <th>类型</th>
+     <th>举例</th>
+     <th>常见注入模式和结果</th>  
+ </tr >
+ <tr >
+     <td>管道</td>
+     <td>|</td>
+     <td>| shell_command -执行命令并返回命令输出信息</td>
+ </tr>
+ <tr>
+     <td rowspan="2">内联</td>
+     <td>;</td>
+     <td>; shell_command -执行命令并返回命令输出信息</td>
+ </tr>
+ <tr>
+     <td>&</td>
+     <td>& shell_command -执行命令并返回命令输出信息</td>
+ </tr>
+ <tr>
+     <td rowspan="3">逻辑运算符</td>
+     <td>$</td>
+     <td>$(shell_command) -执行命令</td>
+ </tr>
+ <tr>
+  <td>&&</td>
+     <td>&& shell_command -执行命令并返回命令输出信息</td>
+ </tr>
+ <tr>
+     <td>||</td>
+     <td>|| shell_command -执行命令并返回命令输出信息</td>
+ </tr>
+ <tr>
+     <td rowspan="3">重定向运算符</td>
+     <td>></td>
+     <td>> target_file -使用前面命令的输出信息写入目标文件</td>
+ </tr>
+ <tr>
+     <td>>></td>
+     <td>>> target_file -将前面命令的输出信息附加到目标文件</td>
+ </tr>
+ <tr>
+     <td ><</td>
+     <td>< target_file -将目标文件的内容发送到前面的命令</td>
+ </tr>
+</table>
+
+
+
+
+
+<p>[^1]:基于huawei Python语言安全编码规范整理，华为发布时间2016&#x2F;04&#x2F;01</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得写的还行，赞助瓶脉动～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赞助饮料</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt=" 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Just
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://wangxiaoyi.world/20200107193800/" title="Python语言安全编程规范">http://wangxiaoyi.world/20200107193800/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E5%AE%89%E5%85%A8/" rel="tag"># 安全</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/20190215090203/" rel="next" title="Python装饰器与闭包">
+                <i class="fa fa-chevron-left"></i> Python装饰器与闭包
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/20200118195328/" rel="prev" title="Django安全开发指南">
+                Django安全开发指南 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:wangyi3355@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcool.com/" title="Linux命令查询" target="_blank">Linux命令查询</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.canva.cn/" title="Canva" target="_blank">Canva</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lingxi360.com/" title="灵析" target="_blank">灵析</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mp.weixin.qq.com/" title="微信公众平台" target="_blank">微信公众平台</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://macwk.com/" title="Mac软件" target="_blank">Mac软件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/" title="微博" target="_blank">微博</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://wenshu.court.gov.cn/" title="裁判文书网" target="_blank">裁判文书网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://redis.cn/" title="Redis中文网" target="_blank">Redis中文网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://go-zero.dev/cn/" title="go_zero" target="_blank">go_zero</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcc.cc/" title="linux" target="_blank">linux</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83-1"><span class="nav-number">1.</span> <span class="nav-text">Python语言安全编程规范[^1]</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.1.</span> <span class="nav-text">数据校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.2.</span> <span class="nav-text">异常行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E8%A1%8C%E4%B8%BA-1"><span class="nav-number">1.3.</span> <span class="nav-text">异常行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E6%93%8D%E4%BD%9C"><span class="nav-number">1.4.</span> <span class="nav-text">IO操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">序列化和反序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="nav-number">1.6.</span> <span class="nav-text">运行环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.7.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Just</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">64.9k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 提供支持</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next gemini" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,django,安全," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Django安全开发指南[^1]本指南适用于Linux系统。同样的技术设置也可用于Windows系统。 这些说明适用于在生产模式下运行的应用程序。开发&#x2F;测试实例不需要加固，因为这会增加测试难度。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django安全开发指南">
+<meta property="og:url" content="http://wangxiaoyi.world/20200118195328/index.html">
+<meta property="og:site_name" content="Just">
+<meta property="og:description" content="Django安全开发指南[^1]本指南适用于Linux系统。同样的技术设置也可用于Windows系统。 这些说明适用于在生产模式下运行的应用程序。开发&#x2F;测试实例不需要加固，因为这会增加测试难度。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-01-18T11:53:28.000Z">
+<meta property="article:modified_time" content="2022-03-26T12:23:06.227Z">
+<meta property="article:author" content="Just">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="django">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxiaoyi.world/20200118195328/"/>
+
+
+
+
+
+  <title>Django安全开发指南 | Just</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Just</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">如果图片裂开请使用http协议而非https协议</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20200118195328/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Just">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Django安全开发指南</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-18T19:53:28+08:00">
+                2020-01-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.8k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Django安全开发指南-1"><a href="#Django安全开发指南-1" class="headerlink" title="Django安全开发指南[^1]"></a>Django安全开发指南[^1]</h2><p>本指南适用于Linux系统。同样的技术设置也可用于Windows系统。</p>
+<p>这些说明适用于在生产模式下运行的应用程序。开发&#x2F;测试实例不需要加固，因为这会增加测试难度。</p>
+<span id="more"></span>
+
+<h3 id="配置加固"><a href="#配置加固" class="headerlink" title="配置加固"></a>配置加固</h3><p>本章节对Django的配置文件进行加固，文件名为：global_settings.py。在这个配置文件中可以修改Django的默认配置。该文件在Django安装路径的固定目录下，例如： <strong>\Django-1.10.2\django\conf</strong></p>
+<p>当用户创建一个新的Django项目时，会生成一个新的<code>settings.py</code>，可以在该文件中修改新项目的配置。</p>
+<p>注意，有些说明并非适用于所有情况。请阅读每一条建议，确定是否有需要注意的限制或事项。</p>
+<ul>
+<li><p>禁用调试</p>
+<p><strong>重要性：</strong>强制</p>
+<p>在生产环境中启用调试会泄露相关应用程序的信息，包括源代码，设置和局部变量。调试功能只能在开发模式下启用。</p>
+<p><strong>配置要求</strong></p>
+<p>在应用程序配置中将DEBUG设置为False。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>影响：</strong>无</p>
+</li>
+<li><p>将密钥设置为随机值</p>
+<p><strong>重要性：</strong>强制</p>
+<p>密值用于诸如会话标识符和密码重置令牌的加密操作。密值必须是随机的、唯一的，避免发生由于使用默认值而损害操作的情况。</p>
+<p><strong>配置要求</strong></p>
+<p>在应用程序配置中将SECRET_KEY设置为随机值。涉及三层秘钥管理结构。</p>
+<p><strong>影响：</strong>无</p>
+</li>
+<li><p>定义使用的主机名&#x2F;域名</p>
+<p><strong>重要性：</strong>可选</p>
+<p>为了防止HTTP主机头攻击，通过配置Django，只接受请求中允许的主机名&#x2F;域名。</p>
+<p><strong>配置建议</strong></p>
+<p>在应用程序配置中，将ALLOWED_HOSTS设置为Django服务的主机名&#x2F;域名。具体值取决于应用程序和它应该操作的域。</p>
+<p>如果开发团队预先不知道域，那么该配置应该当作一项部署任务进行备案，以便在实时环境中部署该应用程序之前进行更改。如果开发的Django服务仅在内网中使用，接受的请求没有域名或不适合配置域名的情况，可以不配置该项。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ALLOWED_HOSTS = [</span><br><span class="line"></span><br><span class="line">  <span class="string">&#x27;.example.com&#x27;</span>, <span class="comment"># Allow domain and subdomains</span></span><br><span class="line"></span><br><span class="line">  <span class="string">&#x27;.example.com.&#x27;</span>, <span class="comment"># Also allow FQDN and subdomains</span></span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>影响：</strong>无</p>
+</li>
+<li><p>跨站请求伪造(CSRF)和会话Cookie使用“安全”标志</p>
+<p><strong>重要性：</strong>可选</p>
+<p>让Django自动设置Cookie上的“安全”标志是可行的，而且强烈建议这样做。在这种场景下，不使用HTTPS的连接不会发送Cookie。这能防止会话劫持，以及其他因无意使用HTTP发送敏感Cookie而造成的攻击。</p>
+<p>不是明确需要通过HTTP发送的Cookie必须使用“安全”标志。然而，这同样可以由系统的不同部分（例如，反向代理或其他系统）来实现。因此，当且仅当某些其他系统已经使用“安全”标志或该标志总是由应用程序直接添加时，这项要求才是可选的。</p>
+<p>CSRF Cookie用于保护使用Django助手功能创建的表单。如果没有使用其他CSRF机制，这项要求是强制的，但是如果一些其他系统使用CSRF保护，则可以自愿选择。</p>
+<p><strong>配置建议</strong></p>
+<p>在应用程序配置中将CSRF_COOKIE_SECURE和SESSION_COOKIE_SECURE设置为True。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CSRF_COOKIE_SECURE = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">SESSION_COOKIE_SECURE = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>影响</strong>：无</p>
+</li>
+<li><p>使用HTTP严格传输安全（HSTS）</p>
+<blockquote>
+<p>HSTS的作用是强制客户端（如浏览器）使用HTTPS与服务器创建连接。服务器开启HSTS的方法是，当客户端通过HTTPS发出请求时，在服务器返回的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">超文本传输协议</a>（HTTP）响应头中包含Strict-Transport-Security字段。非加密传输时设置的HSTS字段无效。比如，<a target="_blank" rel="noopener" href="https://example.com/">https://example.com/</a> 的响应头含有Strict-Transport-Security: max-age&#x3D;31536000; includeSubDomains。这意味着两点:</p>
+<ol>
+<li>在接下来的31536000秒（即一年）中，浏览器向example.com或其子域名发送HTTP请求时，必须采用HTTPS来发起连接。比如，用户点击超链接或在地址栏输入 <a target="_blank" rel="noopener" href="http://www.example.com/">http://www.example.com/</a> ，浏览器应当自动将 http 转写成 https，然后直接向 <a target="_blank" rel="noopener" href="https://www.example.com/">https://www.example.com/</a> 发送请求。</li>
+<li>在接下来的一年中，如果 example.com 服务器发送的TLS证书无效，用户不能忽略浏览器警告继续访问网站。</li>
+</ol>
+<p>更多参考资，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/HTTP%E4%B8%A5%E6%A0%BC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/16018283?fromtitle=HSTS&fromid=8665782&fr=aladdin">点击链接</a></p>
+</blockquote>
+<blockquote>
+<p>该功能对智库的影响：</p>
+<ul>
+<li>前后台很多页面是要求HTTP才能访问、下载的，这些页面需要通查通该</li>
+<li>测试环境服务器、测试文件服务器、正式文件服务器全都没有配置HPPTS，后续全都要配置上才可以。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p><strong>重要性</strong>：可选</p>
+<p>  HTTP严格传输安全是一个HTTP头，用于通知客户端浏览器只连接到使用HTTPS的应用程序。如果应用程序没有HTTP部分，应始终使用该HTTP头。该要求可选，因为它并不适用于某一部分仅为HTTP服务器的系统。</p>
+<p>  <strong>配置建议</strong></p>
+<p>在应用程序配置中将SECURE_HSTS_SECONDS至少设置为31536000（一年）。包括子域的情况下，请将SECURE_HSTS_INCLUDE_SUBDOMAINS设置为True。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SECURE_HSTS_SECONDS = <span class="number">31536000</span></span><br><span class="line"></span><br><span class="line">SECURE_HSTS_INCLUDE_SUBDOMAINS = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>  注：这两个配置项在Django 1.8或以后版本中支持，如果产品使用Django 1.8以前版本则不涉及这个配置。</p>
+<p>  <strong>影响：</strong>无</p>
+<h3 id="运行时配置加固"><a href="#运行时配置加固" class="headerlink" title="运行时配置加固"></a>运行时配置加固</h3><ul>
+<li><p>使用Python散列（hash）随机值</p>
+<blockquote>
+<p>python的字符串hash算法并不是直接遍历字符串每个字符去计算hash，而是会有一个secret prefix和一个secret suffix，可以认为相当于是给字符串加盐后做hash，可以规避一些规律输入的情况</p>
+<p>显然这个secret前后缀的值会直接影响计算结果，而且它有一个启动时随机生成的机制，只不过，在2.x版本中，这个机制默认是关闭的，前后缀每次启动都设置为0，除非你改了相关环境变量来要求随机，而在3.x中修改了默认行为，如果你不配置环境变量，则默认是随机一个前后缀值，这样每次启动都会不同</p>
+<p>这个环境变量是PYTHONHASHSEED，无论在2.x还是3.x中，配置为一个字符串的正整数，将作为随机种子；配置为‘0’，则secret前后缀默认清零（和2.x默认行为就一样了），配置为空串或“random”，则表示让进程随机生成（和3.x默认行为一样）</p>
+</blockquote>
+<blockquote>
+<p>官方文档的解释：If this variable is not set or set to random, a random value is used to seed the hashes of str, bytes and datetime objects.</p>
+<p>If PYTHONHASHSEED is set to an integer value, it is used as a fixed seed for generating the hash() of the types covered by the hash randomization.</p>
+<p>Its purpose is to allow repeatable hashing, such as for selftests for the interpreter itself, or to allow a cluster of python processes to share hash values.</p>
+<p>The integer must be a decimal number in the range [0,4294967295]. Specifying the value 0 will disable hash randomization.</p>
+</blockquote>
+<blockquote>
+<p>我在python2环境下试验，设置PYTHONHASHSEED如下，即可达到目标效果（python3不需要进行此操作）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">&#x27;PYTHONHASHSEED&#x27;</span>] = <span class="string">&quot;random&quot;</span>  <span class="comment"># 此处必须为字符串，如果是要指定其他固定值，则应从 [0,4294967295]中获取，且等式右边需为字符串格式</span></span><br></pre></td></tr></table></figure>
+
+
+</blockquote>
+<p><strong>重要性：</strong>可选</p>
+<p>Python hash随机化能防止某些类型的拒绝服务（DoS）攻击，DoS攻击利用dict类型中最坏用例构造。这尤其会影响Django应用程序，应加以防范。</p>
+<p><strong>配置建议</strong></p>
+<p>调用使用-R标志运行Django的Python进程或将PYTHONHASHSEED的环境变量设置为random。能否实现取决于环境设置，且应该充分验证。</p>
+<p><strong>影响：</strong>无</p>
+</li>
+</ul>
+<h3 id="安全开发指导"><a href="#安全开发指导" class="headerlink" title="安全开发指导"></a>安全开发指导</h3><ul>
+<li><p>保护Django 管理员（admin）</p>
+<p>在生产环境中从INSTALLED_APPS设置中删除<strong>django.contrib.admin</strong>，以禁用Django admin，并从<strong>urls.py</strong>中删除the <strong>admin.site.urls</strong>条目。</p>
+<p>如果您想使用Django admin，请将其托管在其他域，并确保其只能通过内部网络或VPN等进行访问。</p>
+</li>
+<li><p>保护Django设置文件</p>
+<p>创建新的Django项目时，会生成一个带有新<strong>SECRET_KEY</strong>的<strong>settings.py</strong>。此密钥用于Django中的加密操作，该文件还包含其他敏感信息，例如IP地址和外部系统的认证凭据。<strong>settings.py</strong>决不能泄露，应设置合理的访问权限（建议设置权限为700）。</p>
+<blockquote>
+<p>-rwx—— ( 700) 只有拥有者有读、写、执行权限。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(wiseboxenv) [root@szxphisprc06395 /opt/project/test/wisebox/dts_cms/dts]<span class="comment">#ls -l settings_local.py</span></span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root <span class="number">90686</span> Feb  <span class="number">3</span> <span class="number">14</span>:<span class="number">11</span> settings_local.py</span><br></pre></td></tr></table></figure>
+
+<p>一共有十位数，其中：最前面那个 - 代表的是类型</p>
+<p>中间那三个 rw- 代表的是所有者（user）拥有的权限</p>
+<p>然后那三个 r– 代表的是组群（group）拥有的权限</p>
+<p>最后那三个 r– 代表的是其他人（other）拥有的权限</p>
+<p>然后</p>
+<p>r 表示文件可以被读（read）</p>
+<p>w 表示文件可以被写（write）</p>
+<p>x 表示文件可以被执行（如果它是程序的话）</p>
+<p>- 表示相应的权限还没有被授予</p>
+<p>之后的root root 就是用户拥有者了</p>
+<p>需要注意的是：查看文件权限的目录问题: 如果有文件夹  &#x2F;a&#x2F;b&#x2F;c</p>
+<p>那么执行 ls -l &#x2F;a&#x2F;b 查看权限的文件并不是b，而是查看的c的权限。</p>
+</blockquote>
+</li>
+<li><p>使用Django内置认证，授权和会话管理</p>
+<p>Django自带内置认证，授权和会话管理系统，可放心使用。详细内容请参考：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/es/1.10/topics/auth/%E3%80%82">https://docs.djangoproject.com/es/1.10/topics/auth/。</a></p>
+<p>使用Django内置认证，授权和会话管理有以下好处：</p>
+<ul>
+<li><p>用户口令使用PBKDF2进行安全哈希处理。更多关于Django口令管理信息，请参考：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/es/1.10/topics/auth/passwords/%E3%80%82">https://docs.djangoproject.com/es/1.10/topics/auth/passwords/。</a></p>
+</li>
+<li><p>会话标识符强且随机。</p>
+</li>
+<li><p>会话有效期默认为两周，可以通过SESSION_COOKIE_AGE设置修改这一期限：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_AGE%E3%80%82">https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_AGE。</a></p>
+</li>
+<li><p>免受会话固定攻击。更多关于会话固定攻击的信息，请参考：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/Session_fixation%E3%80%82">https://www.owasp.org/index.php/Session_fixation。</a></p>
+</li>
+<li><p>使用内置Django模型来管理用户、群组和权限。</p>
+</li>
+<li><p>使用内置Django装饰器对视图进行访问控制。</p>
+</li>
+<li><p>使用内置Django admin管理用户、群组和权限。</p>
+</li>
+<li><p>使用内置Django表单管理注册、认证和口令。</p>
+</li>
+<li><p>最重要的是，您不必再施行自己的会话管理、认证或授权机制，这些机制可能有风险。</p>
+</li>
+</ul>
+</li>
+<li><p>对外部输入进行校验</p>
+<p><strong>永远不要默认信任用户输入</strong>。验证来自不可信源的所有输入（例如请求参数、Cookie和信息头）。推荐使用白名单校验。</p>
+<p>在Django中，可用以下方法验证输入。</p>
+<ul>
+<li><p>对于URL参数（有时称为GET参数），第一级验证是在<strong>urls.py</strong>中设置限制性正则表达式。除此之外，还需在视图中输入验证逻辑。因为：</p>
+</li>
+<li><p><strong>urls.py</strong>文件只允许指定一个正则表达式，但有时需要进行更复杂的验证。</p>
+</li>
+<li><p>视图有时可以从（例如）另一个视图中进行调用，不需通过<strong>urls.py</strong>，这会有效绕过URL正则表达式验证。</p>
+</li>
+<li><p>对于body参数（有时称为POST参数），最简单的方法是使用Django的表单（<strong>forms</strong>）和<strong>验证器（</strong>validators）。关于表单和验证器，请分别参考：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/1.10/topics/forms/%E5%92%8Chttps://docs.djangoproject.com/en/1.10/ref/forms/validation/">https://docs.djangoproject.com/en/1.10/topics/forms/和https://docs.djangoproject.com/en/1.10/ref/forms/validation/</a>. Django提供了一套很好的内置验证器，您也可以编写自己的验证器。</p>
+</li>
+<li><p>对于已处理的Cookie和其他HTTP头，请在视图中输入验证逻辑。</p>
+<p>此外，可以添加客户端验证以提升用户体验，如果您记录了潜在恶意请求的安全日志，请缩小误报率。</p>
+</li>
+</ul>
+</li>
+<li><p>使用Django模板，防止XSS</p>
+<p>XSS是一种网络攻击，受控数据在网页上显示为超文本标记语言（HTML），而不是文本。这种攻击使攻击者能在受害用户的Web浏览器中执行恶意的Javascript代码。关于跨站点脚本攻击，请参考：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29</a>。</p>
+<p>默认情况下，Django的模板系统对**&gt;<strong>，</strong>&lt;<strong>，</strong>&amp;<strong>，</strong>‘和’**字符进行HTML编码。只要遵循一些基本规则，这种自动编码可以有效防止XSS。</p>
+<ul>
+<li><p><strong>使用</strong>模板系统。当编写视图时，使用<strong>django.shortcuts.render</strong>从模板呈现HTML。<strong>不要使用</strong>其他方法，例如，用<strong>django.http.HttpResponse</strong>将HTML返回到客户端。Django只自动保护从模板呈现的HTML。</p>
+</li>
+<li><p><strong>不要</strong>通过<code>&#123;% autoescape off %&#125;</code>，<code>|safe</code>或者在上下文（context）中设置<strong>autoescape&#x3D;False</strong>关闭自动编码。</p>
+</li>
+<li><p><strong>仅</strong>在安全上下文中呈现模板变量（例如****）：</p>
+<ul>
+<li><p>内部HTML标记，除了脚本标记或可用于执行代码的其他HTML标记。例如：&lt;p&gt;搜索：****&lt;&#x2F;p&gt;</p>
+</li>
+<li><p>内部<strong>有引号的</strong>HTML属性。例如：&lt;input type&#x3D;”text” value&#x3D;”“&#x2F;&gt;</p>
+</li>
+<li><p>内部<strong>有引号的</strong>Javascript字符串。例如：&lt;script&gt;var userName &#x3D; ““;&lt;&#x2F;script&gt;</p>
+</li>
+</ul>
+</li>
+<li><p><strong>永远不要</strong>在不安全的上下文中呈现模板变量，例如：</p>
+<ul>
+<li><p>内部DOM事件处理程序（甚至没有引号）。例如：&lt;p onclick&#x3D;”alert(‘‘)”&gt;Click to show username!&lt;&#x2F;p&gt;</p>
+</li>
+<li><p>内部客户端代码，<strong>没有引号</strong>（例如：Javascript&#x2F;VBScript）。例如：&lt;script&gt;var userName &#x3D; ;&lt;&#x2F;script&gt;</p>
+</li>
+<li><p>内部<strong>没有引号</strong>的HTML属性。例如：&lt;input type&#x3D;”text” value&#x3D;<strong></strong>&#x2F;&gt;</p>
+</li>
+<li><p>内部不安全Javascript函数，例如：<strong>eval</strong>，<strong>setTimeout</strong>或<strong>setInterval</strong>。</p>
+</li>
+</ul>
+</li>
+<li><p>内部HTML注释。例如：&lt;!– Username: <strong></strong> –&gt;</p>
+</li>
+<li><p>内部HTML属性名称。例如：&lt;a <strong></strong>&#x3D;”test”&gt;test</a></p>
+</li>
+<li><p>内部HTML标记名称。例如：&lt;<strong></strong>&gt;</p>
+</li>
+<li><p>URL编码URL地址中的模板变量。例如：&lt;a href&#x3D;”&#x2F;users&#x2F;“&gt;Show user&lt;&#x2F;a&gt;</p>
+</li>
+<li><p>尽可能严格地实施CSP（内容安全策略）头，使应用程序仍然运行。如果可以，从头开始编写应用程序，以便实施CSP时可以禁用除了从安全域加载的Javascript之外的所有客户端代码。更多关于CSP的信息，请参考：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/Content_Security_Policy%E3%80%82%E8%A6%81%E5%9C%A8Django%E4%B8%AD%E5%AE%9E%E7%8E%B0CSP%EF%BC%8C%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8Mozilla%E7%9A%84**django-csp**%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9Ahttps://github.com/mozilla/django-csp%E3%80%82">https://www.owasp.org/index.php/Content_Security_Policy。要在Django中实现CSP，可以使用Mozilla的**django-csp**软件包：https://github.com/mozilla/django-csp。</a></p>
+</li>
+<li><p>实施X-XSS-Protection头，确保Web浏览器的内置XSS保护功能未关闭。要实施X-XSS-Protection头，在 <strong>settings.py</strong>里设置<strong>SECURE_BROWSER_XSS_FILTER &#x3D; True</strong>。</p>
+</li>
+<li><p>使用HttpOnly标志保护会话Cookie。当使用Django的会话管理时，可以通过在<strong>settings.py</strong>中设置<strong>SESSION_COOKIE_HTTPONLY &#x3D; True</strong>来实现。</p>
+</li>
+</ul>
+<p>有关防止XSS漏洞的更多信息，请参考OWASP速查表：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet">https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet</a>。 </p>
+</li>
+<li><p>在POST请求中验证CSRF令牌，防止CSRF</p>
+<p>CSRF是一种攻击，发动该攻击时，恶意或受损网站向受害用户会话中的目标应用程序发出请求。关于CSRF攻击，请参考：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29</a>。</p>
+<ul>
+<li><p><strong>不要</strong>使用POST之外的其他HTTP方法进行更改。Django CSRF令牌只保护POST方法，GET和HEAD等其他方法不受保护。因此，做更改时只能使用POST方法，其他方法应该是“只读”。</p>
+</li>
+<li><p><strong>不要</strong>通过，如<strong>csrf_exempt</strong>装饰器禁用CSRF保护。</p>
+</li>
+<li><p>以所有形式添加CSRF令牌，如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;form&gt;</span><br><span class="line">...</span><br><span class="line">&#123;% csrf_token %&#125;</span><br><span class="line">...</span><br><span class="line">&lt;/form&gt; </span><br></pre></td></tr></table></figure>
+
+<p>更多关于Django CSRF保护的信息，请参考：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/1.10/ref/csrf/%E3%80%82">https://docs.djangoproject.com/en/1.10/ref/csrf/。</a></p>
+</li>
+</ul>
+</li>
+<li><p>使用Django提供的ORM，防止SQL注入 </p>
+<p> SQL注入是一种攻击，将用户输入合并到SQL查询中，使攻击者有效地控制查询结构。攻击者可以利用SQL注入漏洞读取和写入数据库，读取和写入系统文件，有时甚至执行操作系统命令。更多关于SOL注入攻击，请参考：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/es/1.10/topics/db/%E3%80%82">https://docs.djangoproject.com/es/1.10/topics/db/。</a></p>
+<p>Django的ORM（对象关系映射器）能防止SQL注入，但需要遵循以下基本规则：</p>
+<ul>
+<li><p>使用Django提供的ORM。不要使用其他任何方法访问数据库。</p>
+</li>
+<li><p>不要在Django ORM中使用不安全的方法做原始查询。不安全的方法指 **raw()<strong>和</strong>extra()**。</p>
+<p>遵循以上原则，就可避免SQL注入。更多关于Django ORM的信息，请参考：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/es/1.10/topics/db/%E3%80%82">https://docs.djangoproject.com/es/1.10/topics/db/。</a></p>
+</li>
+</ul>
+</li>
+<li><p>使用django.core.mail，防止电子邮件头注入</p>
+<p>电子邮件头注入是一种攻击，攻击者通过在参数中添加换行符，将自己的信息头注入电子邮件头。更多关于电子邮件头注入攻击的信息，请参考：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Email_injection%E3%80%82">https://en.wikipedia.org/wiki/Email_injection。</a></p>
+<p>为了防止电子邮件头注入攻击，使用<strong>django.core.mail</strong>中的Django邮件函数发送电子邮件。</p>
+</li>
+<li><p>防止中间人（MITM）攻击</p>
+<p>在MITM攻击中，攻击者驻留在受害者的Web浏览器和Web服务器之间。如果网站流量未适当加密，攻击者可以读取、拦截甚至对其进行修改。更多关于中间人攻击的信息，请参考：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/Man-in-the-middle_attack%E3%80%82">https://www.owasp.org/index.php/Man-in-the-middle_attack。</a></p>
+<p>为保护网站流量不被攻击者拦截，可以：</p>
+<ul>
+<li><p>仅通过加密的<strong>HTTPS</strong>提供内容。将明文<strong>HTTP</strong>请求重定向到一个<strong>https:&#x2F;&#x2F;</strong> URL。在Django中，这可通过在<strong>settings.py</strong>中设置<strong>SECURE_SSL_REDIRECT &#x3D; True</strong>来实现。</p>
+</li>
+<li><p>使用安全（ secure）标志保护会话和CSRF Cookie。该标志告知网络浏览器，Cookies只能通过加密的HTTPS发送，绝不能通过明文HTTP发送。在Django中，这可通过在settings.py中添加SESSION_COOKIE_SECURE &#x3D; True和CSRF_COOKIE_SECURE &#x3D; True来实现。</p>
+</li>
+<li><p>使用<strong>Strict-Transport-Security</strong>头，防止Web浏览器（在第一次看到<strong>Strict-Transport-Security</strong>头之后）通过未加密的连接访问网站。在使用<strong>Strict-Transport-Security</strong>头之前，请确保您了解其工作原理，以防阻止用户访问您的网站。更多关于<strong>Strict-Transport-Security</strong>的信息，请参考：<a target="_blank" rel="noopener" href="https://www.owasp.org/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet%E3%80%82">https://www.owasp.org/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet。</a></p>
+<p>一旦了解了其工作原理，您可以通过在<strong>settings.py</strong>中设置以下选项，在网站的域和子域将<strong>HSTS</strong>设置为一年：</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SECURE_HSTS_SECONDS = <span class="number">31536000</span></span><br><span class="line">SECURE_HSTS_INCLUDE_SUBDOMAINS = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>HSTS有一个缺陷。在浏览器看到<strong>Strict-Transport-Security</strong>头之前，它允许Web浏览器通过未加密的连接访问页面<em>一次</em>。要解决该缺陷，请将您的网站提交到HSTS预加载列表：<a target="_blank" rel="noopener" href="https://hstspreload.appspot.com/%E3%80%82">https://hstspreload.appspot.com/。</a></p>
+</li>
+<li><p>确保Web服务器仅支持安全的SSL &#x2F; TLS协议和密码。更多详细信息，请参阅Web服务器的加固指南。</p>
+</li>
+</ul>
+</li>
+<li><p>防止客户端缓存</p>
+<p>除了明确告知不能缓存的，Web浏览器默认缓存（写入不受保护磁盘）所有HTTP响应。这是一个问题，因为HTTP响应通常包含敏感数据。要防止客户端缓存，请将限制性缓存控制（<strong>Cache-Control</strong>）头添加到所有包含敏感数据的HTTP响应。在Django中，可以通过never_cache视图装饰器执行此操作，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.views.decorators.cache <span class="keyword">import</span> never_cache</span><br><span class="line"></span><br><span class="line"><span class="meta">@never_cache</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">myview</span>(<span class="params">request</span>):</span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>防止用户使用弱口令</p>
+<p>通过配置强口令策略防止用户使用弱口令。为防止用户使用弱口令，Django1.9之后的版本提供了口令验证：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/dev/topics/auth/passwords/#password-validation">https://docs.djangoproject.com/en/dev/topics/auth/passwords/#password-validation</a>.</p>
+</li>
+</ul>
+<p>[^1]: 基于华为公司Django安全开发指南V1.0版本, 华为发布时间2018&#x2F;01&#x2F;02</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得写的还行，赞助瓶脉动～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赞助饮料</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt=" 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Just
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://wangxiaoyi.world/20200118195328/" title="Django安全开发指南">http://wangxiaoyi.world/20200118195328/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/django/" rel="tag"># django</a>
+          
+            <a href="/tags/%E5%AE%89%E5%85%A8/" rel="tag"># 安全</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/20200107193800/" rel="next" title="Python语言安全编程规范">
+                <i class="fa fa-chevron-left"></i> Python语言安全编程规范
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/20200520182904/" rel="prev" title="Django中Cache 缓存版本控制">
+                Django中Cache 缓存版本控制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:wangyi3355@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcool.com/" title="Linux命令查询" target="_blank">Linux命令查询</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.canva.cn/" title="Canva" target="_blank">Canva</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lingxi360.com/" title="灵析" target="_blank">灵析</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mp.weixin.qq.com/" title="微信公众平台" target="_blank">微信公众平台</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://macwk.com/" title="Mac软件" target="_blank">Mac软件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/" title="微博" target="_blank">微博</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://wenshu.court.gov.cn/" title="裁判文书网" target="_blank">裁判文书网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://redis.cn/" title="Redis中文网" target="_blank">Redis中文网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://go-zero.dev/cn/" title="go_zero" target="_blank">go_zero</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcc.cc/" title="linux" target="_blank">linux</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Django%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97-1"><span class="nav-number">1.</span> <span class="nav-text">Django安全开发指南[^1]</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8A%A0%E5%9B%BA"><span class="nav-number">1.1.</span> <span class="nav-text">配置加固</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E9%85%8D%E7%BD%AE%E5%8A%A0%E5%9B%BA"><span class="nav-number">1.2.</span> <span class="nav-text">运行时配置加固</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91%E6%8C%87%E5%AF%BC"><span class="nav-number">1.3.</span> <span class="nav-text">安全开发指导</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Just</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">64.9k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 提供支持</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

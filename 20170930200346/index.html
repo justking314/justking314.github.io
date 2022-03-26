@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next gemini" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,tips," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python tips">
+<meta property="og:url" content="http://wangxiaoyi.world/20170930200346/index.html">
+<meta property="og:site_name" content="Just">
+<meta property="og:description" content="定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-09-30T12:03:46.000Z">
+<meta property="article:modified_time" content="2022-03-26T12:15:52.418Z">
+<meta property="article:author" content="Just">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="tips">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxiaoyi.world/20170930200346/"/>
+
+
+
+
+
+  <title>python tips | Just</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Just</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">如果图片裂开请使用http协议而非https协议</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20170930200346/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Just">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python tips</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-30T20:03:46+08:00">
+                2017-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去"><a href="#定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去" class="headerlink" title="定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去"></a>定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去</h1><span id="more"></span>
+
+<p><strong>说明</strong></p>
+<p>在模块中定义了__all__之后，从外部from module import  * 只会import __all__中定义的内容。</p>
+<p><strong>示例</strong></p>
+<p>sample_package.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__all__ = [<span class="string">&quot;sample_external_function&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sample_external_function</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;This is an external function..&quot;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sample_internal_function</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;This is an internal function..&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>main.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sample_package <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    sample_external_function()</span><br><span class="line">    sample_internal_function()</span><br><span class="line">    </span><br><span class="line">NameError: name <span class="string">&#x27;sample_internal_function&#x27;</span> <span class="keyword">is</span> <span class="keyword">not</span> defined</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="在list成员个数可以预知的情况下，创建list时需预留空间正好容纳所有成员的空间"><a href="#在list成员个数可以预知的情况下，创建list时需预留空间正好容纳所有成员的空间" class="headerlink" title="在list成员个数可以预知的情况下，创建list时需预留空间正好容纳所有成员的空间"></a>在list成员个数可以预知的情况下，创建list时需预留空间正好容纳所有成员的空间</h1><p><strong>说明</strong></p>
+<p>与Java、C++等语言的list一样，Python语言的list在append()成员时，如果没有多余的空间容纳新的成员，就会分配一块更大的内存，并将原来内存里的成员拷贝到新的内存上，并将最新append()的成员也拷贝到此新内存空间中，然后释放老的内存空间。如果append()调用次数很大，则如上过程会频繁发生，因而会造成灾难性性能下<br>降，而不仅仅是一点下降。</p>
+<p>错误示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">members = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">1000000</span>):</span><br><span class="line">    members.append(i)</span><br><span class="line"><span class="built_in">len</span>(members)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>正确示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">members = [<span class="literal">None</span>] * <span class="number">1000000</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">1000000</span>):</span><br><span class="line">    members[i] = i</span><br><span class="line"><span class="built_in">len</span>(members)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="在成员个数及内容皆不变的场景下尽量使用tuple替代list"><a href="#在成员个数及内容皆不变的场景下尽量使用tuple替代list" class="headerlink" title="在成员个数及内容皆不变的场景下尽量使用tuple替代list"></a>在成员个数及内容皆不变的场景下尽量使用tuple替代list</h1><p><strong>说明</strong></p>
+<p>list是动态array，而tuple是静态array（其成员个数以及内容皆不可变）。因此，list需要更多的内存来跟踪其成员的状态。<br>此外，对于成员个数小于等于20的tuple，Python会对其进行缓存，即当此tuple不再使用时，Python并不会立即<br>将其占用的内存返还给操作系统，而是保留以备后用。</p>
+<p>错误示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myenum = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>正确示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myenum = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) <span class="comment"># 如果恰好被缓存过，则初始化速度会为错误示例中的5倍以上。</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="对于频繁使用的外界对象，尽量使用局部变量来引用"><a href="#对于频繁使用的外界对象，尽量使用局部变量来引用" class="headerlink" title="对于频繁使用的外界对象，尽量使用局部变量来引用"></a>对于频繁使用的外界对象，尽量使用局部变量来引用</h1><p><strong>说明</strong></p>
+<p>在Python中对一个函数、变量、模块的调用，是以一种字典树的方式来查找的。Python首先会查找locals()数组，这里保存着所有的局部变量；如果找不到，则会继续查找globals()数组；如果在这里也找不到，则会到<br><strong>buildtin</strong>（其实是一个模块）中的locals()数组中查找，或者到其它import进来的模块&#x2F;类中查找。<br>错误示例：</p>
+<p>错误示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">afunc</span>():</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">100000</span>):</span><br><span class="line">        <span class="keyword">return</span> math.tan(x)</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，Python会先到globals()中的名值对字典中，找到math模块；然后在math模块的locals()的字典中<br>查找tan()函数；然后在当前函数的locals()中查找。这里存在着3次查找。<br>当调用次数大时，每次调用多出来的1、2次查找，就会被放大。<br>错误示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> tan</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">afunc</span>():</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">100000</span>):</span><br><span class="line">        <span class="keyword">return</span> tan(x)</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，Python会先到globals()的字典中查找tan()函数（其已经被from math import tan语句加载到了<br>globals()中）；然后在当前函数的locals()中查找x。这里存在着2次查找，比前一个例子少了一次查找，但是还不是最优解。<br>正确示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">afunc</span>(<span class="params">tan=math.tan</span>):</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">100000</span>):</span><br><span class="line">        <span class="keyword">return</span> tan(x)</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，在函数定义时，有且只有一次查找math模块、然后查找tan函数的操作；之后在循环中对tan()函数的调用，都是在afunc()函数的locals()中进行查找。而对函数的locals()中的查找，Python是有特殊优化措施的，速度是非常快的；当然，还包括对本地变量x的查找（也是在当前函数的locals()中查找）。</p>
+<h1 id="使用format方法、”-”操作符和join方法代替”-”和”-x3D-”操作符来完成字符串格式化"><a href="#使用format方法、”-”操作符和join方法代替”-”和”-x3D-”操作符来完成字符串格式化" class="headerlink" title="使用format方法、”%”操作符和join方法代替”+”和”+&#x3D;”操作符来完成字符串格式化"></a>使用format方法、”%”操作符和join方法代替”+”和”+&#x3D;”操作符来完成字符串格式化</h1><p><strong>说明</strong></p>
+<p>即使参数都是字符串，也可以使用format方法或%运算符来格式化字符串。一般性能要求的场景可以使用+或+&#x3D;运算符，但需要避免使用+和+&#x3D;运算符在循环中累积字符串。由于字符串是不可变的，因此会产生不必要的临时对象并导致二次而非线性运行时间。<br>推荐做法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="string">&#x27;%s, %s!&#x27;</span> % (imperative, expletive)</span><br><span class="line">x = <span class="string">&#x27;&#123;&#125;, &#123;&#125;!&#x27;</span>.<span class="built_in">format</span>(imperative, expletive)</span><br><span class="line">x = <span class="string">&#x27;name: %s; score: %d&#x27;</span> % (name, n)</span><br><span class="line">x = <span class="string">&#x27;name: &#123;&#125;; score: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(name, n)</span><br><span class="line">items = [<span class="string">&#x27;&lt;table&gt;&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> last_name, first_name <span class="keyword">in</span> employee_list:</span><br><span class="line">    items.append(<span class="string">&#x27;&lt;tr&gt;&lt;td&gt;%s, %s&lt;/td&gt;&lt;/tr&gt;&#x27;</span> % (last_name, first_name))</span><br><span class="line">    items.append(<span class="string">&#x27;&lt;/table&gt;&#x27;</span>)</span><br><span class="line">employee_table = <span class="string">&#x27;&#x27;</span>.join(items)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>不推荐做法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x = imperative + <span class="string">&#x27;, &#x27;</span> + expletive + <span class="string">&#x27;!&#x27;</span></span><br><span class="line">x = <span class="string">&#x27;name: &#x27;</span> + name + <span class="string">&#x27;; score: &#x27;</span> + <span class="built_in">str</span>(n)</span><br><span class="line">employee_table = <span class="string">&#x27;&lt;table&gt;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> last_name, first_name <span class="keyword">in</span> employee_list:</span><br><span class="line">    employee_table += <span class="string">&#x27;&lt;tr&gt;&lt;td&gt;%s, %s&lt;/td&gt;&lt;/tr&gt;&#x27;</span> % (last_name, first_name)</span><br><span class="line">employee_table += <span class="string">&#x27;&lt;/table&gt;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="函数参数中的可变参数不要使用默认值，在定义时使用None"><a href="#函数参数中的可变参数不要使用默认值，在定义时使用None" class="headerlink" title="函数参数中的可变参数不要使用默认值，在定义时使用None"></a>函数参数中的可变参数不要使用默认值，在定义时使用None</h1><p><strong>说明</strong></p>
+<p>参数的默认值会在方法定义被执行时就已经设定了，这就意味着默认值只会被设定一次，当函数定义后，每次被调用时都会有”预计算”的过程。当参数的默认值是一个可变的对象时，就显得尤为重要，例如参数值是一个list或dict，如果方法体修改这个值(例如往list里追加数据)，那么这个修改就会影响到下一次调用这个方法，这显然不<br>是一种好的方式。应对种情况的方式是将参数的默认值设定为None。（使用缓存函数时除外）</p>
+<p>错误示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">bar=[]</span>): <span class="comment"># bar is optional and defaults to [] if not specified</span></span><br><span class="line"><span class="meta">... </span>bar.append(<span class="string">&quot;baz&quot;</span>) <span class="comment"># but this line could be problematic, as we&#x27;ll see...</span></span><br><span class="line"><span class="meta">... </span><span class="keyword">return</span> bar</span><br><span class="line"></span><br><span class="line">在上面这段代码里，一旦重复调用foo()函数（没有指定一个bar参数），那么将一直返回<span class="string">&#x27;bar&#x27;</span>。因为没有指定参</span><br><span class="line">数，那么foo()每次被调用的时候，都会赋予[]。下面来看看，这样做的结果：</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>foo()</span><br><span class="line">[<span class="string">&quot;baz&quot;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>foo()</span><br><span class="line">[<span class="string">&quot;baz&quot;</span>, <span class="string">&quot;baz&quot;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>foo()</span><br><span class="line">[<span class="string">&quot;baz&quot;</span>, <span class="string">&quot;baz&quot;</span>, <span class="string">&quot;baz&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>正确示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">bar=<span class="literal">None</span></span>):</span><br><span class="line"><span class="meta">... </span><span class="keyword">if</span> bar <span class="keyword">is</span> <span class="literal">None</span>: <span class="comment"># or if not bar:</span></span><br><span class="line"><span class="meta">... </span>bar = []</span><br><span class="line"><span class="meta">... </span>bar.append(<span class="string">&quot;baz&quot;</span>)</span><br><span class="line"><span class="meta">... </span><span class="keyword">return</span> bar</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>foo()</span><br><span class="line">[<span class="string">&quot;baz&quot;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>foo()</span><br><span class="line">[<span class="string">&quot;baz&quot;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>foo()</span><br><span class="line">[<span class="string">&quot;baz&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="使用os-path库中的方法代替字符串拼接来完成文件系统路径的操作"><a href="#使用os-path库中的方法代替字符串拼接来完成文件系统路径的操作" class="headerlink" title="使用os.path库中的方法代替字符串拼接来完成文件系统路径的操作"></a>使用os.path库中的方法代替字符串拼接来完成文件系统路径的操作</h1><p><strong>说明</strong></p>
+<p>os.path库实现了一系列文件系统路径操作方法，这些方法相比单纯的路径字符串拼接来说更为安全，而且<br>为用户屏蔽了不同操作系统之间的差异。</p>
+<p>错误示例：如下路径字符串的拼接在Windows操作系统无法使用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path = os.getcwd() + <span class="string">&#x27;/myDirectory&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>正确示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path = os.path.join(os.getcwd(), <span class="string">&#x27;myDirectory&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得写的还行，赞助瓶脉动～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赞助饮料</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt=" 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Just
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://wangxiaoyi.world/20170930200346/" title="python tips">http://wangxiaoyi.world/20170930200346/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/tips/" rel="tag"># tips</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/20151030210352/" rel="next" title="Django初始化">
+                <i class="fa fa-chevron-left"></i> Django初始化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/20171223200253/" rel="prev" title="动态类型">
+                动态类型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:wangyi3355@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcool.com/" title="Linux命令查询" target="_blank">Linux命令查询</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.canva.cn/" title="Canva" target="_blank">Canva</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lingxi360.com/" title="灵析" target="_blank">灵析</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mp.weixin.qq.com/" title="微信公众平台" target="_blank">微信公众平台</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://macwk.com/" title="Mac软件" target="_blank">Mac软件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/" title="微博" target="_blank">微博</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://wenshu.court.gov.cn/" title="裁判文书网" target="_blank">裁判文书网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://redis.cn/" title="Redis中文网" target="_blank">Redis中文网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://go-zero.dev/cn/" title="go_zero" target="_blank">go_zero</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcc.cc/" title="linux" target="_blank">linux</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AAall%E4%B8%8D%E4%BC%9A%E6%8A%8A%E6%9C%AC%E6%A8%A1%E5%9D%97%E7%9A%84%E6%89%80%E6%9C%89%E5%86%85%E5%AE%B9%E9%83%BD%E6%9A%B4%E9%9C%B2%E5%9C%A8%E5%A4%96%E9%83%A8%EF%BC%8C%E5%B0%86%E5%85%81%E8%AE%B8%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE%E7%9A%84%E5%8F%98%E9%87%8F%E3%80%81%E5%87%BD%E6%95%B0%E5%92%8C%E7%B1%BB%E7%9A%84%E5%90%8D%E5%AD%97%E6%94%BE%E8%BF%9B%E5%8E%BB"><span class="nav-number">1.</span> <span class="nav-text">定义一个all不会把本模块的所有内容都暴露在外部，将允许外部访问的变量、函数和类的名字放进去</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8list%E6%88%90%E5%91%98%E4%B8%AA%E6%95%B0%E5%8F%AF%E4%BB%A5%E9%A2%84%E7%9F%A5%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%8C%E5%88%9B%E5%BB%BAlist%E6%97%B6%E9%9C%80%E9%A2%84%E7%95%99%E7%A9%BA%E9%97%B4%E6%AD%A3%E5%A5%BD%E5%AE%B9%E7%BA%B3%E6%89%80%E6%9C%89%E6%88%90%E5%91%98%E7%9A%84%E7%A9%BA%E9%97%B4"><span class="nav-number">2.</span> <span class="nav-text">在list成员个数可以预知的情况下，创建list时需预留空间正好容纳所有成员的空间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E6%88%90%E5%91%98%E4%B8%AA%E6%95%B0%E5%8F%8A%E5%86%85%E5%AE%B9%E7%9A%86%E4%B8%8D%E5%8F%98%E7%9A%84%E5%9C%BA%E6%99%AF%E4%B8%8B%E5%B0%BD%E9%87%8F%E4%BD%BF%E7%94%A8tuple%E6%9B%BF%E4%BB%A3list"><span class="nav-number">3.</span> <span class="nav-text">在成员个数及内容皆不变的场景下尽量使用tuple替代list</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E9%A2%91%E7%B9%81%E4%BD%BF%E7%94%A8%E7%9A%84%E5%A4%96%E7%95%8C%E5%AF%B9%E8%B1%A1%EF%BC%8C%E5%B0%BD%E9%87%8F%E4%BD%BF%E7%94%A8%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E6%9D%A5%E5%BC%95%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">对于频繁使用的外界对象，尽量使用局部变量来引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8format%E6%96%B9%E6%B3%95%E3%80%81%E2%80%9D-%E2%80%9D%E6%93%8D%E4%BD%9C%E7%AC%A6%E5%92%8Cjoin%E6%96%B9%E6%B3%95%E4%BB%A3%E6%9B%BF%E2%80%9D-%E2%80%9D%E5%92%8C%E2%80%9D-x3D-%E2%80%9D%E6%93%8D%E4%BD%9C%E7%AC%A6%E6%9D%A5%E5%AE%8C%E6%88%90%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">使用format方法、”%”操作符和join方法代替”+”和”+&#x3D;”操作符来完成字符串格式化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8%E9%BB%98%E8%AE%A4%E5%80%BC%EF%BC%8C%E5%9C%A8%E5%AE%9A%E4%B9%89%E6%97%B6%E4%BD%BF%E7%94%A8None"><span class="nav-number">6.</span> <span class="nav-text">函数参数中的可变参数不要使用默认值，在定义时使用None</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8os-path%E5%BA%93%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%E4%BB%A3%E6%9B%BF%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5%E6%9D%A5%E5%AE%8C%E6%88%90%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E8%B7%AF%E5%BE%84%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">使用os.path库中的方法代替字符串拼接来完成文件系统路径的操作</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Just</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">64.9k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 提供支持</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
