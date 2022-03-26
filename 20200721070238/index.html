@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next gemini" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,设计模式," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="如无特殊说明，本站设计模式相关文章均使用Python3实现（后期也可能会加入Go） 本文最近一次更新时间为20220325">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式（1）">
+<meta property="og:url" content="http://wangxiaoyi.world/20200721070238/index.html">
+<meta property="og:site_name" content="Just">
+<meta property="og:description" content="如无特殊说明，本站设计模式相关文章均使用Python3实现（后期也可能会加入Go） 本文最近一次更新时间为20220325">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-07-20T23:02:38.000Z">
+<meta property="article:modified_time" content="2022-03-26T09:35:06.102Z">
+<meta property="article:author" content="Just">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxiaoyi.world/20200721070238/"/>
+
+
+
+
+
+  <title>设计模式（1） | Just</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Just</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">如果图片裂开请使用http协议而非https协议</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxiaoyi.world/20200721070238/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Just">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式（1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-21T07:02:38+08:00">
+                2020-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如无特殊说明，本站设计模式相关文章均使用Python3实现（后期也可能会加入Go）</p>
+<p>本文最近一次更新时间为20220325</p>
+<span id="more"></span>
+
+<p>个人理解，设计模式是一种指导思想，一种类似于内功心法的东西，讲究的就是一个融会贯通，了然于胸。总结学习以下设计模式，也是为了将来再面对问题时，更有“抓手”。写代码设计层，总让我有一种高中数学&#x2F;物理或初中语文的感觉，一切似乎虚无缥缈，但冥冥中自己的心又似乎受到牵引，不失方向。想起物理老师的一段话：解题有法，但无定法；无法之法，是为智法。不要问我为什么，宇宙就是甩出来的~</p>
+<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><p>设计模式，是指软件设计问题的推荐方案（既不是唯一，也不一定存在最优）。设计模式一般是描述如何组织代码和使用最佳实践来解决常见的设计问题，但并不会关注具体的实现细节，是一种高层次的方案，是一种指导性的方案。</p>
+<p>随着技术和语言的演进，一些设计模式可能过时了，也可能被内置到语言中。</p>
+<p>需要注意的是，写代码就应该使用设计模式这种想法是不对的，1+1又何必演化成1+2-3+2呢？设计模式是在已有的方案上发现更好的方案，而不是发明或者直接空中楼阁。不要为了设计模式而设计模式，设计模式也绝非万能，一般来说，只有代码存在坏味道的时候才有使用的必要，简单直白几乎不会出错，不要为了秀而瞎搞。</p>
+<p>我会总结归纳实践三种大类十六中小类的设计模式：</p>
+<ul>
+<li>创建型模式：处理对象创建相关的问题。目的是当创建对象不太方便时，提供更好的方式。<ul>
+<li>工厂模式</li>
+<li>建造者模式</li>
+<li>原型模式</li>
+</ul>
+</li>
+<li>结构型模式<ul>
+<li>适配器模式</li>
+<li>修饰器模式</li>
+<li>外观模式</li>
+<li>享元模式</li>
+<li>MVC模式（模型-视图-控制器模式）</li>
+<li>代理模式</li>
+</ul>
+</li>
+<li>行为型模式<ul>
+<li>责任链模式</li>
+<li>命令模式</li>
+<li>解释器模式</li>
+<li>观察者模式</li>
+<li>状态模式</li>
+<li>策略模式</li>
+<li>模板模式</li>
+</ul>
+</li>
+</ul>
+<h1 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h1><h2 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h2><p>调用者请求对象的时候，无需知道这个对象来自于哪里（也就是使用哪个类来生成的对象）。<strong>工厂模式的思想是简化对象的创建。</strong>基于一个中心化函数来实现对象，更易于追踪创建了哪些对象，并且将创建对象的代码和使用对象的代码解耦，降低维护的复杂度。</p>
+<p>工厂通常有两种形式：</p>
+<ul>
+<li>工厂方法：对不同的输入参数返回不同的对象</li>
+<li>抽象工厂：一组用于创建一系列相关事物对象的工厂方法</li>
+</ul>
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>定性：执行单个函数，传入一个参数（提供信息表明我们想要什么），但并不要求知道任何关于对象如何实现以及对象来自哪里的细节。</p>
+<p>比如Django使用工厂方法模式创建表单字段。Django中的forms模块支持不同种类字段的创建（CharField，EmailField）和定制（max_length、required）。</p>
+<h4 id="适用情况"><a href="#适用情况" class="headerlink" title="适用情况"></a>适用情况</h4><p>如果应用创建对象的代码分布在多个不同的地方难以跟踪，那么可以使用工厂方法模式。集中在一个地方创建对象，使对象跟踪更为容易；当然，创建多个工厂方法也完全没有问题。比如对相似的对象进行逻辑分组，每个工厂方法只负责一个分组。例如一个工厂方法负责连接到不同的数据库，另外一个负责创建一个查询函数。</p>
+<p>如果想要达到对象的创建和使用进行解耦，工厂方法也是适合的。创建对象时，并没有与某个特定的类耦合或者绑定，而只是通过调用某个函数来提供关于我们想要的部分信息。</p>
+<p>另外就是工厂方法可以在有必要的时候创建新的对象，从而提供性能和内存使用率。</p>
+<h4 id="Python例子"><a href="#Python例子" class="headerlink" title="Python例子"></a>Python例子</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> xml.etree.ElementTree <span class="keyword">as</span> etree</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">JsonConn</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, path</span>):</span><br><span class="line">        self.data = <span class="built_in">dict</span>()</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(path, mode=<span class="string">&quot;r&quot;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            self.data = json.load(f)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parsed_data</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">XMLConn</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, path</span>):</span><br><span class="line">        self.tree = etree.parse(path)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parsed_data</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.tree</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">conn_factory</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="keyword">if</span> path.endwith(<span class="string">&quot;json&quot;</span>):</span><br><span class="line">        connector = JsonConn</span><br><span class="line">    <span class="keyword">elif</span> path.endwith(<span class="string">&quot;xml&quot;</span>):</span><br><span class="line">        connector = XMLConn</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">f&quot;cannot connect to <span class="subst">&#123;path&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> connector(path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">conn</span>(<span class="params">path</span>):</span><br><span class="line">    factory = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        factory = conn_factory(path)</span><br><span class="line">    <span class="keyword">except</span> ValueError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="keyword">return</span> factory</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    f = conn(<span class="string">&quot;/data/xxx.json&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    data = f.parsed_data</span><br><span class="line">    <span class="comment"># do sth with data</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>虽然上面两个有相同的parsed_data接口，但是接口返回的数据并不能统一处理。</p>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>抽象工厂设计模式是抽象方法的一种泛化。一个抽象工厂是（逻辑上的）一组工厂方法，其中的每个工厂方法负责产生不同种类的对象。</p>
+<h4 id="适用情况-1"><a href="#适用情况-1" class="headerlink" title="适用情况"></a>适用情况</h4><p>抽象工厂模式是工厂方法模式的一种泛化，所以他的优点和工厂方法模式一样：更容易追踪对象的创建、将对象的创建和使用解耦、提供优化内存占用和性能的可能。</p>
+<p>那什么时候使用呢？通常一开始使用工厂方法，因为他更简单。如果后来发现应用需要许多工厂方法，那么将创建一系列对象的过程合并到一起更合理，也就是使用了抽象工厂。</p>
+<p>抽象工厂一个通常被忽视的优点是能够通过改变激活的工厂方法动态地改变应用行为。</p>
+<h4 id="Python例子-1"><a href="#Python例子-1" class="headerlink" title="Python例子"></a>Python例子</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Bee</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">interact_with</span>(<span class="params">self, obstacle</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;self&#125;</span> see <span class="subst">&#123;obstacle&#125;</span> and <span class="subst">&#123;obstacle.action()&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Flower</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;a flower&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">action</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;make honey&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BeeWorld</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        <span class="built_in">print</span>(self)</span><br><span class="line">        self.player_name = name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;\n\n\t-------Bee World--------&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">make_character</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> Bee(self.player_name)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">make_action</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> Flower()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DNF</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">interact_with</span>(<span class="params">self, obstacle</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;self&#125;</span> against <span class="subst">&#123;obstacle&#125;</span> and <span class="subst">&#123;obstacle.action()&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BadMan</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;a bad man&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">action</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;kill him&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DNFWorld</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        <span class="built_in">print</span>(self)</span><br><span class="line">        self.player_name = name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;\n\n\t-------DNF World--------&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">make_character</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> DNF(self.player_name)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">make_action</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> BadMan()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GameEnv</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, factory</span>):</span><br><span class="line">        self.hero = factory.make_character()</span><br><span class="line">        self.obstacle = factory.make_action()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">play</span>(<span class="params">self</span>):</span><br><span class="line">        self.hero.interact_with(self.obstacle)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">validate_age</span>(<span class="params">name</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        age = <span class="built_in">input</span>(<span class="string">f&quot;welcome <span class="subst">&#123;name&#125;</span>. how old are you?&quot;</span>)</span><br><span class="line">        age = <span class="built_in">int</span>(age)</span><br><span class="line">    <span class="keyword">except</span> ValueError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;age <span class="subst">&#123;age&#125;</span> error!&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span>, age</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span>, age</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    name = <span class="built_in">input</span>(<span class="string">&quot;请输入用户名：&quot;</span>)</span><br><span class="line">    valid_input = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> valid_input:</span><br><span class="line">        valid_input, age = validate_age(name)</span><br><span class="line">    game = BeeWorld <span class="keyword">if</span> age &lt; <span class="number">18</span> <span class="keyword">else</span> DNFWorld</span><br><span class="line">    environment = GameEnv(game(name))</span><br><span class="line">    environment.play()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line">输出：</span><br><span class="line">请输入用户名：just</span><br><span class="line">welcome just. how old are you?<span class="number">15</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	-------Bee World--------</span><br><span class="line">just see a flower <span class="keyword">and</span> make honey</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>工厂模式适用于</p>
+<ul>
+<li>想要追踪对象的创建</li>
+<li>想要将对象的创建和使用解耦</li>
+<li>优化性能和资源占用</li>
+</ul>
+<p>工厂方法设计模式的实现是一个不属于任何类的单一函数，负责单一种类对象的创建（比如数据库、一些逻辑上类似的方法）。</p>
+<p>抽象工厂设计模式的实现是同属于单个类的许多个工厂方法用于创建一系列种类的相关对象（比如一个游戏环境）。</p>
+<h2 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h2><p>建造者模式是 将一个复杂对象的构造过程与其表现分离，这样，同一个构造过程可用于创建多个不同的表现。该模式中，有两个参与者：建造者（builder） 和指挥者（director）。<strong>建造者负责创建复杂对象的各个组成部分。指挥者使用一个建造者实例控制建造的过程。</strong></p>
+<h3 id="适用情况-2"><a href="#适用情况-2" class="headerlink" title="适用情况"></a>适用情况</h3><p>如果我们知道一个对象必须经过多个步骤来创建，并且要求同一个构造过程可以产生不同的表现，就可以使用建造者模式。</p>
+<p>建造者模式也可用于解决可伸缩构造函数问题。 当我们为支持不同的对象创建方式而不得不创建一个新的构造函数时，可伸缩构造函数问题就发生了，这种情况最终产生许多构造函数和长长的形参列表，难以管理。但是在Python中可以用以下两种方式解决：</p>
+<ul>
+<li>适用命名形参</li>
+<li>适用实参列表展开</li>
+</ul>
+<p>在这一点上，建造者模式和工厂模式的差别并不太明确。主要的<strong>区别在于工厂模式以单个步骤创建对象，而建造者模式以多个步骤创建对象</strong>，并且几乎始终会使用一个指挥者。一些有针对性的建造者模式实现并未使用指挥者，如Java的StringBuilder，但这只是例外。</p>
+<p><strong>另一个区别是，在工厂模式下，会立即返回一个创建好的对象；而在建造者模式下，仅在需要时客户端代码才显式地请求指挥者返回最终的对象</strong></p>
+<h3 id="Python例子-2"><a href="#Python例子-2" class="headerlink" title="Python例子"></a>Python例子</h3><p>使用建造者模式实现一个订购包子的应用。面团有发面团和死面团，馅料有猪肉和牛肉，包法有天津包法和东北包法，包完后有速冻和已经做好的包子（决定是否有蒸的时间）。</p>
+<p>最终的产品是一个包子，由<code>BaoZi</code>类描述。若使用建造者模式，则<strong>最终产品（类）并没有多少职责，因为它不支持直接实例化</strong>。建造者会创建一个最终产品的实例，并确保这个实例完全准备好。这就是<code>BaoZi</code>类这么短小的缘由。它只是将所有数据初始化为合理的默认值，唯一的例外 是方法prepare_dough()。将prepare_dough方法定义在<code>BaoZi</code>类而不是建造者中，是考虑到 以下两点。</p>
+<ul>
+<li>为了澄清一点，就是虽然最终产品类通常会最小化，但这并不意味着绝不应该给它分配任何职责 </li>
+<li>为了通过组合提高代码复用</li>
+</ul>
+<p>在这个例子中，指挥者就是服务员。Waiter类的核心是construct_包子方法，该方法接 受一个建造者作为参数，并以正确的顺序执行包子的所有准备步骤。选择恰当的建造者（甚至可以在运行时选择），无需修改指挥者（Waiter）的任何代码，就能制作不同的包子。Waiter类 还包含baozi()方法，会向调用者返回最终产品（准备好的包子），</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line">BaoZiProgress = Enum(<span class="string">&quot;BaoZiProgress&quot;</span>, <span class="string">&quot;queued preparation ready&quot;</span>)</span><br><span class="line">BaoZiDough = Enum(<span class="string">&quot;BaoZiDough&quot;</span>, <span class="string">&quot;ferment unferment&quot;</span>)</span><br><span class="line">BaoZiStuffing = Enum(<span class="string">&quot;BaoZiStuffing&quot;</span>, <span class="string">&quot;pork beef&quot;</span>)</span><br><span class="line">BaoZiMethod = Enum(<span class="string">&quot;BaoZiMethod&quot;</span>, <span class="string">&quot;steam freeze&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># BaoZiDough = Enum(&quot;BaoZiDough&quot;, &quot;发酵 死面&quot;)</span></span><br><span class="line"><span class="comment"># BaoZiStuffing = Enum(&quot;BaoZiStuffing&quot;, &quot;猪肉 牛肉&quot;)</span></span><br><span class="line"><span class="comment"># BaoZiMethod = Enum(&quot;BaoZiMethod&quot;, &quot;蒸熟 速冻&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BaoZi</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.dough = <span class="literal">None</span></span><br><span class="line">        self.stuffing = <span class="literal">None</span></span><br><span class="line">        self.method = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">prepare_dough</span>(<span class="params">self, dough</span>):</span><br><span class="line">        self.dough = dough</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;在为你的 <span class="subst">&#123;self.name&#125;</span> 准备 <span class="subst">&#123;dough.name&#125;</span> 面团&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PorkBaoZiBuilder</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.baozi = BaoZi(<span class="string">&quot;猪肉包子&quot;</span>)</span><br><span class="line">        self.progress = BaoZiProgress.queued</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">prepare_dough</span>(<span class="params">self</span>):</span><br><span class="line">        self.progress = BaoZiProgress.preparation</span><br><span class="line">        self.baozi.prepare_dough(BaoZiDough.ferment)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_stuffing</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;往里加猪肉馅了~&quot;</span>)</span><br><span class="line">        self.baozi.stuffing = BaoZiStuffing.pork</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;猪肉馅放好了~&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">choose_method</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;直接给你蒸了哈~&quot;</span>)</span><br><span class="line">        self.baozi.method = BaoZiMethod.steam</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;猪肉馅包子蒸熟了&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deliver</span>(<span class="params">self</span>):</span><br><span class="line">        self.progress = BaoZiProgress.ready</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;猪肉馅包子出餐了~自取还是送餐？你自取吧~&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BeefBaoZiBuilder</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.baozi = BaoZi(<span class="string">&quot;牛肉包子&quot;</span>)</span><br><span class="line">        self.progress = BaoZiProgress.queued</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">prepare_dough</span>(<span class="params">self</span>):</span><br><span class="line">        self.progress = BaoZiProgress.preparation</span><br><span class="line">        self.baozi.prepare_dough(BaoZiDough.unferment)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_stuffing</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;往里加牛肉馅了~&quot;</span>)</span><br><span class="line">        self.baozi.stuffing = BaoZiStuffing.beef</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;牛肉馅放好了~&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">choose_method</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;牛肉馅包子只能速冻了~&quot;</span>)</span><br><span class="line">        self.baozi.method = BaoZiMethod.freeze</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;牛肉馅包子速冻好了~&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deliver</span>(<span class="params">self</span>):</span><br><span class="line">        self.progress = BaoZiProgress.ready</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;牛肉包子出餐了~自取还是送餐？你自取吧~&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Waiter</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.builder = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">construct_baozi</span>(<span class="params">self, builder</span>):</span><br><span class="line">        self.builder = builder</span><br><span class="line">        [step() <span class="keyword">for</span> step <span class="keyword">in</span> (builder.prepare_dough, builder.add_stuffing,</span><br><span class="line">                             builder.choose_method, builder.deliver)]</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">baozi</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.builder.baozi</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">validate_style</span>(<span class="params">builders</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        baozi_style = <span class="built_in">input</span>(<span class="string">&#x27;想要什么包子？ [p]猪肉 or [b]牛肉? &#x27;</span>)</span><br><span class="line">        builder = builders[baozi_style]()</span><br><span class="line">    <span class="keyword">except</span> KeyError <span class="keyword">as</span> err:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Sorry, only margarita (key m) and creamy bacon (key c) are available&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> (<span class="literal">False</span>, <span class="literal">None</span>)</span><br><span class="line">    <span class="keyword">return</span> (<span class="literal">True</span>, builder)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">实现的最后一部分是main()函数。main()函数实例化一个包子建造者，然后指挥者Waiter</span></span><br><span class="line"><span class="string">使用包子建造者来准备包子。创建好的包子可在稍后的时间点交付给客户端。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    builders = <span class="built_in">dict</span>(p=PorkBaoZiBuilder, b=BeefBaoZiBuilder)</span><br><span class="line">    valid_input = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> valid_input:</span><br><span class="line">        valid_input, builder = validate_style(builders)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;-&quot;</span> * <span class="number">20</span>)</span><br><span class="line">    waiter = Waiter()</span><br><span class="line">    waiter.construct_baozi(builder)</span><br><span class="line">    baozi = waiter.baozi</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;-&quot;</span> * <span class="number">20</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;好好吃你的 &#123;&#125; 吧!&#x27;</span>.<span class="built_in">format</span>(baozi))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">想要什么包子？ [p]猪肉 <span class="keyword">or</span> [b]牛肉? b</span><br><span class="line">--------------------</span><br><span class="line">在为你的 牛肉包子 准备 unferment 面团</span><br><span class="line">往里加牛肉馅了~</span><br><span class="line">牛肉馅放好了~</span><br><span class="line">牛肉馅包子只能速冻了~</span><br><span class="line">牛肉馅包子速冻好了~</span><br><span class="line">牛肉包子出餐了~自取还是送餐？你自取吧~</span><br><span class="line">--------------------</span><br><span class="line">好好吃你的 牛肉包子 吧!</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="变体"><a href="#变体" class="headerlink" title="变体"></a>变体</h4><p>如果 链式 的调用建造者方法，通过将建造者本身定义为内部类并从其<strong>每个设置器方法返回自身</strong>的方式返回最终对象，可以称为<code>流利的建造者模式</code>。但还是要有一个方法返回我们想要的最终类。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ColdNoodles</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, builder</span>):</span><br><span class="line">        self.egg = builder.egg</span><br><span class="line">        self.beef = builder.beef</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        egg = <span class="string">&quot;yes&quot;</span> <span class="keyword">if</span> self.egg <span class="keyword">else</span> <span class="string">&quot;no&quot;</span></span><br><span class="line">        beef = <span class="string">&quot;yes&quot;</span> <span class="keyword">if</span> self.beef <span class="keyword">else</span> <span class="string">&quot;no&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;egg: <span class="subst">&#123;egg&#125;</span>, beef: <span class="subst">&#123;beef&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Builder</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">            self.egg = <span class="literal">False</span></span><br><span class="line">            self.beef = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">add_egg</span>(<span class="params">self</span>):</span><br><span class="line">            self.egg = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">add_beef</span>(<span class="params">self</span>):</span><br><span class="line">            self.beef = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">return</span> self</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">builder</span>(<span class="params">self</span>):</span><br><span class="line">            <span class="comment"># 这里的self指的是类Builder的实例</span></span><br><span class="line">            <span class="keyword">return</span> ColdNoodles(self)</span><br><span class="line"></span><br><span class="line">cold_noodles = ColdNoodles.Builder().add_beef().add_egg().builder()</span><br><span class="line"><span class="built_in">print</span>(cold_noodles)</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">egg: yes, beef: yes</span><br></pre></td></tr></table></figure>
+
+<p>上面的这个例子可以在<code>add_beef</code>和<code>add_egg</code>中增加参数实现动态的建造。只有当调用builder函数的时候才能返回coldnoodles这个类的实例化对象，当然你也可以传一个builder对象进去实现实例化~</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在以下几种情况下，与工厂模式相比，建造者模式是更好的选择。 </p>
+<ul>
+<li>想要创建一个复杂对象（对象由多个部分构成，且对象的创建要经过多个不同的步骤， 这些步骤也许还需遵从特定的顺序） </li>
+<li>要求一个对象能有不同的表现，并希望将对象的构造与表现解耦 </li>
+<li>想要在某个时间点创建对象，但在稍后的时间点再访问</li>
+</ul>
+<h2 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h2><p>原型设计模式（Prototype design pattern）帮助我们创建对象的克隆，其最简单的形式就是一个clone()函数，接受一个对象作为输入参数，返回输入对象的一个副本。在Python中，这可以使用copy.deepcopy()函数来完成。</p>
+<h3 id="适用情况-3"><a href="#适用情况-3" class="headerlink" title="适用情况"></a>适用情况</h3><p>当我们已经有一个对象，并希望创建该对象的一个完整副本的时候，就可以使用原型模式。比如想修改某些功能但是还想保持原对象不变，就可以使用原型模式。</p>
+<p>上面提到的副本都是深副本，浅副本指的是引用（就像deepcopy和copy）</p>
+<p>我们可以引入数据共享和写时复制一类的技术来优化性能（例如， 减小克隆对象的创建时间）和内存使用。如果可用资源有限（例如，嵌入式系统）或性能至关重要（例如，高性能计算），那么使用浅副本可能更佳。</p>
+<h3 id="Python例子-3"><a href="#Python例子-3" class="headerlink" title="Python例子"></a>Python例子</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Book</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, authors, price, **kwargs</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.authors = authors</span><br><span class="line">        self.price = price</span><br><span class="line">        self.__dict__.update(kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        string_list = <span class="built_in">list</span>()</span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> self.__dict__.items():</span><br><span class="line">            string_list.append(<span class="string">f&quot;<span class="subst">&#123;k&#125;</span>: <span class="subst">&#123;v&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;; &quot;</span>.join(string_list)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NewBook</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.objects = <span class="built_in">dict</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">register</span>(<span class="params">self, ident, obj</span>):</span><br><span class="line">        self.objects[ident] = obj</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">unregister</span>(<span class="params">self, ident</span>):</span><br><span class="line">        <span class="keyword">del</span> self.objects[ident]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">clone</span>(<span class="params">self, ident, **kwargs</span>):</span><br><span class="line">        found = self.objects.get(ident)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&quot;not found ident&quot;</span>)</span><br><span class="line">        obj = copy.deepcopy(found)</span><br><span class="line">        obj.__dict__.update(kwargs)</span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    old_book = Book(name=<span class="string">&quot;西游记&quot;</span>, authors=<span class="string">&quot;曹雪芹&quot;</span>, price=<span class="string">&quot;998刀&quot;</span>, publisher=<span class="string">&quot;作家出版社&quot;</span>)</span><br><span class="line">    all_book = NewBook()</span><br><span class="line">    CIP = <span class="string">&quot;978-7-111-55797-5&quot;</span></span><br><span class="line">    all_book.register(CIP, old_book)</span><br><span class="line">    new_book = all_book.clone(CIP, edition=<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> (old_book, new_book):</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line">输出：</span><br><span class="line">name: 西游记; authors: 曹雪芹; price: <span class="number">998</span>刀; publisher: 作家出版社</span><br><span class="line">name: 西游记; authors: 曹雪芹; price: <span class="number">998</span>刀; publisher: 作家出版社; edition: <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>原型模式用于创建对象的完全副本。确切地说，创建一个对象的副本可以指代以下两件事情：</p>
+<ul>
+<li>当创建一个浅副本时，副本依赖引用</li>
+<li>当创建一个深副本时，副本复制所有东西</li>
+</ul>
+<p>第一种情况中，我们关注提升应用性能和优化内存使用，在对象之间引入数据共享，但需要小心地修改数据，因为所有变更对所有副本都是可见的。</p>
+<p>第二种情况中，我们希望能够对一个副本进行更改而不会影响其他对象，不会进行数据共享，所以需要关注因对象克隆而引入的资源耗用问题。</p>
+<h1 id="创建型模式总结"><a href="#创建型模式总结" class="headerlink" title="创建型模式总结"></a>创建型模式总结</h1><p>创建型模式，更多的是为了更好的创建对象而设计、总结、实践的，平时开发中可能用的相对较少。</p>
+<p>工厂模式：生产对象的工厂；提供一个接口，传入参数生产对应类型的对象。适用于比如数据库切换的场景。</p>
+<p>抽象工厂模式：生产工厂的工厂。在<strong>工厂方法模式</strong>中，我们的具体创建者<strong>每次使用都只能创建一个同类型的对象</strong>，假如我们现在需要的是<strong>多个不同类型的对象</strong>，工厂方法就满足不了需求了。此时就可以进一步封装，使用抽象工厂模式。</p>
+<p>建造者模式：打包创建对象，将对象拆分（比如电脑拆成主机、键盘、显示器等等）。</p>
+<p>原型模式：创建好一个对象后，放到一个地方，然后可以基于它实现新的对象（copy）。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得写的还行，赞助瓶脉动～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赞助饮料</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt=" 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Just
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://wangxiaoyi.world/20200721070238/" title="设计模式（1）">http://wangxiaoyi.world/20200721070238/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/20190215090203/" rel="next" title="Python装饰器与闭包">
+                <i class="fa fa-chevron-left"></i> Python装饰器与闭包
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/20211212092203/" rel="prev" title="Redis单线程为什么还快">
+                Redis单线程为什么还快 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:wangyi3355@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcool.com/" title="Linux命令查询" target="_blank">Linux命令查询</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.canva.cn/" title="Canva" target="_blank">Canva</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lingxi360.com/" title="灵析" target="_blank">灵析</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mp.weixin.qq.com/" title="微信公众平台" target="_blank">微信公众平台</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://macwk.com/" title="Mac软件" target="_blank">Mac软件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/" title="微博" target="_blank">微博</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://wenshu.court.gov.cn/" title="裁判文书网" target="_blank">裁判文书网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://redis.cn/" title="Redis中文网" target="_blank">Redis中文网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://go-zero.dev/cn/" title="go_zero" target="_blank">go_zero</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.linuxcc.cc/" title="linux" target="_blank">linux</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">设计模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">创建型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">工厂模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">工厂方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">适用情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python%E4%BE%8B%E5%AD%90"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">Python例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="nav-number">2.1.2.</span> <span class="nav-text">抽象工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%83%85%E5%86%B5-1"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">适用情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python%E4%BE%8B%E5%AD%90-1"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">Python例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.1.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">建造者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%83%85%E5%86%B5-2"><span class="nav-number">2.2.1.</span> <span class="nav-text">适用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python%E4%BE%8B%E5%AD%90-2"><span class="nav-number">2.2.2.</span> <span class="nav-text">Python例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E4%BD%93"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">变体</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">原型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%83%85%E5%86%B5-3"><span class="nav-number">2.3.1.</span> <span class="nav-text">适用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python%E4%BE%8B%E5%AD%90-3"><span class="nav-number">2.3.2.</span> <span class="nav-text">Python例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">2.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">创建型模式总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Just</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">16.7k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 提供支持</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
