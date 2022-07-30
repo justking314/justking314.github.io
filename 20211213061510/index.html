@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="python,cached_property," />
+  <meta name="keywords" content="redis,systemctl," />
 
 
 
@@ -77,19 +77,21 @@
 
 
 
-<meta name="description" content="该装饰器主要实现的功能：  将类中函数包装成属性 第一次调用的时候会完整的执行该函数，执行结果保存到对象的__dict__中，比如属性为a，对象为obj，则从第二次获取a属性的时候，会直接从obj.__dict__[“a”]中获取，避免多次计算 搭配单例使用可以实现缓存，如果有刷新需求，可以在需要的位置添加下面的clear_cache_key(cls, key)类似方法   使用限制：只能用于只带">
+<meta name="description" content="base信息：centos 7.6 centos6版本之前服务管理采用service命令，但在centos7版本后使用systemctl命令来管理系统服务，systemctl命令语法格式如下：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="浅析@cached_property缓存装饰器">
-<meta property="og:url" content="http://www.wangxiaoyi.world/20180311204233/index.html">
+<meta property="og:title" content="systemctl管理服务">
+<meta property="og:url" content="http://www.wangxiaoyi.world/20211213061510/index.html">
 <meta property="og:site_name" content="Just">
-<meta property="og:description" content="该装饰器主要实现的功能：  将类中函数包装成属性 第一次调用的时候会完整的执行该函数，执行结果保存到对象的__dict__中，比如属性为a，对象为obj，则从第二次获取a属性的时候，会直接从obj.__dict__[“a”]中获取，避免多次计算 搭配单例使用可以实现缓存，如果有刷新需求，可以在需要的位置添加下面的clear_cache_key(cls, key)类似方法   使用限制：只能用于只带">
+<meta property="og:description" content="base信息：centos 7.6 centos6版本之前服务管理采用service命令，但在centos7版本后使用systemctl命令来管理系统服务，systemctl命令语法格式如下：">
 <meta property="og:locale">
-<meta property="article:published_time" content="2018-03-11T12:42:33.000Z">
-<meta property="article:modified_time" content="2022-03-26T11:56:56.008Z">
+<meta property="og:image" content="http://cdn.wangxiaoyi.world/image-20220608224013727.png">
+<meta property="article:published_time" content="2021-12-12T22:15:10.000Z">
+<meta property="article:modified_time" content="2022-06-09T14:08:25.923Z">
 <meta property="article:author" content="Just">
-<meta property="article:tag" content="python">
-<meta property="article:tag" content="cached_property">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="systemctl">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn.wangxiaoyi.world/image-20220608224013727.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://www.wangxiaoyi.world/20180311204233/"/>
+  <link rel="canonical" href="http://www.wangxiaoyi.world/20211213061510/"/>
 
 
 
 
 
-  <title>浅析@cached_property缓存装饰器 | Just</title>
+  <title>systemctl管理服务 | Just</title>
   
 
 
@@ -252,7 +254,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.wangxiaoyi.world/20180311204233/">
+    <link itemprop="mainEntityOfPage" href="http://www.wangxiaoyi.world/20211213061510/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -269,7 +271,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">浅析@cached_property缓存装饰器</h2>
+          <h2 class="post-title" itemprop="name headline">systemctl管理服务</h2>
         
 
         <div class="post-meta">
@@ -281,8 +283,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-11T20:42:33+08:00">
-                2018-03-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-13T06:15:10+08:00">
+                2021-12-13
               </time>
             
 
@@ -318,7 +320,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  376
+                  553
                 </span>
               
 
@@ -334,7 +336,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -355,26 +357,51 @@
       
 
       
-        <p>该装饰器主要实现的功能：</p>
+        <p>base信息：centos 7.6</p>
+<p>centos6版本之前服务管理采用service命令，但在centos7版本后使用systemctl命令来管理系统服务，systemctl命令语法格式如下：</p>
+<span id="more"></span>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl [选项] [服务名]</span><br></pre></td></tr></table></figure>
+
+<p>常用选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">start						：表示启动服务</span><br><span class="line">restart						：表示重启服务</span><br><span class="line">status						：表示查看服务状态</span><br><span class="line">reload						：表示重新加载</span><br><span class="line">stop						：表示停止服务</span><br><span class="line">enable						：表示服务开机自启</span><br><span class="line">disable						：表示禁止服务开机自启</span><br><span class="line">list-unit-files				：列出系统所有已安装的服务单元</span><br><span class="line">list-units [PATTERN...]     ：列出当前内存中的服务单元 </span><br><span class="line">get-default					：查看系统默认运行级别</span><br><span class="line">set-default TARGET        	：设置系统默认运行级别</span><br><span class="line">reboot						：重启</span><br><span class="line">poweroff					：关机</span><br><span class="line">cat 						：查看服务的启动配置文件</span><br></pre></td></tr></table></figure>
+
+<p>用service来管理服务的时候，是在<code>/etc/init.d/</code>目录中创建一个脚本文件，来管理服务的启动和停止，在systemctl中，也类似，文件目录有所不同，在<code>/lib/systemd/system</code>目录下创建一个脚本文件redis.service，里面的内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Redis</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/local/bin/redis-server /usr/local/redis/redis.conf  --daemonize no</span><br><span class="line">ExecStop=/usr/local/bin/redis-cli -h 127.0.0.1 -p 6379 shutdown</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>[Unit] 表示这是基础信息</p>
 <ul>
-<li>将类中函数包装成属性</li>
-<li>第一次调用的时候会完整的执行该函数，执行结果保存到对象的__dict__中，比如属性为a，对象为obj，则从第二次获取a属性的时候，会直接从obj.__dict__[“a”]中获取，避免多次计算</li>
-<li>搭配单例使用可以实现缓存，如果有刷新需求，可以在需要的位置添加下面的<code>clear_cache_key(cls, key)</code>类似方法</li>
+<li>Description 是描述</li>
+<li>After 是在那个服务后面启动，一般是网络服务启动后启动</li>
+</ul>
+<p>[Service] 表示这里是服务信息</p>
+<ul>
+<li>ExecStart 是启动服务的命令</li>
+<li>ExecStop 是停止服务的指令</li>
+</ul>
+<p>[Install] 表示这是是安装相关信息</p>
+<ul>
+<li>WantedBy 是以哪种方式启动：multi-user.target表明当系统以多用户方式（默认的运行级别）启动时，这个服务需要被自动运行。</li>
 </ul>
 <blockquote>
-<p>使用限制：只能用于只带默认参数的类。</p>
+<p>这里做了一个软链接处理，文件安装在<code>/software/redis-5.0.8</code> 中，切换到<code>/usr/local/</code>目录下，执行 <code>ln -s /software/redis-5.0.8/ redis</code>。相关操作</p>
 </blockquote>
-<span id="more"></span>
+<h3 id="创建service软链接"><a href="#创建service软链接" class="headerlink" title="创建service软链接"></a>创建service软链接</h3><p>创建软链接是为了下一步系统初始化时自动启动服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /lib/systemd/system/redis.service /etc/systemd/system/multi-user.target.wants/redis.service</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">from</span> polls.models <span class="keyword">import</span> Dts</span><br><span class="line"><span class="keyword">from</span> django.utils.functional <span class="keyword">import</span> cached_property</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DataMakeTool</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    _instance = <span class="literal">None</span></span><br><span class="line">    _instance_lock = threading.Lock()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">with</span> DataMakeTool._instance_lock:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> DataMakeTool._instance:</span><br><span class="line">                DataMakeTool._instance = <span class="built_in">super</span>(DataMakeTool, cls).__new__(cls)</span><br><span class="line">        <span class="keyword">return</span> DataMakeTool._instance</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">clear_cache_key</span>(<span class="params">cls, key</span>):</span><br><span class="line">        <span class="keyword">if</span> key == <span class="string">&#x27;dts&#x27;</span> <span class="keyword">and</span> <span class="string">&#x27;dpt_pros_info&#x27;</span> <span class="keyword">in</span> cls._instance.__dict__:</span><br><span class="line">            cls._instance.__dict__.pop(<span class="string">&#x27;dpt_pros_info&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @cached_property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dpt_pros_info</span>(<span class="params">self</span>):</span><br><span class="line">        data = <span class="built_in">dict</span>()</span><br><span class="line">        infos = Dts.objects.values_list(<span class="string">&#x27;dts_department&#x27;</span>, <span class="string">&quot;dts_product&quot;</span>)</span><br><span class="line">        <span class="keyword">for</span> info <span class="keyword">in</span> infos:</span><br><span class="line">            dts_department = info[<span class="number">0</span>]</span><br><span class="line">            dts_product = info[<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">if</span> dts_department <span class="keyword">not</span> <span class="keyword">in</span> data:</span><br><span class="line">                data[dts_department] = []</span><br><span class="line">            <span class="keyword">if</span> dts_product:</span><br><span class="line">                data[dts_department].append(dts_product)</span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> data.items():</span><br><span class="line">            data[k] = <span class="built_in">list</span>(<span class="built_in">set</span>(data[k]))</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">data_tool = DataMakeTool()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.utils.functional <span class="keyword">import</span> cached_property</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, age=<span class="number">0</span></span>):</span><br><span class="line">        self.age=age</span><br><span class="line"></span><br><span class="line"><span class="meta">    @cached_property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getWorkYear</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">65</span>-self.age</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">user=User(<span class="number">20</span>)</span><br><span class="line"><span class="built_in">print</span>(user.getWorkYear)    <span class="comment">#45</span></span><br><span class="line"><span class="comment"># print(user.getWorkYear())  #error</span></span><br><span class="line"><span class="built_in">print</span>(user.__dict__)  <span class="comment">#&#123;&#x27;age&#x27;: 20, &#x27;getWorkYear&#x27;: 45&#125;</span></span><br><span class="line"><span class="built_in">print</span>(user.getWorkYear) <span class="comment">#45</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>:</span><br><span class="line"><span class="meta">    @cached_property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;========执行foo==========&#x27;</span>)</span><br><span class="line">        a = <span class="number">12</span></span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = Foo()</span><br><span class="line"><span class="built_in">print</span> f.__dict__  <span class="comment"># &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(f.foo)</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">========执行foo==========</span></span><br><span class="line"><span class="string">12</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="built_in">print</span> f.__dict__  <span class="comment"># &#123;&#x27;foo&#x27;: 12&#125;</span></span><br><span class="line"><span class="built_in">print</span>(f.foo)  <span class="comment"># 12</span></span><br><span class="line"><span class="built_in">print</span> f.__dict__  <span class="comment"># &#123;&#x27;foo&#x27;: 12&#125;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://cdn.wangxiaoyi.world/image-20220608224013727.png" alt="image-20220608224013727"></p>
+<h3 id="刷新配置"><a href="#刷新配置" class="headerlink" title="刷新配置"></a>刷新配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
 
 
 
+<h3 id="开机自启动"><a href="#开机自启动" class="headerlink" title="开机自启动"></a>开机自启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable redis</span><br></pre></td></tr></table></figure>
 
+<h3 id="禁止开机自启动"><a href="#禁止开机自启动" class="headerlink" title="禁止开机自启动"></a>禁止开机自启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl disable redis</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl disable redis</span><br><span class="line">Removed symlink /etc/systemd/system/multi-user.target.wants/redis.service.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a>查看状态</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status redis</span><br></pre></td></tr></table></figure>
 
 
       
@@ -430,7 +457,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.wangxiaoyi.world/20180311204233/" title="浅析@cached_property缓存装饰器">http://www.wangxiaoyi.world/20180311204233/</a>
+    <a href="http://www.wangxiaoyi.world/20211213061510/" title="systemctl管理服务">http://www.wangxiaoyi.world/20211213061510/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -445,9 +472,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/redis/" rel="tag"># redis</a>
           
-            <a href="/tags/cached-property/" rel="tag"># cached_property</a>
+            <a href="/tags/systemctl/" rel="tag"># systemctl</a>
           
         </div>
       
@@ -460,8 +487,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/20180202204249/" rel="next" title="nginx系列01--nginx简介和安装">
-                <i class="fa fa-chevron-left"></i> nginx系列01--nginx简介和安装
+              <a href="/20211212212203/" rel="next" title="Redis系列之CentOS下安装与启动和关闭">
+                <i class="fa fa-chevron-left"></i> Redis系列之CentOS下安装与启动和关闭
               </a>
             
           </div>
@@ -470,8 +497,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/20180311204233/" rel="prev" title="python treelib 树结构">
-                python treelib 树结构 <i class="fa fa-chevron-right"></i>
+              <a href="/20211213212203/" rel="prev" title="Redis系列之Redis的发布与订阅">
+                Redis系列之Redis的发布与订阅 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -667,7 +694,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo"><span class="nav-number">1.</span> <span class="nav-text">Demo</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAservice%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">创建service软链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B7%E6%96%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">刷新配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="nav-number">3.</span> <span class="nav-text">开机自启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="nav-number">4.</span> <span class="nav-text">禁止开机自启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%8A%B6%E6%80%81"><span class="nav-number">5.</span> <span class="nav-text">查看状态</span></a></li></ol></div>
             
 
           </div>
